@@ -1,1 +1,2 @@
+# added unit testing capabilities, changed README.md into AsciiDoc format
 0.0.0 2021-12-12 Initial version, no functionality yet.

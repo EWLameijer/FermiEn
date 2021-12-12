@@ -1,1 +1,10 @@
-// add unit testing capabilities
+// design basic structure: context, question, answer, importance
+?? importance for context
+
+
+As learning works best with flashcards, which have a question and answer, a file format should be supported that can
+house both questions and answers. Assuming text (for now) a normal format would be
+"questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines,
+tabs, and so on.
+
+Subtask 1: make functionality
