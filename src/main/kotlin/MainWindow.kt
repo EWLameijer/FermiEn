@@ -12,7 +12,15 @@ class MainWindow : JFrame() {
         text = "back"
     }
 
-    private val okButton = JButton("Ok")
+    private val okButton = JButton("Ok").apply {
+        addActionListener { saveNewEntry() }
+    }
+
+    private fun saveNewEntry() {
+        val front = cardFrontPane.text.toStorageString()
+        val back = cardBackPane.text.toStorageString()
+        println("$front\t$back")
+    }
 
     // NOTE: init has to be below the cardFrontPane and cardBackPane definitions, else it doesn't work
     // (tested 2021-12-12)
