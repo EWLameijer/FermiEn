@@ -1,2 +1,2 @@
 "hel\\lo"	"wor\\ld"
-"I go\nto the"	"movies(I especially like\t"Jaws"\t, as\tyou\t may know!)"
+"I go\nto the"	"movies(I especially like "Jaws", as you may know!)"

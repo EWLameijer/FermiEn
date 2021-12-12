@@ -1,1 +1,18 @@
-tabs: note that IntelliJ automatically converts tabs to spaces in text files, so make text files in Notepad++
+tabs:
+  note that IntelliJ automatically converts tabs to spaces in text files, so make text files in Notepad++
+  I also decided not to use/permit tabs in questions and answers. It both simplifies coding and allows easier switching
+    between question and answer window later.
+
+unit testing: Example of parametrized test
+  @ParameterizedTest(name = "{0} => {1}")
+    @CsvSource(
+        "2, 4",
+        "3, 9",
+        "-1, 1"
+    )
+    fun testForTesting(input: Int, expectedOutput: Int) {
+        val actualOutput = forTesting(input)
+        assertEquals(expectedOutput, actualOutput) {
+            "$input should lead to $expectedOutput, not $actualOutput."
+        }
+    }

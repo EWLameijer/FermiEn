@@ -4,16 +4,19 @@
 
 As learning works best with flashcards, which have a question and answer, a file format should be supported that can
 house both questions and answers. Assuming text (for now) a normal format would be
-"questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines,
-tabs, and so on.
-
-subtask 1: refactoring: refactor fun String.toLines() [possibly make parser object?]
-subtask 2: remove starting and ending "" in the toLines()
+"questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
+backslashes.
 
 Subtask 1: make functionality to get question and answer from the user
+  SEE https://github.com/EWLameijer/Eb2/blob/master/src/main/kotlin/eb/subwindow/cardediting/CardEditingWindow.kt
+  add OK button and confirm (with the console) that it writes properly
+
+
 Subtask 2: write the question and answer to a file
+  first transform the format into a simple string. Possibly surround it by ""
 
 
 => logical extension: make some kind of GUI/Form that enables me as user to change the default filename to read from/
 write to
 -> will also need a settings file to save that filename
+
