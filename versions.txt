@@ -1,2 +1,8 @@
-# added unit testing capabilities, changed README.md into AsciiDoc format
+Note: from https://semver.org/
+
+MAJOR version when you make incompatible API changes, // meaning old files cannot be read anymore in this case
+MINOR version when you add functionality in a backwards compatible manner, and // added functionality
+PATCH version when you make backwards compatible bug fixes. // bug fixes
+
+0.1.0 added unit testing capabilities, changed README.md into AsciiDoc format, read questions and answers when starting up and show them to the user.
 0.0.0 2021-12-12 Initial version, no functionality yet.

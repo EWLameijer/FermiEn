@@ -7,4 +7,13 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines,
 tabs, and so on.
 
-Subtask 1: make functionality
+subtask 1: refactoring: refactor fun String.toLines() [possibly make parser object?]
+subtask 2: remove starting and ending "" in the toLines()
+
+Subtask 1: make functionality to get question and answer from the user
+Subtask 2: write the question and answer to a file
+
+
+=> logical extension: make some kind of GUI/Form that enables me as user to change the default filename to read from/
+write to
+-> will also need a settings file to save that filename
