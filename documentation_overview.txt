@@ -1,0 +1,5 @@
+Documentation overview
+
+user_manual.txt: the manual for users
+code_ency.txt: an overview of the code (for developers)
+todo.txt: current plans
