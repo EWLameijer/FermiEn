@@ -4,6 +4,8 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.5.0 2021-12-13 make the OK button also clear the panels, remove trailing spaces before string is stored, create a menu in the main window, with a Ctrl+N for new fact.
+0.4.0 2021-12-13 the OK button now will add the string to the entries; which will be saved on exit
 0.3.0 2021-12-12 now outputs a correctly formatted string when pressing the OK button
 0.2.0 2021-12-12 removed starting and ending "" when displaying strings restored from file. Added a JFrame to prepare for user input
 0.1.0 2021-12-12 added unit testing capabilities, changed README.md into AsciiDoc format, read questions and answers when starting up and show them to the user.

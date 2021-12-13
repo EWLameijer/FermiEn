@@ -34,10 +34,17 @@ class StoredStringParser(private val input: String) {
     }
 }
 
+const val storageNewline = """\n"""
+
 fun storageRepresentationOf(ch: Char) = when (ch) {
-    '\n' -> """\n"""
+    '\n' -> storageNewline // ASCII-code 10
     '\\' -> """\\"""
+    '\t' -> """ """
+    '\r' -> "" // ASCII-code 13 Usually \r\n on Windows. Linux and Mac don't use it. https://www.petefreitag.com/item/863.cfm
     else -> "$ch"
 }
 
-fun String.toStorageString() = "\"${this.map(::storageRepresentationOf).joinToString(separator = "")}\""
+fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(storageNewline) { it.trimEnd() }
+
+fun String.toStorageString() =
+    "\"${this.map(::storageRepresentationOf).joinToString(separator = "").removeStorageTrailingSpaces()}\""

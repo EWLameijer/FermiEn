@@ -1,6 +1,6 @@
 import java.io.File
 
-const val version = "0.3.0"
+const val version = "0.5.0"
 
 val entries = mutableListOf<Entry>()
 
@@ -13,7 +13,6 @@ fun String.toEntry(): Entry {
     val (question, answer) = split('\t')
     return Entry(question, answer)
 }
-
 
 fun prettyPrint(s: String) = StoredStringParser(s).parse().forEach(::println)
 

@@ -1,22 +1,16 @@
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
-import java.awt.event.WindowListener
+import java.awt.event.*
 import java.beans.EventHandler
 import java.io.File
 import javax.swing.*
 import kotlin.system.exitProcess
 
 class MainWindow : JFrame() {
-    private val cardFrontPane = JTextPane().apply {
-        text = "front"
-    }
+    private val cardFrontPane = JTextPane()
 
-    private val cardBackPane = JTextPane().apply {
-        text = "back"
-    }
+    private val cardBackPane = JTextPane()
 
     private val okButton = JButton("Ok").apply {
         addActionListener { saveNewEntry() }
@@ -27,11 +21,14 @@ class MainWindow : JFrame() {
         val back = cardBackPane.text.toStorageString()
         println("$front\t$back")
         entries += Entry(front, back)
+        cardFrontPane.text = ""
+        cardBackPane.text = ""
     }
 
     // NOTE: init has to be below the cardFrontPane and cardBackPane definitions, else it doesn't work
     // (tested 2021-12-12)
     init {
+        addMenu()
         addCardPanel()
         addButtonPanel()
         setSize(1000, 700)
@@ -42,6 +39,20 @@ class MainWindow : JFrame() {
                 saveAndQuit()
             }
         })
+    }
+
+    private fun addMenu() {
+        jMenuBar = JMenuBar()
+        val entryMenu = JMenu("Entry")
+        entryMenu.add(createMenuItem("Add Entry", 'n') {})
+        jMenuBar.add(entryMenu)
+    }
+
+
+    private fun createMenuItem(label: String, actionKey: Char, listener: () -> Unit) = JMenuItem(label).apply {
+        accelerator =
+            KeyStroke.getKeyStroke(KeyEvent.getExtendedKeyCodeForChar(actionKey.code), ActionEvent.CTRL_MASK)
+        addActionListener { listener() }
     }
 
     private fun saveAndQuit() {
