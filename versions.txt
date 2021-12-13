@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.9.0 2021-12-13 make enter click on the OK button when focused; also pops up dialogue now to indicate duplicate
 0.8.0 2021-12-13 make adding card with existing question text impossible; make tab transfer focus instead of adding tab
 0.7.0 2021-12-13 make table contents uneditable, sort them alphabetically, and make clicking on them pop up the edit window
 0.6.0 2021-12-13 make Ctrl+N pop up a small window that works like the original main window, repurpose main window to show questions and answers.

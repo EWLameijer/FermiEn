@@ -9,10 +9,7 @@ backslashes.
 
 
 Subtask 2: write the question and answer to a file
-  make <Enter> on OK click it
-  pop up dialog to signal attempt to add entry with duplicate front
-
-  // make search box (whole text search in q/a)
+  make search box (whole text search in q/a)
 
 
 
