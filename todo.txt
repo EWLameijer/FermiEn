@@ -11,7 +11,6 @@ Subtask 1: make functionality to get question and answer from the user
   SEE https://github.com/EWLameijer/Eb2/blob/master/src/main/kotlin/eb/subwindow/cardediting/CardEditingWindow.kt
 
 Subtask 2: write the question and answer to a file
-  write the string to the notes-file, together with the notes so far (so need some kind of list)
   make the OK button also clear the panels
   create a menu in the main window, with a Ctrl+N for new fact
   Let THAT pop up a smaller edit window that works like the current main window

@@ -1,7 +1,13 @@
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
+import java.awt.event.WindowListener
+import java.beans.EventHandler
+import java.io.File
 import javax.swing.*
+import kotlin.system.exitProcess
 
 class MainWindow : JFrame() {
     private val cardFrontPane = JTextPane().apply {
@@ -20,6 +26,7 @@ class MainWindow : JFrame() {
         val front = cardFrontPane.text.toStorageString()
         val back = cardBackPane.text.toStorageString()
         println("$front\t$back")
+        entries += Entry(front, back)
     }
 
     // NOTE: init has to be below the cardFrontPane and cardBackPane definitions, else it doesn't work
@@ -30,6 +37,17 @@ class MainWindow : JFrame() {
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
+        addWindowListener(object : WindowAdapter() {
+            override fun windowClosing(windowEvent: WindowEvent?) {
+                saveAndQuit()
+            }
+        })
+    }
+
+    private fun saveAndQuit() {
+        File(inputFileName).writeText(entries.joinToString(separator = "\n") { "${it.question}\t${it.answer}" })
+        dispose()
+        exitProcess(0)
     }
 
     private fun addCardPanel() {

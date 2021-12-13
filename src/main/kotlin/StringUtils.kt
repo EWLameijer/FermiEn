@@ -34,10 +34,10 @@ class StoredStringParser(private val input: String) {
     }
 }
 
-fun Char.toStorageRepresentation() = when (this) {
+fun storageRepresentationOf(ch: Char) = when (ch) {
     '\n' -> """\n"""
     '\\' -> """\\"""
-    else -> "$this"
+    else -> "$ch"
 }
 
-fun String.toStorageString() = "\"${this.map { it.toStorageRepresentation() }.joinToString(separator = "")}\""
+fun String.toStorageString() = "\"${this.map(::storageRepresentationOf).joinToString(separator = "")}\""
