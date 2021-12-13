@@ -1,22 +1,45 @@
 import java.awt.event.*
 import java.io.File
 import javax.swing.*
+import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
 
 
 class MainWindow : JFrame() {
+    class UnchangeableTableModel : DefaultTableModel() {
+        override fun isCellEditable(row: Int, column: Int): Boolean {
+            //all cells false
+            return false
+        }
+    }
 
-    private val table: JTable = JTable(toTableContents(entries), arrayOf("question", "answer"))
+    private val table = JTable()
 
-    private fun toTableContents(entries: List<Entry>): Array<Array<String>> =
-        entries.map { it.toHorizontalDisplay() }.map { arrayOf(it.first, it.second) }.toTypedArray()
-
-    private val scrollPane = JScrollPane(table);
-
+    private val scrollPane = JScrollPane(table)
 
     init {
         addMenu()
-        table.fillsViewportHeight = true;
+        val tableModel = UnchangeableTableModel()
+        tableModel.addColumn("question")
+        tableModel.addColumn("answer")
+        entries.map { it.toHorizontalDisplay() }.sortedBy { it.first.lowercase() }.forEach {
+            tableModel.addRow(arrayOf(it.first, it.second))
+        }
+        table.model = tableModel
+        table.fillsViewportHeight = true
+        table.addMouseListener(object : MouseAdapter() {
+            override fun mousePressed(mouseEvent: MouseEvent) {
+                val table = mouseEvent.source as JTable
+                val point = mouseEvent.point
+                val row = table.rowAtPoint(point)
+                if (mouseEvent.clickCount == 2 && table.selectedRow != -1) {
+                    println("Clicked row $row")
+                    val key = table.getValueAt(row,0) as String
+                    showEntryByKey(key)
+                }
+            }
+        })
+
         add(scrollPane)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -26,6 +49,11 @@ class MainWindow : JFrame() {
                 saveAndQuit()
             }
         })
+    }
+
+    private fun showEntryByKey(key: String) {
+        val selectedEntry = entries.find { it.toHorizontalDisplay().first == key }
+        EntryEditingWindow(selectedEntry)
     }
 
     private fun addMenu() {

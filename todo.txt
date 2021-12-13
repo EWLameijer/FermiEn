@@ -10,8 +10,7 @@ backslashes.
 
 Subtask 2: write the question and answer to a file
   make adding card impossible if it has same horizontal format in question
-  make table contents uneditable
-  sorted alphabetically
+
   when that works, let clicking on any item pop up the view/edit window
   // make search box (whole text search in q/a)
 

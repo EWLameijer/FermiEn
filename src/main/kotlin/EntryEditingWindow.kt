@@ -3,7 +3,7 @@ import java.awt.GridBagLayout
 import java.awt.Insets
 import javax.swing.*
 
-class EntryEditingWindow : JFrame() {
+class EntryEditingWindow(private val entry: Entry? = null) : JFrame() {
     private val cardFrontPane = JTextPane()
 
     private val cardBackPane = JTextPane()
@@ -15,6 +15,10 @@ class EntryEditingWindow : JFrame() {
     // NOTE: init has to be below the cardFrontPane and cardBackPane definitions, else it doesn't work
     // (tested 2021-12-12)
     init {
+        if (entry != null) {
+            cardFrontPane.text = StoredStringParser(entry.question).toDisplayString()
+            cardBackPane.text = StoredStringParser(entry.answer).toDisplayString()
+        }
         addCardPanel()
         addButtonPanel()
         setSize(650, 400)

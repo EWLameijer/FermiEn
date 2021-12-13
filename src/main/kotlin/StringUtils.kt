@@ -5,6 +5,8 @@ class StoredStringParser(private val input: String) {
     private val lines = mutableListOf<String>()
     private val currentLine = StringBuilder()
 
+    fun toDisplayString() = parse().joinToString("\n")
+
     fun parse(): List<String> {
         var backSlashActivated = false
         if (input[0] != '"' || input.last() != '"')
@@ -34,6 +36,7 @@ class StoredStringParser(private val input: String) {
     }
 }
 
+
 const val storageNewline = """\n"""
 
 fun storageRepresentationOf(ch: Char) = when (ch) {
@@ -46,7 +49,8 @@ fun storageRepresentationOf(ch: Char) = when (ch) {
 
 fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(storageNewline) { it.trimEnd() }
 
-fun String.toHorizontalString() = this.replace("""\n""", " ")
+// replace newlines by spaces, remove surrounding ""
+fun String.toHorizontalString() = this.replace("""\n""", " ").drop(1).dropLast(1).trim()
 
 fun String.toStorageString() =
     "\"${this.map(::storageRepresentationOf).joinToString(separator = "").removeStorageTrailingSpaces()}\""
