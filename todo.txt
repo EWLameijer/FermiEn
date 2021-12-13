@@ -9,9 +9,9 @@ backslashes.
 
 
 Subtask 2: write the question and answer to a file
-  make adding card impossible if it has same horizontal format in question
+  make <Enter> on OK click it
+  pop up dialog to signal attempt to add entry with duplicate front
 
-  when that works, let clicking on any item pop up the view/edit window
   // make search box (whole text search in q/a)
 
 

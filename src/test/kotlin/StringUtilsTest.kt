@@ -40,6 +40,7 @@ class StringUtilsTest {
             Arguments.of("hel\r\nlo", """"hel\nlo""""), // test newline
             Arguments.of("hel\\lo", """"hel\\lo""""), // test backslash
             Arguments.of("hello\tworld", """"hello world""""), // test tab
-            Arguments.of("hello \n   \n world  \n ! ", """"hello\n\n world\n !"""")) // test trailing space removal
+            Arguments.of("hello \n   \n world  \n ! ", """"hello\n\n world\n !""""), // test trailing space removal
+            Arguments.of("hello world\n\n", """"hello world"""")) // test trailing newline removal
     }
 }

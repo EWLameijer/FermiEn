@@ -1,12 +1,21 @@
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
+import java.awt.*
 import javax.swing.*
 
 class EntryEditingWindow(private val entry: Entry? = null) : JFrame() {
-    private val cardFrontPane = JTextPane()
+    private val cardFrontPane = JTextPane().apply {
+        makeTabTransferFocus(this)
+    }
 
-    private val cardBackPane = JTextPane()
+    private fun makeTabTransferFocus(component: Component) {
+        var strokes: HashSet<KeyStroke> = HashSet(listOf(KeyStroke.getKeyStroke("pressed TAB")))
+        component.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, strokes)
+        strokes = HashSet(listOf(KeyStroke.getKeyStroke("shift pressed TAB")))
+        component.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, strokes)
+    }
+
+    private val cardBackPane = JTextPane().apply {
+        makeTabTransferFocus(this)
+    }
 
     private val okButton = JButton("Ok").apply {
         addActionListener { saveNewEntry() }
@@ -30,9 +39,13 @@ class EntryEditingWindow(private val entry: Entry? = null) : JFrame() {
         val front = cardFrontPane.text.toStorageString()
         val back = cardBackPane.text.toStorageString()
         println("$front\t$back")
-        entries += Entry(front, back)
-        cardFrontPane.text = ""
-        cardBackPane.text = ""
+        if (entries.any { it.toHorizontalDisplay().first == front.toHorizontalString() })
+            println("Sorry! An entry with this question already exists")
+        else {
+            entries += Entry(front, back)
+            cardFrontPane.text = ""
+            cardBackPane.text = ""
+        }
     }
 
     private fun addCardPanel() {

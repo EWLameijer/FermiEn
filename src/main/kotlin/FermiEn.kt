@@ -1,6 +1,6 @@
 import java.io.File
 
-const val version = "0.6.0"
+const val version = "0.8.0"
 
 val entries = mutableListOf<Entry>()
 

@@ -9,8 +9,7 @@ class StoredStringParser(private val input: String) {
 
     fun parse(): List<String> {
         var backSlashActivated = false
-        if (input[0] != '"' || input.last() != '"')
-            throw IllegalArgumentException("StoredStringParser.parse(): '$input' is an illegal argument.")
+        if (input[0] != '"' || input.last() != '"') throw IllegalArgumentException("StoredStringParser.parse(): '$input' is an illegal argument.")
 
         // get rid of leading and trailing ""
         input.substring(1 until input.lastIndex).forEach {
@@ -52,5 +51,8 @@ fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(st
 // replace newlines by spaces, remove surrounding ""
 fun String.toHorizontalString() = this.replace("""\n""", " ").drop(1).dropLast(1).trim()
 
-fun String.toStorageString() =
-    "\"${this.map(::storageRepresentationOf).joinToString(separator = "").removeStorageTrailingSpaces()}\""
+fun String.toStorageString() = "\"${
+    this.map(::storageRepresentationOf).dropLastWhile {
+        it == storageNewline || it == " " || it == ""
+    }.joinToString(separator = "").removeStorageTrailingSpaces()
+}\""
