@@ -1,36 +1,23 @@
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
 import java.awt.event.*
-import java.beans.EventHandler
 import java.io.File
 import javax.swing.*
 import kotlin.system.exitProcess
 
+
 class MainWindow : JFrame() {
-    private val cardFrontPane = JTextPane()
 
-    private val cardBackPane = JTextPane()
+    private val table: JTable = JTable(toTableContents(entries), arrayOf("question", "answer"))
 
-    private val okButton = JButton("Ok").apply {
-        addActionListener { saveNewEntry() }
-    }
+    private fun toTableContents(entries: List<Entry>): Array<Array<String>> =
+        entries.map { it.toHorizontalDisplay() }.map { arrayOf(it.first, it.second) }.toTypedArray()
 
-    private fun saveNewEntry() {
-        val front = cardFrontPane.text.toStorageString()
-        val back = cardBackPane.text.toStorageString()
-        println("$front\t$back")
-        entries += Entry(front, back)
-        cardFrontPane.text = ""
-        cardBackPane.text = ""
-    }
+    private val scrollPane = JScrollPane(table);
 
-    // NOTE: init has to be below the cardFrontPane and cardBackPane definitions, else it doesn't work
-    // (tested 2021-12-12)
+
     init {
         addMenu()
-        addCardPanel()
-        addButtonPanel()
+        table.fillsViewportHeight = true;
+        add(scrollPane)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
@@ -44,10 +31,9 @@ class MainWindow : JFrame() {
     private fun addMenu() {
         jMenuBar = JMenuBar()
         val entryMenu = JMenu("Entry")
-        entryMenu.add(createMenuItem("Add Entry", 'n') {})
+        entryMenu.add(createMenuItem("Add Entry", 'n') { EntryEditingWindow() })
         jMenuBar.add(entryMenu)
     }
-
 
     private fun createMenuItem(label: String, actionKey: Char, listener: () -> Unit) = JMenuItem(label).apply {
         accelerator =
@@ -59,34 +45,5 @@ class MainWindow : JFrame() {
         File(inputFileName).writeText(entries.joinToString(separator = "\n") { "${it.question}\t${it.answer}" })
         dispose()
         exitProcess(0)
-    }
-
-    private fun addCardPanel() {
-        val upperPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT, JScrollPane(cardFrontPane), JScrollPane(cardBackPane))
-        upperPanel.resizeWeight = 0.5
-        layout = GridBagLayout()
-        val frontConstraints = GridBagConstraints().apply {
-            gridx = 0
-            gridy = 0
-            weightx = 1.0
-            weighty = 1.0
-            insets = Insets(0, 0, 5, 0)
-            fill = GridBagConstraints.BOTH
-        }
-        add(upperPanel, frontConstraints)
-    }
-
-    private fun addButtonPanel() {
-        val buttonPane = JPanel().apply {
-            add(okButton)
-        }
-        val buttonPaneConstraints = GridBagConstraints().apply {
-            gridx = 0
-            gridy = 1
-            weightx = 0.0
-            weighty = 0.0
-            insets = Insets(10, 10, 10, 10)
-        }
-        add(buttonPane, buttonPaneConstraints)
     }
 }

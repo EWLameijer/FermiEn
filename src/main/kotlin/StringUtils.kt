@@ -46,5 +46,7 @@ fun storageRepresentationOf(ch: Char) = when (ch) {
 
 fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(storageNewline) { it.trimEnd() }
 
+fun String.toHorizontalString() = this.replace("""\n""", " ")
+
 fun String.toStorageString() =
     "\"${this.map(::storageRepresentationOf).joinToString(separator = "").removeStorageTrailingSpaces()}\""

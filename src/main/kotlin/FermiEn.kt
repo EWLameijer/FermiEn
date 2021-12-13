@@ -1,13 +1,15 @@
 import java.io.File
 
-const val version = "0.5.0"
+const val version = "0.6.0"
 
 val entries = mutableListOf<Entry>()
 
 // TODO: make it read from a settings-file
 const val inputFileName = "notes.txt"
 
-data class Entry(val question: String, val answer: String)
+data class Entry(val question: String, val answer: String) {
+    fun toHorizontalDisplay() : Pair<String, String> = question.toHorizontalString() to answer.toHorizontalString()
+}
 
 fun String.toEntry(): Entry {
     val (question, answer) = split('\t')
