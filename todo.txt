@@ -7,9 +7,8 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-when adding an entry, immediately update the table in the main window
+!make escape (in EditWindow) close it
 
-allow overwriting question or answer
 fill the notes with 100 CS entries, like #Haskell
 make escape clear the search field
 make panel to switch to repetitions (and open FermiEn with it)

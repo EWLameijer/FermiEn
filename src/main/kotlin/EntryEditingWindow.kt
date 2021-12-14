@@ -47,14 +47,14 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
 
     private fun saveNewEntry() {
         if (entry != null) { // are you trying to replace the card/front?
-            val originalQuestion = entry!!.question
-            val originalAnswer = entry!!.answer
+            val originalQuestion = entry!!.question.toHorizontalString()
+            val originalAnswer = entry!!.answer.toHorizontalString()
             val buttons = getFrontChangeButtons()
             JOptionPane.showOptionDialog(
                 null,
                 """Replace the card
                            '$originalQuestion' / '$originalAnswer' with
-                           '${question()}' / '${answer()}'?""",
+                           '${question().toHorizontalString()}' / '${answer().toHorizontalString()}'?""",
                 "Are you sure you want to update the current card?", 0,
                 JOptionPane.QUESTION_MESSAGE, null, buttons, null
             )

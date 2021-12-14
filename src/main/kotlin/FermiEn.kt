@@ -32,11 +32,22 @@ object EntryManager {
 
     fun addEntry(entry: Entry) {
         entries += entry
+        notifyListeners()
     }
 
     private val entries = mutableListOf<Entry>()
 
     fun getHorizontalRepresentation() = entries.map { it.toHorizontalDisplay() }
+
+    fun registerAsListener(listener: () -> Unit) {
+        listeners += listener
+    }
+
+    private fun notifyListeners() {
+        listeners.forEach { it() }
+    }
+
+    private val listeners = mutableSetOf<() -> Unit>()
 }
 
 // TODO: make it read from a settings-file

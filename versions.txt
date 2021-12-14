@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.11.0 2021-12-14 when adding an entry, immediately update the table in the main window, fixed bug displaying StorageString class in update optionsbox
 0.10.0 2021-12-14 made search box, displayed backslashes correctly in the table, allow overwriting question or answer
 0.9.0 2021-12-13 make enter click on the OK button when focused; also pops up dialogue now to indicate duplicate
 0.8.0 2021-12-13 make adding card with existing question text impossible; make tab transfer focus instead of adding tab

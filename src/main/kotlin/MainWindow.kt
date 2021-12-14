@@ -42,6 +42,7 @@ class MainWindow : JFrame() {
     }
 
     init {
+        EntryManager.registerAsListener(::updateTable)
         addMenu()
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
@@ -94,8 +95,6 @@ class MainWindow : JFrame() {
             }
         })
     }
-
-
 
     private fun addMenu() {
         jMenuBar = JMenuBar()
