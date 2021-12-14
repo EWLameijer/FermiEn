@@ -1,3 +1,4 @@
+import java.awt.CardLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
@@ -6,8 +7,21 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
 
+enum class MainWindowState { LIST_ENTRIES, REVIEWING }
 
 class MainWindow : JFrame() {
+    private val reviewPanelId = "REVIEWING_PANEL"
+
+    private val entryPanelId = "ENTRY_PANEL"
+
+    private var mainState = MainWindowState.LIST_ENTRIES
+
+    private val reviewPanel = JPanel()
+
+    private val entryPanel = JPanel()
+
+    private val modesContainer = JPanel()
+
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
             //all cells false
@@ -29,7 +43,7 @@ class MainWindow : JFrame() {
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
         tableModel.addColumn("answer")
-        EntryManager.getHorizontalRepresentation().filter (::searchContentsInHorizontalEntry)
+        EntryManager.getHorizontalRepresentation().filter(::searchContentsInHorizontalEntry)
             .sortedBy { it.first.lowercase() }.forEach {
                 tableModel.addRow(arrayOf(it.first, it.second))
             }
@@ -43,6 +57,10 @@ class MainWindow : JFrame() {
 
     init {
         EntryManager.registerAsListener(::updateTable)
+        modesContainer.layout = CardLayout()
+        createKeyListener(KeyEvent.VK_ESCAPE) { searchField.text = "" }
+
+        showCorrectPanel()
         addMenu()
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
@@ -64,8 +82,7 @@ class MainWindow : JFrame() {
                 }
             }
         })
-        val panel = JPanel()
-        panel.layout = GridBagLayout()
+        entryPanel.layout = GridBagLayout()
         val searchBoxConstraints = GridBagConstraints().apply {
             gridx = 0
             gridy = 0
@@ -83,9 +100,11 @@ class MainWindow : JFrame() {
             fill = GridBagConstraints.BOTH
         }
 
-        panel.add(searchField, searchBoxConstraints)
-        panel.add(scrollPane, tableConstraints)
-        add(panel)
+        entryPanel.add(searchField, searchBoxConstraints)
+        entryPanel.add(scrollPane, tableConstraints)
+        modesContainer.add(entryPanel, entryPanelId)
+        modesContainer.add(reviewPanel, reviewPanelId)
+        add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
@@ -94,6 +113,20 @@ class MainWindow : JFrame() {
                 saveAndQuit()
             }
         })
+        showCorrectPanel()
+    }
+
+    private fun showCorrectPanel() =
+        switchToPanel(
+            when (mainState) {
+                MainWindowState.LIST_ENTRIES -> entryPanelId
+                MainWindowState.REVIEWING -> reviewPanelId
+            }
+        )
+
+    private fun switchToPanel(panelId: String) {
+        val cardLayout = modesContainer.layout as CardLayout
+        cardLayout.show(modesContainer, panelId)
     }
 
     private fun addMenu() {

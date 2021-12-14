@@ -1,6 +1,9 @@
 import java.awt.*
+import java.awt.event.KeyEvent
+import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.JComponent.WHEN_FOCUSED
+
 
 class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private val cardFrontPane = JTextPane().apply {
@@ -34,11 +37,27 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
             cardFrontPane.text = entry!!.question.toDisplayString()
             cardBackPane.text = entry!!.answer.toDisplayString()
         }
+        createKeyListener(KeyEvent.VK_ESCAPE) { clearOrExit() }
+
         addCardPanel()
         addButtonPanel()
         setSize(650, 400)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         isVisible = true
+    }
+
+    private fun clearOrExit() {
+        if (cardFrontPane.text.isNotBlank() || cardBackPane.text.isNotBlank()) clear() else closeWindow()
+    }
+
+    private fun closeWindow() {
+        dispatchEvent(WindowEvent(this, WindowEvent.WINDOW_CLOSING))
+    }
+
+    private fun clear() {
+        entry = null
+        cardFrontPane.text = ""
+        cardBackPane.text = ""
     }
 
     private fun question() = cardFrontPane.text.toStorageString()
@@ -65,9 +84,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
 
     private fun submitEntry() {
         EntryManager.addEntry(Entry(question(), answer()))
-        entry = null
-        cardFrontPane.text = ""
-        cardBackPane.text = ""
+        clear()
     }
 
     private fun getFrontChangeButtons(): Array<JButton> {
