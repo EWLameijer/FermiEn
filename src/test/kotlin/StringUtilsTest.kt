@@ -8,8 +8,8 @@ import org.junit.jupiter.params.provider.MethodSource
 class StringUtilsTest {
     @ParameterizedTest
     @MethodSource("toLinesSource")
-    fun testStoredStringParser(input: String, expectedOutput: List<String>) {
-        val actualOutput = StoredStringParser(input).parse()
+    fun testStoredStringParser(input: StorageString, expectedOutput: List<String>) {
+        val actualOutput = input.toLines()
         assertEquals(expectedOutput, actualOutput) {
             "$input should lead to $expectedOutput, not $actualOutput."
         }
@@ -18,10 +18,19 @@ class StringUtilsTest {
 
     @ParameterizedTest
     @MethodSource("toStorageStringSource")
-    fun testToStorageString(input: String, expectedOutput: String) {
+    fun testToStorageString(input: String, expectedOutput: StorageString) {
         val actualOutput = input.toStorageString()
         assertEquals(expectedOutput, actualOutput) {
             "$input should lead to $expectedOutput, not $actualOutput."
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("toHorizontalString")
+    fun testStorageStringToHorizontalString(storageString: StorageString, expectedOutput: String) {
+        val actualOutput = storageString.toHorizontalString()
+        assertEquals(expectedOutput, actualOutput) {
+            "$storageString should lead to $expectedOutput, not $actualOutput."
         }
     }
 
@@ -31,6 +40,11 @@ class StringUtilsTest {
             Arguments.of(""""hello"""", listOf("hello")), // default
             Arguments.of(""""hello\n world"""", listOf("hello", " world")), // test newline
             Arguments.of(""""(\\x -> x + 1)"""", listOf("(\\x -> x + 1)")), // test backslash
+        )
+
+        @JvmStatic
+        private fun toHorizontalString() = listOf(
+            Arguments.of(""""a\\b"""", """a\b""")
         )
 
         @JvmStatic

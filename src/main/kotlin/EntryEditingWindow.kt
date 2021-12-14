@@ -2,7 +2,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.JComponent.WHEN_FOCUSED
 
-class EntryEditingWindow(private val entry: Entry? = null) : JFrame() {
+class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private val cardFrontPane = JTextPane().apply {
         makeTabTransferFocus(this)
     }
@@ -27,11 +27,12 @@ class EntryEditingWindow(private val entry: Entry? = null) : JFrame() {
     init {
         val enterKeyStroke = KeyStroke.getKeyStroke("pressed ENTER")
         val action = "Enter"
+
         okButton.getInputMap(WHEN_FOCUSED).put(enterKeyStroke, action)
         okButton.actionMap.put(action, ProgrammableAction(::saveNewEntry))
         if (entry != null) {
-            cardFrontPane.text = StoredStringParser(entry.question).toDisplayString()
-            cardBackPane.text = StoredStringParser(entry.answer).toDisplayString()
+            cardFrontPane.text = entry!!.question.toDisplayString()
+            cardBackPane.text = entry!!.answer.toDisplayString()
         }
         addCardPanel()
         addButtonPanel()
@@ -40,19 +41,58 @@ class EntryEditingWindow(private val entry: Entry? = null) : JFrame() {
         isVisible = true
     }
 
+    private fun question() = cardFrontPane.text.toStorageString()
+
+    private fun answer() = cardBackPane.text.toStorageString()
+
     private fun saveNewEntry() {
-        val front = cardFrontPane.text.toStorageString()
-        val back = cardBackPane.text.toStorageString()
-        println("$front\t$back")
-        if (entries.any { it.toHorizontalDisplay().first == front.toHorizontalString() }) {
-            JOptionPane.showMessageDialog(null, "An entry with this question already exists",
-                "Duplicate entry", JOptionPane.ERROR_MESSAGE)
+        if (entry != null) { // are you trying to replace the card/front?
+            val originalQuestion = entry!!.question
+            val originalAnswer = entry!!.answer
+            val buttons = getFrontChangeButtons()
+            JOptionPane.showOptionDialog(
+                null,
+                """Replace the card
+                           '$originalQuestion' / '$originalAnswer' with
+                           '${question()}' / '${answer()}'?""",
+                "Are you sure you want to update the current card?", 0,
+                JOptionPane.QUESTION_MESSAGE, null, buttons, null
+            )
         } else {
-            entries += Entry(front, back)
-            cardFrontPane.text = ""
-            cardBackPane.text = ""
+            submitEntry()
         }
     }
+
+    private fun submitEntry() {
+        EntryManager.addEntry(Entry(question(), answer()))
+        entry = null
+        cardFrontPane.text = ""
+        cardBackPane.text = ""
+    }
+
+    private fun getFrontChangeButtons(): Array<JButton> {
+        val replaceButton = JButton("Replace card").apply {
+            addActionListener {
+                EntryManager.removeEntry(entry!!)
+                submitEntry()
+                closeOptionPane()
+            }
+        }
+        val keepBothButton = JButton("Keep both cards").apply {
+            addActionListener {
+                submitEntry()
+                closeOptionPane()
+            }
+        }
+        val cancelCardSubmissionButton = JButton("Cancel this submission").apply {
+            addActionListener {
+                closeOptionPane()
+            }
+        }
+        return arrayOf(replaceButton, keepBothButton, cancelCardSubmissionButton)
+    }
+
+    private fun closeOptionPane() = JOptionPane.getRootFrame().dispose()
 
     private fun addCardPanel() {
         val upperPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT, JScrollPane(cardFrontPane), JScrollPane(cardBackPane))

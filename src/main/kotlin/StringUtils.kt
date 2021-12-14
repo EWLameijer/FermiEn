@@ -1,20 +1,17 @@
-// turns "(\\x -> x + 1)\nThis is an increase function" into
-//  (\x -> x + 1)
-//  This is an increase function
-class StoredStringParser(private val input: String) {
-    private val lines = mutableListOf<String>()
-    private val currentLine = StringBuilder()
+@JvmInline
+value class StorageString(val s: String) {
+    fun toDisplayString() = toLines().joinToString("\n")
 
-    fun toDisplayString() = parse().joinToString("\n")
-
-    fun parse(): List<String> {
+    fun toLines(): List<String> {
         var backSlashActivated = false
-        if (input[0] != '"' || input.last() != '"') throw IllegalArgumentException("StoredStringParser.parse(): '$input' is an illegal argument.")
+        if (s[0] != '"' || s.last() != '"') throw IllegalArgumentException("StorageString.toLines(): '$s' is an illegal argument.")
 
+        val currentLine = StringBuilder()
+        val lines = mutableListOf<String>()
         // get rid of leading and trailing ""
-        input.substring(1 until input.lastIndex).forEach {
+        s.substring(1 until s.lastIndex).forEach {
             if (backSlashActivated) {
-                processBackSlashedCharacter(it)
+                processBackSlashedCharacter(it, currentLine, lines)
                 backSlashActivated = false
             } else if (it == '\\') backSlashActivated = true
             else currentLine.append(it)
@@ -23,25 +20,26 @@ class StoredStringParser(private val input: String) {
         return lines
     }
 
-    private fun processBackSlashedCharacter(ch: Char) = when (ch) {
-        '\\' -> currentLine.append('\\')
-        'n' -> {
-            lines.add(currentLine.toString())
-            currentLine.clear()
+    private fun processBackSlashedCharacter(ch: Char, currentLine: StringBuilder, lines: MutableList<String>) =
+        when (ch) {
+            '\\' -> currentLine.append('\\')
+            'n' -> {
+                lines.add(currentLine.toString())
+                currentLine.clear()
+            }
+            else -> throw IllegalArgumentException(
+                "StorageString.processBackSlashedCharacter(): \"\\$ch\" is an unknown character."
+            )
         }
-        else -> throw IllegalArgumentException(
-            "StoredStringParser.processBackSlashedCharacter(): \"\\$ch\" is an unknown character."
-        )
-    }
 }
 
-
 const val storageNewline = """\n"""
+const val storageBackslash = """\\"""
 
 fun storageRepresentationOf(ch: Char) = when (ch) {
     '\n' -> storageNewline // ASCII-code 10
-    '\\' -> """\\"""
-    '\t' -> """ """
+    '\\' -> storageBackslash
+    '\t' -> " "
     '\r' -> "" // ASCII-code 13 Usually \r\n on Windows. Linux and Mac don't use it. https://www.petefreitag.com/item/863.cfm
     else -> "$ch"
 }
@@ -49,10 +47,13 @@ fun storageRepresentationOf(ch: Char) = when (ch) {
 fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(storageNewline) { it.trimEnd() }
 
 // replace newlines by spaces, remove surrounding ""
-fun String.toHorizontalString() = this.replace("""\n""", " ").drop(1).dropLast(1).trim()
+fun StorageString.toHorizontalString() = s.replace(storageNewline, " ").replace(storageBackslash, "\\")
+    .drop(1).dropLast(1).trim()
 
-fun String.toStorageString() = "\"${
-    this.map(::storageRepresentationOf).dropLastWhile {
-        it == storageNewline || it == " " || it == ""
-    }.joinToString(separator = "").removeStorageTrailingSpaces()
-}\""
+fun String.toStorageString() = StorageString(
+    "\"${
+        this.map(::storageRepresentationOf).dropLastWhile {
+            it == storageNewline || it == " " || it == ""
+        }.joinToString(separator = "").removeStorageTrailingSpaces()
+    }\""
+)

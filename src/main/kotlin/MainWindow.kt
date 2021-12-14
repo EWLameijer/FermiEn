@@ -1,5 +1,7 @@
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
 import java.awt.event.*
-import java.io.File
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
@@ -17,12 +19,34 @@ class MainWindow : JFrame() {
 
     private val scrollPane = JScrollPane(table)
 
+    private val searchFieldListener = DelegatingDocumentListener { updateTable() }
+
+    private val searchField = JTextField().apply {
+        document.addDocumentListener(searchFieldListener)
+    }
+
+    private fun updateTable() {
+        val tableModel = UnchangeableTableModel()
+        tableModel.addColumn("question")
+        tableModel.addColumn("answer")
+        EntryManager.getHorizontalRepresentation().filter (::searchContentsInHorizontalEntry)
+            .sortedBy { it.first.lowercase() }.forEach {
+                tableModel.addRow(arrayOf(it.first, it.second))
+            }
+        table.model = tableModel
+    }
+
+    private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {
+        val term = searchField.text.lowercase()
+        return term in entry.first.lowercase() || term in entry.second.lowercase()
+    }
+
     init {
         addMenu()
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
         tableModel.addColumn("answer")
-        entries.map { it.toHorizontalDisplay() }.sortedBy { it.first.lowercase() }.forEach {
+        EntryManager.getHorizontalRepresentation().sortedBy { it.first.lowercase() }.forEach {
             tableModel.addRow(arrayOf(it.first, it.second))
         }
         table.model = tableModel
@@ -34,13 +58,33 @@ class MainWindow : JFrame() {
                 val row = table.rowAtPoint(point)
                 if (mouseEvent.clickCount == 2 && table.selectedRow != -1) {
                     println("Clicked row $row")
-                    val key = table.getValueAt(row,0) as String
-                    showEntryByKey(key)
+                    val key = table.getValueAt(row, 0) as String
+                    EntryManager.editEntryByKey(key)
                 }
             }
         })
+        val panel = JPanel()
+        panel.layout = GridBagLayout()
+        val searchBoxConstraints = GridBagConstraints().apply {
+            gridx = 0
+            gridy = 0
+            weightx = 1.0
+            weighty = 1.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+        }
+        val tableConstraints = GridBagConstraints().apply {
+            gridx = 0
+            gridy = 1
+            weightx = 1.0
+            weighty = 1000.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+        }
 
-        add(scrollPane)
+        panel.add(searchField, searchBoxConstraints)
+        panel.add(scrollPane, tableConstraints)
+        add(panel)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
         isVisible = true
@@ -51,10 +95,7 @@ class MainWindow : JFrame() {
         })
     }
 
-    private fun showEntryByKey(key: String) {
-        val selectedEntry = entries.find { it.toHorizontalDisplay().first == key }
-        EntryEditingWindow(selectedEntry)
-    }
+
 
     private fun addMenu() {
         jMenuBar = JMenuBar()
@@ -70,7 +111,7 @@ class MainWindow : JFrame() {
     }
 
     private fun saveAndQuit() {
-        File(inputFileName).writeText(entries.joinToString(separator = "\n") { "${it.question}\t${it.answer}" })
+        EntryManager.saveEntriesToFile()
         dispose()
         exitProcess(0)
     }
