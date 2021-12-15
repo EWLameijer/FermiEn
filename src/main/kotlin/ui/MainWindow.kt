@@ -1,26 +1,34 @@
+package ui
+
+import DelegatingDocumentListener
+import EntryManager
+import Settings
+import createKeyListener
 import java.awt.CardLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
 import java.awt.event.*
 import javax.swing.*
+import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
 
 enum class MainWindowState { LIST_ENTRIES, REVIEWING }
 
 class MainWindow : JFrame() {
-    private val reviewPanelId = "REVIEWING_PANEL"
-
-    private val entryPanelId = "ENTRY_PANEL"
-
     private var mainState = MainWindowState.LIST_ENTRIES
 
-    private val reviewPanel = JPanel()
+    private val reviewPanel = ReviewPanel()
 
     private val entryPanel = JPanel()
 
     private val modesContainer = JPanel()
+
+    private val startReviewingMenuItem = createMenuItem("Start reviewing", 'r') { startReviewing() }
+    private val goToEntryListMenuItem = createMenuItem("Go to list of entries", 'l') { goToEntryList() }
+
+    private val nameOfLastUsedEncyDirectory = ""
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -60,7 +68,6 @@ class MainWindow : JFrame() {
         modesContainer.layout = CardLayout()
         createKeyListener(KeyEvent.VK_ESCAPE) { searchField.text = "" }
 
-        showCorrectPanel()
         addMenu()
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
@@ -102,8 +109,8 @@ class MainWindow : JFrame() {
 
         entryPanel.add(searchField, searchBoxConstraints)
         entryPanel.add(scrollPane, tableConstraints)
-        modesContainer.add(entryPanel, entryPanelId)
-        modesContainer.add(reviewPanel, reviewPanelId)
+        modesContainer.add(entryPanel, MainWindowState.LIST_ENTRIES.name)
+        modesContainer.add(reviewPanel, MainWindowState.REVIEWING.name)
         add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -116,24 +123,50 @@ class MainWindow : JFrame() {
         showCorrectPanel()
     }
 
-    private fun showCorrectPanel() =
-        switchToPanel(
-            when (mainState) {
-                MainWindowState.LIST_ENTRIES -> entryPanelId
-                MainWindowState.REVIEWING -> reviewPanelId
-            }
-        )
-
-    private fun switchToPanel(panelId: String) {
+    private fun showCorrectPanel() {
         val cardLayout = modesContainer.layout as CardLayout
-        cardLayout.show(modesContainer, panelId)
+        cardLayout.show(modesContainer, mainState.name)
+        goToEntryListMenuItem.isEnabled = mainState == MainWindowState.REVIEWING
+        startReviewingMenuItem.isEnabled = mainState == MainWindowState.LIST_ENTRIES
     }
 
     private fun addMenu() {
         jMenuBar = JMenuBar()
+        val fileMenu = JMenu("File")
+        fileMenu.add(createMenuItem("New Encyclopedia", 'o') { createEncyFile() })
+        val modeMenu = JMenu("Mode")
+        modeMenu.add(startReviewingMenuItem)
+        modeMenu.add(goToEntryListMenuItem)
         val entryMenu = JMenu("Entry")
         entryMenu.add(createMenuItem("Add Entry", 'n') { EntryEditingWindow() })
+        jMenuBar.add(fileMenu)
         jMenuBar.add(entryMenu)
+        jMenuBar.add(modeMenu)
+    }
+
+    private fun createEncyFile() {
+        val chooser = JFileChooser(nameOfLastUsedEncyDirectory).apply {
+            fileFilter = FileNameExtensionFilter("Encyclopedia files", "txt")
+        }
+        val result = chooser.showOpenDialog(this)
+        if (result == JFileChooser.CANCEL_OPTION) {
+            return
+        } else {
+            EntryManager.saveEntriesToFile()
+            EntryManager.clearEntries()
+            val selectedFile = chooser.selectedFile
+            Settings.setCurrentFile(selectedFile)
+        }
+    }
+
+    private fun goToEntryList() {
+        mainState = MainWindowState.LIST_ENTRIES
+        showCorrectPanel()
+    }
+
+    private fun startReviewing() {
+        mainState = MainWindowState.REVIEWING
+        showCorrectPanel()
     }
 
     private fun createMenuItem(label: String, actionKey: Char, listener: () -> Unit) = JMenuItem(label).apply {

@@ -7,8 +7,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-**Refactor MainWIndow so it can use its string representation as the PanelID without needing those extra constants
-create repetition panel
+fill repetition-panel
 
 fill the notes with 100 CS entries, like #Haskell
 
