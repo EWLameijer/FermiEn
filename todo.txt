@@ -7,6 +7,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
+save extra version
 fill repetition-panel
 
 fill the notes with 100 CS entries, like #Haskell

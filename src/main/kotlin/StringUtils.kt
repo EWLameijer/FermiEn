@@ -1,6 +1,6 @@
 @JvmInline
 value class StorageString(val s: String) {
-    fun toDisplayString() = toLines().joinToString("\n")
+    fun toPanelDisplayString() = toLines().joinToString("\n")
 
     fun toLines(): List<String> {
         var backSlashActivated = false

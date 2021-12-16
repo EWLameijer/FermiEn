@@ -1,5 +1,8 @@
+import eb.mainwindow.reviewing.ReviewManager
 import ui.MainWindow
+import ui.ReviewPanel
 import java.io.File
+import java.time.Duration
 
 val version = getFermiEnVersion()
 
@@ -24,6 +27,11 @@ object Settings {
         return currentFile!!
     }
 
+    fun currentRepetitionsFile() : String {
+        val entryFile = currentFile()
+        return entryFile.replace(".txt", "_reps.txt")
+    }
+
     fun setCurrentFile(selectedFile: File?) {
         currentFile = selectedFile!!.absolutePath
     }
@@ -31,6 +39,9 @@ object Settings {
     fun save() {
         File(statusFileName).writeText("$lastLoadedEncyKey: $currentFile")
     }
+
+    fun intervalDurationFromUserSettings(reviews: List<Review>): Duration =
+        studyOptions.intervalSettings.calculateNextIntervalDuration(reviews)
 }
 
 fun List<String>.getAt(key: String): String? {
@@ -43,7 +54,9 @@ fun main() {
     println("FermiEn version $version: Start\n")
     EntryManager.loadEntries()
     EntryManager.printEntries()
-    MainWindow()
+    val reviewPanel = ReviewPanel()
+    val reviewManager = ReviewManager(reviewPanel)
+    MainWindow(reviewPanel)
 }
 
 

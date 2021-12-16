@@ -42,8 +42,8 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         okButton.getInputMap(WHEN_FOCUSED).put(enterKeyStroke, action)
         okButton.actionMap.put(action, ProgrammableAction(::saveNewEntry))
         if (entry != null) {
-            cardFrontPane.text = entry!!.question.toDisplayString()
-            cardBackPane.text = entry!!.answer.toDisplayString()
+            cardFrontPane.text = entry!!.question.toPanelDisplayString()
+            cardBackPane.text = entry!!.answer.toPanelDisplayString()
         }
         createKeyListener(KeyEvent.VK_ESCAPE) { clearOrExit() }
 

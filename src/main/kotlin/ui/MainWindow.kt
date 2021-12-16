@@ -16,10 +16,8 @@ import kotlin.system.exitProcess
 
 enum class MainWindowState { LIST_ENTRIES, REVIEWING }
 
-class MainWindow : JFrame() {
+class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
     private var mainState = MainWindowState.LIST_ENTRIES
-
-    private val reviewPanel = ReviewPanel()
 
     private val entryPanel = JPanel()
 
