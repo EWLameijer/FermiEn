@@ -11,7 +11,7 @@ import java.util.Objects
  *
  * @author Eric-Wubbo Lameijer
  */
-class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit) : Serializable {
+class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit)  {
     init {
         require(scalar >= 0) { "TimeInterval.setTo() error: negative time intervals are not permitted."}
     }
@@ -30,7 +30,11 @@ class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit) : Serializable 
 
     fun asDuration() = multiplyDurationBy(unit.duration, scalar)
 
-    companion object {
-        private const val serialVersionUID = 4957903341568456588L
-    }
+    override fun toString() = "$scalar ${unit.userInterfaceName}"
+}
+
+fun String.toTimeInterval(): TimeInterval {
+    val (scalarStr, unitStr) = split(' ')
+    val correctUnit = TimeUnit.values().find { it.userInterfaceName == unitStr}!!
+    return TimeInterval(scalarStr.toDouble(), correctUnit)
 }

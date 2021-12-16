@@ -7,28 +7,31 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-1. save and load settings file
+neverending loop at:
+	at study_options.ReviewManager.updatePanels(ReviewManager.kt:116)
+	at study_options.ReviewManager.startCardReview(ReviewManager.kt:151)
+	at study_options.ReviewManager.continueReviewSession(ReviewManager.kt:146)
+	at study_options.ReviewManager.initializeReviewSession(ReviewManager.kt:122)
+	at study_options.ReviewManager.ensureReviewSessionIsValid(ReviewManager.kt:91)
+	at study_options.ReviewManager.currentFront(ReviewManager.kt:83)
+	at study_options.ReviewManager.updatePanels(ReviewManager.kt:116)
+
+
+1. ensure that reviews take place!
 2. load and save reviews so far
-3. check that reviews take place
+4. add way to change priority of card
+5. make priorities affect repetition order
+6. add analysis to optimize learning
+7. implement way to import text files, including duplicate detection
+8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)
 
-save extra version
-fill repetition-panel
-
-
-2021-12-16/15:53  24 components, making
-    FixedSizeNumberDocument work OK
-    NOW 25 components, ReviewManager line 159: make it go to mainwindowState => Well, summarizing is ok. Include that too...
-    ReviewManager OK
-    NOW 25 components, TimerSettings
-
-fill the notes with 100 CS entries, like #Haskell
-
-make panel to switch to repetitions (and open FermiEn with it)
-give priority to repetitions (1 archive; store as third argument)
-
+?fill the notes with 100 CS entries, like #Haskell
 ?remove leading empty lines from entries? (toLines=> filter)
 ?text C# will like google look for separate terms?
 ?save entries in alphabetic order?
+?give the window a non-standard Java icon?
+
+
 
 
 

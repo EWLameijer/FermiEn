@@ -42,6 +42,8 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     // 'Yes'/true when the user needs to check the answer.
     private var showAnswer: Boolean = false
 
+    private var initialized = false
+
     /* fun reviewResults(): List<study_options.Review> {
         ensureReviewSessionIsValid()
         return cardsReviewed.flatMap { it.getReviewsAfter(DeckManager.deckLoadTime()) }
@@ -119,10 +121,11 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
 
     fun initializeReviewSession() {
         //cardsReviewed = mutableSetOf() // don't carry old reviews with you.
-        continueReviewSession()
+        if (!initialized) continueReviewSession()
     }
 
     private fun continueReviewSession() {
+        initialized = true
         val maxNumReviews = 20 // currentDeck.studyOptions.otherSettings?.reviewSessionSize
         val reviewableEntries = EntryManager.reviewableEntries()
         val numberOfReviewableEntries = reviewableEntries.size

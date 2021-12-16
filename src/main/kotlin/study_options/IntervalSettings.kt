@@ -1,10 +1,7 @@
 package study_options
 
 
-import data.TimeInterval
-import data.TimeUnit
-import data.doublesEqualWithinThousands
-import data.multiplyDurationBy
+import data.*
 import java.time.Duration
 import java.util.*
 import kotlin.math.pow
@@ -20,7 +17,7 @@ class IntervalSettings(
     var rememberedInterval: TimeInterval = defaultRememberedInterval,
     var forgottenInterval: TimeInterval = defaultForgottenInterval,
     var lengtheningFactor: Double = defaultLengtheningFactor
-)  {
+) : PropertyPossessor() {
     override fun equals(other: Any?) = when {
         this === other -> true
         other == null -> false
@@ -65,5 +62,33 @@ class IntervalSettings(
         val streakLength = reviews.takeLastWhile { it.result == ReviewResult.SUCCESS }.size
         val numberOfLengthenings = streakLength - 1 // 2 reviews = lengthen 1x.
         return multiplyDurationBy(waitTime, lengtheningFactor.pow(numberOfLengthenings.toDouble()))
+    }
+
+    private val initialIntervalLabel = "initial interval"
+    private val rememberedIntervalLabel = "remembered interval"
+    private val forgottenIntervalLabel = "forgotten interval"
+    private val lengtheningFactorLabel = "lengthening factor"
+
+    override fun properties() = mapOf<String, Any>(
+        initialIntervalLabel to initialInterval,
+        rememberedIntervalLabel to rememberedInterval,
+        forgottenIntervalLabel to forgottenInterval,
+        lengtheningFactorLabel to lengtheningFactor
+    )
+
+    override fun parse(lines: List<String>) {
+        lines.forEach {
+            val initialIntervalParse = parseLabel(it, initialIntervalLabel, String::toTimeInterval)
+            if (initialIntervalParse.isSuccess) initialInterval = initialIntervalParse.getOrThrow()
+
+            val rememberedIntervalParse = parseLabel(it, rememberedIntervalLabel, String::toTimeInterval)
+            if (rememberedIntervalParse.isSuccess) rememberedInterval = rememberedIntervalParse.getOrThrow()
+
+            val forgottenIntervalParse = parseLabel(it, forgottenIntervalLabel, String::toTimeInterval)
+            if (forgottenIntervalParse.isSuccess) forgottenInterval = forgottenIntervalParse.getOrThrow()
+
+            val lengtheningFactorParse = parseLabel(it, lengtheningFactorLabel, String::toDouble)
+            if (lengtheningFactorParse.isSuccess) lengtheningFactor = lengtheningFactorParse.getOrThrow()
+        }
     }
 }

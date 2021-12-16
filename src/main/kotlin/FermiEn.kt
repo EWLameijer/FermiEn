@@ -47,6 +47,11 @@ object Settings {
 
     fun intervalDurationFromUserSettings(reviews: List<Review>): Duration =
         studyOptions.intervalSettings.calculateNextIntervalDuration(reviews)
+
+    fun currentSettingsFile(): String {
+        val entryFile = currentFile()
+        return entryFile.replace(".txt", "_settings.txt")
+    }
 }
 
 fun List<String>.getAt(key: String): String? {

@@ -72,6 +72,8 @@ object EntryManager {
         if (entriesFile.isFile) entries += entriesFile.readLines().map { it.toEntry() }
         val repetitionsFile = File(Settings.currentRepetitionsFile())
         if (repetitionsFile.isFile) repetitionsFile.readLines().map(EntryManager::addEntryRepetitionData)
+        val settingsFile = File(Settings.currentSettingsFile())
+        if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
     }
 
     private fun addEntryRepetitionData(repetitionData: String) {
@@ -88,6 +90,7 @@ object EntryManager {
         File(Settings.currentRepetitionsFile()).writeText(entries.joinToString(separator = "\n") {
             "${it.question.toHorizontalString()}\t${it.creationInstant ?: Instant.now()}\t${it.importance ?: 10}"
         })
+        File(Settings.currentSettingsFile()).writeText(Settings.studyOptions.toString())
         Settings.save()
     }
 

@@ -4,6 +4,9 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.15.0 2021-12-16 now saves a (study) settings file too per encyclopedia, and can load it as well.
+0.14.0 2021-12-16 debug data.Entry, debug Load Eb's Default values, debug Update constructor error: must give second parameter when the program state changes.
+0.13.0 2021-12-15 now enable switching to review window, added option to save last-used encyclopedia, review window now has buttons and panels
 0.12.0 2021-12-14 make escape (in EditWindow) close it, make escape clear the search field. In progress: creating reviewing window
 0.11.0 2021-12-14 when adding an entry, immediately update the table in the main window, fixed bug displaying StorageString class in update optionsbox
 0.10.0 2021-12-14 made search box, displayed backslashes correctly in the table, allow overwriting question or answer

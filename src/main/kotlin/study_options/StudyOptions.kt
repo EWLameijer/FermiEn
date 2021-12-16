@@ -28,4 +28,11 @@ class StudyOptions(
     }
 
     override fun hashCode() = Objects.hash(intervalSettings, otherSettings)
+
+    override fun toString() = "$intervalSettings$otherSettings"
+
+    fun parse(readLines: List<String>) {
+        intervalSettings.parse(readLines)
+        otherSettings.parse(readLines)
+    }
 }
