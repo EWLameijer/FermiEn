@@ -7,8 +7,19 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
+1. save and load settings file
+2. load and save reviews so far
+3. check that reviews take place
+
 save extra version
 fill repetition-panel
+
+
+2021-12-16/15:53  24 components, making
+    FixedSizeNumberDocument work OK
+    NOW 25 components, ReviewManager line 159: make it go to mainwindowState => Well, summarizing is ok. Include that too...
+    ReviewManager OK
+    NOW 25 components, TimerSettings
 
 fill the notes with 100 CS entries, like #Haskell
 

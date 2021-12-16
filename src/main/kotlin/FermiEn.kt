@@ -1,4 +1,8 @@
-import eb.mainwindow.reviewing.ReviewManager
+import data.EntryManager
+import data.StorageString
+import study_options.Review
+import study_options.ReviewManager
+import study_options.StudyOptions
 import ui.MainWindow
 import ui.ReviewPanel
 import java.io.File
@@ -14,6 +18,7 @@ object Settings {
     private const val statusFileName = "fermien_status.txt"
     private const val lastLoadedEncyKey = "last_loaded_ency"
     private var currentFile: String? = null
+    var studyOptions = StudyOptions()
 
     fun currentFile(): String {
         if (currentFile == null) {
@@ -56,6 +61,7 @@ fun main() {
     EntryManager.printEntries()
     val reviewPanel = ReviewPanel()
     val reviewManager = ReviewManager(reviewPanel)
+    reviewManager.initializeReviewSession()
     MainWindow(reviewPanel)
 }
 

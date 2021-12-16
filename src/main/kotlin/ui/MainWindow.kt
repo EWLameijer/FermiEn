@@ -1,20 +1,17 @@
 package ui
 
-import DelegatingDocumentListener
-import EntryManager
+import data.EntryManager
 import Settings
 import createKeyListener
-import java.awt.CardLayout
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
+import eventhandling.DelegatingDocumentListener
+import java.awt.*
 import java.awt.event.*
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
 
-enum class MainWindowState { LIST_ENTRIES, REVIEWING }
+enum class MainWindowState { LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
 
 class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
     private var mainState = MainWindowState.LIST_ENTRIES
@@ -83,7 +80,7 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
                 if (mouseEvent.clickCount == 2 && table.selectedRow != -1) {
                     println("Clicked row $row")
                     val key = table.getValueAt(row, 0) as String
-                    EntryManager.editEntryByKey(key)
+                    EntryManager.editEntryByQuestion(key)
                 }
             }
         })
@@ -132,12 +129,15 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
         jMenuBar = JMenuBar()
         val fileMenu = JMenu("File")
         fileMenu.add(createMenuItem("New Encyclopedia", 'o') { createEncyFile() })
+        val encyMenu = JMenu("Encyclopedia Settings")
+        encyMenu.add(createMenuItem("Study Settings", 't') {StudyOptionsWindow.display()})
         val modeMenu = JMenu("Mode")
         modeMenu.add(startReviewingMenuItem)
         modeMenu.add(goToEntryListMenuItem)
         val entryMenu = JMenu("Entry")
         entryMenu.add(createMenuItem("Add Entry", 'n') { EntryEditingWindow() })
         jMenuBar.add(fileMenu)
+        jMenuBar.add(encyMenu)
         jMenuBar.add(entryMenu)
         jMenuBar.add(modeMenu)
     }

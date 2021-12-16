@@ -1,11 +1,11 @@
 package ui
 
-import Entry
-import EntryManager
+import data.Entry
+import data.EntryManager
 import ProgrammableAction
 import createKeyListener
-import toHorizontalString
-import toStorageString
+import data.toHorizontalString
+import data.toStorageString
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent

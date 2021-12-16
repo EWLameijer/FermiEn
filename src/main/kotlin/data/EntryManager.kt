@@ -1,3 +1,8 @@
+package data
+
+import Settings
+import prettyPrint
+import study_options.Review
 import ui.EntryEditingWindow
 import java.io.File
 import java.time.Duration
@@ -17,6 +22,8 @@ data class Entry(val question: StorageString, val answer: StorageString) {
         reviews += review
     }
 
+    fun numReviews() = reviews.size
+
     fun timeUntilNextReview() : Duration = Duration.between(Instant.now(), nextReviewInstant())
 
     private fun nextReviewInstant(): Temporal {
@@ -26,15 +33,15 @@ data class Entry(val question: StorageString, val answer: StorageString) {
         return waitTime.addTo(startOfCountingTime)
     }
 
+    fun getRipenessFactor() = timeUntilNextReview().seconds.toDouble()
 
-    private fun getPlannedIntervalDuration(): Duration {
+    private fun plannedIntervalDuration(): Duration {
         /*val reviewPattern: String =
             card.getReviews().map { if (it.wasSuccess) 'S' else 'F' }.joinToString(separator = "")
         return recommendationsMap[reviewPattern] // calculate wait time from optimized settings
         // else: not enough data to determine best settings; use user-provided defaults
             ?: */
-        Settings.intervalDurationFromUserSettings(reviews.toList())
-
+        return Settings.intervalDurationFromUserSettings(reviews.toList())
     }
 
     private fun hasBeenReviewed() = reviews.size > 0
@@ -64,7 +71,7 @@ object EntryManager {
         val entriesFile = File(Settings.currentFile())
         if (entriesFile.isFile) entries += entriesFile.readLines().map { it.toEntry() }
         val repetitionsFile = File(Settings.currentRepetitionsFile())
-        if (repetitionsFile.isFile) repetitionsFile.readLines().map(::addEntryRepetitionData)
+        if (repetitionsFile.isFile) repetitionsFile.readLines().map(EntryManager::addEntryRepetitionData)
     }
 
     private fun addEntryRepetitionData(repetitionData: String) {
@@ -79,7 +86,7 @@ object EntryManager {
     fun saveEntriesToFile() {
         File(Settings.currentFile()).writeText(entries.joinToString(separator = "\n") { "${it.question.s}\t${it.answer.s}" })
         File(Settings.currentRepetitionsFile()).writeText(entries.joinToString(separator = "\n") {
-            "${it.question.toHorizontalString()}\t${it.creationInstant}\t${it.importance}"
+            "${it.question.toHorizontalString()}\t${it.creationInstant ?: Instant.now()}\t${it.importance ?: 10}"
         })
         Settings.save()
     }
@@ -94,10 +101,12 @@ object EntryManager {
         }
     }
 
-    fun editEntryByKey(key: String) {
-        val selectedEntry = entries.find { it.toHorizontalDisplay().first == key }
+    fun editEntryByQuestion(question: String) {
+        val selectedEntry = entries.find { it.toHorizontalDisplay().first == question }
         EntryEditingWindow(selectedEntry)
     }
+
+    fun containsEntryWithQuestion(question: String) = entries.any { it.toHorizontalDisplay().first == question }
 
     fun addEntry(entry: Entry) {
         entry.apply {
