@@ -11,11 +11,9 @@ import eventhandling.BlackBoard
 import log
 import ui.MainWindowState
 import ui.ReviewPanel
-import java.time.Duration
 import java.util.ArrayList
 
 import java.time.Instant
-import javax.swing.Timer
 import kotlin.math.min
 
 /**
@@ -45,10 +43,15 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     // 'Yes'/true when the user needs to check the answer.
     private var initialized = false
 
-    /* fun reviewResults(): List<study_options.Review> {
+    fun reviewResults(): List<Review> {
         ensureReviewSessionIsValid()
-        return cardsReviewed.flatMap { it.getReviewsAfter(DeckManager.deckLoadTime()) }
-    }*/
+        return EntryManager.entries().flatMap { it.getReviewsAfter(EntryManager.encyLoadInstant()!!) }
+    }
+
+    fun reviewedEntries(): List<Entry> {
+        ensureReviewSessionIsValid()
+        return EntryManager.entries().filter { it.reviews().last().instant > EntryManager.encyLoadInstant()!! }
+    }
 
 
     /*fun reviewedCards(): List<Card> {
@@ -56,27 +59,27 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         return cardsReviewed.toList()
     }*/
 
-    /* fun getNewFirstReviews(): List<study_options.Review> {
+    fun getNewFirstReviews(): List<Review> {
         ensureReviewSessionIsValid()
-        return cardsReviewed.map { it.getReviews().first() }.filter { it.instant > DeckManager.deckLoadTime() }
+        return EntryManager.entries().map { it.reviews().first() }
+            .filter { it.instant > EntryManager.encyLoadInstant() }
     }
 
-    fun getNonFirstReviews(): Pair<List<study_options.Review>, List<study_options.Review>> {
+    fun getNonFirstReviews(): Pair<List<Review>, List<Review>> {
         ensureReviewSessionIsValid()
-        val previouslySucceeded = mutableListOf<study_options.Review>()
-        val previouslyFailed = mutableListOf<study_options.Review>()
-        cardsReviewed.forEach { card ->
-            val reversedReviews = card.getReviews().reversed()
+        val previouslySucceeded = mutableListOf<Review>()
+        val previouslyFailed = mutableListOf<Review>()
+        reviewedEntries().forEach { entry ->
+            val reversedReviews = entry.reviews().reversed()
             for (index in 0 until reversedReviews.lastIndex) { // for each review EXCEPT the 'first review'
                 val review = reversedReviews[index]
-                if (review.instant > DeckManager.deckLoadTime()) {
-                    if (reversedReviews[index + 1].wasSuccess) previouslySucceeded += review else previouslyFailed += review
+                if (review.instant > EntryManager.encyLoadInstant()) {
+                    if (reversedReviews[index + 1].result == ReviewResult.SUCCESS) previouslySucceeded += review else previouslyFailed += review
                 } else break
             }
         }
         return previouslySucceeded to previouslyFailed
-    } */
-
+    }
 
     private fun currentEntry(): Entry? =
         if (entriesToBeReviewed.isEmpty() || counter >= entriesToBeReviewed.size) null
@@ -156,7 +159,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     // is there a next card to study?
-    private fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
+    fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
 
     // The number of cards that still need to be reviewed in this session
     fun cardsToGoYet(): Int {

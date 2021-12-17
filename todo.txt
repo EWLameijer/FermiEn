@@ -8,8 +8,8 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 1. ensure that reviews take place!
-    Handle last review: make review panel blank, and should switch to summary panel. Perhaps best to make summary and
-    review alternatives; That Ctrl-R can also show: no reviews coming
+1) BUG: back to reviews -> SHOULD BE INFORMATION WINDOW, NOT REVIEWING WINDOW
+
 2. load and save reviews so far
 4. add way to change priority of card
 5. make priorities affect repetition order

@@ -16,6 +16,12 @@ data class Entry(val question: StorageString, val answer: StorageString) {
 
     private val reviews = mutableListOf<Review>()
 
+
+
+    fun reviews() = reviews.toList()
+
+    fun getReviewsAfter(instant: Instant) = reviews.filter { it.instant > instant }
+
     fun toHorizontalDisplay(): Pair<String, String> = question.toHorizontalString() to answer.toHorizontalString()
 
     fun addReview(review: Review) {
@@ -57,10 +63,18 @@ fun String.toEntry(): Entry {
 }
 
 object EntryManager {
+    private var encyLoadInstant: Instant? = null
+
+    fun encyLoadInstant() = encyLoadInstant
+
+    fun timeUntilNextReview(): Duration? = entries.minOfOrNull { it.timeUntilNextReview() }
+
     fun clearEntries() {
         entries.clear()
         notifyListeners()
     }
+
+    fun entries() = entries.toList()
 
     fun removeEntry(entry: Entry) {
         entries.remove(entry)
@@ -69,11 +83,15 @@ object EntryManager {
 
     fun loadEntries() {
         val entriesFile = File(Settings.currentFile())
-        if (entriesFile.isFile) entries += entriesFile.readLines().map { it.toEntry() }
+        if (entriesFile.isFile) {
+            entries += entriesFile.readLines().map { it.toEntry() }
+            encyLoadInstant = Instant.now()
+        }
         val repetitionsFile = File(Settings.currentRepetitionsFile())
         if (repetitionsFile.isFile) repetitionsFile.readLines().map(EntryManager::addEntryRepetitionData)
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
+
     }
 
     private fun addEntryRepetitionData(repetitionData: String) {

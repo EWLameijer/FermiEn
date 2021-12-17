@@ -67,7 +67,7 @@ fun main() {
     val reviewPanel = ReviewPanel()
     val reviewManager = ReviewManager(reviewPanel)
     reviewManager.initializeReviewSession()
-    MainWindow(reviewPanel)
+    MainWindow(reviewManager)
 }
 
 

@@ -1,9 +1,11 @@
 package data
 
+import EMPTY_STRING
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParsePosition
+import java.time.Duration
 import java.util.regex.Pattern
 
 @JvmInline
@@ -117,6 +119,42 @@ fun stringToInt(string: String): Int? {
     val parsePosition = ParsePosition(0)
     val number = numberFormat.parse(string, parsePosition)
     return if (parsePosition.index == 0) null else number.toInt()
+}
+
+fun durationToString(duration: Duration) = buildString {
+    var durationAsSeconds = duration.seconds
+    var finalPrefix = ""
+    if (durationAsSeconds < 0) {
+        durationAsSeconds *= -1
+        finalPrefix = "minus "
+    }
+    val seconds = durationAsSeconds % 60
+    append("$seconds seconds")
+    val durationAsMinutes = durationAsSeconds / 60
+    if (durationAsMinutes > 0) insert(0, getMinutesAndMore(durationAsMinutes))
+    insert(0, finalPrefix)
+}
+
+private fun getMinutesAndMore(durationAsMinutes: Long) = buildString {
+    val minutes = durationAsMinutes % 60
+    append("$minutes minutes and ")
+    val durationAsHours = durationAsMinutes / 60
+    if (durationAsHours > 0) {
+        val hours = durationAsHours % 24
+        insert(0, "$hours hours, ")
+        val durationAsDays = durationAsHours / 24
+        if (durationAsDays > 0) {
+            val years = durationAsDays / 365
+            val days = durationAsDays % 365
+            insert(0, "$days days, ")
+            if (years > 0) insert(0, "$years years, ")
+        }
+    }
+}
+
+fun pluralize(word: String, number: Int) = when (number) {
+    1 -> word
+    else -> if (word.last() == 'y') word.dropLast(1) + "ies" else word + "s"
 }
 
 /**

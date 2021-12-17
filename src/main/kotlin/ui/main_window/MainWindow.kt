@@ -2,8 +2,14 @@ package ui
 
 import data.EntryManager
 import Settings
+import Update
+import com.sun.tools.javac.Main
 import createKeyListener
+import doNothing
+import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
+import study_options.ReviewManager
+import ui.main_window.InformationPanel
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
@@ -11,14 +17,18 @@ import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
 
-enum class MainWindowState { LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
+enum class MainWindowState { INFORMATIONAL, LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
 
-class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
+class MainWindow(reviewManager: ReviewManager) : JFrame() {
     private var mainState = MainWindowState.REVIEWING
 
     private val entryPanel = JPanel()
 
     private val modesContainer = JPanel()
+
+    private val summarizingPanel = SummarizingPanel(reviewManager)
+
+    private val informationPanel = InformationPanel(reviewManager)
 
     private val startReviewingMenuItem = createMenuItem("Start reviewing", 'r') { startReviewing() }
     private val goToEntryListMenuItem = createMenuItem("Go to list of entries", 'l') { goToEntryList() }
@@ -62,6 +72,7 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
         EntryManager.registerAsListener(::updateTable)
         modesContainer.layout = CardLayout()
         createKeyListener(KeyEvent.VK_ESCAPE) { searchField.text = "" }
+        BlackBoard.register(::respondToUpdate, UpdateType.PROGRAMSTATE_CHANGED)
 
         addMenu()
         val tableModel = UnchangeableTableModel()
@@ -105,7 +116,9 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
         entryPanel.add(searchField, searchBoxConstraints)
         entryPanel.add(scrollPane, tableConstraints)
         modesContainer.add(entryPanel, MainWindowState.LIST_ENTRIES.name)
-        modesContainer.add(reviewPanel, MainWindowState.REVIEWING.name)
+        modesContainer.add(reviewManager.reviewPanel, MainWindowState.REVIEWING.name)
+        modesContainer.add(summarizingPanel, MainWindowState.SUMMARIZING.name)
+        modesContainer.add(informationPanel, MainWindowState.INFORMATIONAL.name)
         add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -119,9 +132,11 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
     }
 
     private fun showCorrectPanel() {
+        println("showcorrectPanel")
         val cardLayout = modesContainer.layout as CardLayout
-        cardLayout.show(modesContainer, mainState.name)
-        goToEntryListMenuItem.isEnabled = mainState == MainWindowState.REVIEWING
+        if (mainState == MainWindowState.REACTIVE) cardLayout.show(modesContainer, MainWindowState.INFORMATIONAL.name)
+        else cardLayout.show(modesContainer, mainState.name)
+        goToEntryListMenuItem.isEnabled = mainState != MainWindowState.LIST_ENTRIES
         startReviewingMenuItem.isEnabled = mainState == MainWindowState.LIST_ENTRIES
     }
 
@@ -178,5 +193,33 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
         EntryManager.saveEntriesToFile()
         dispose()
         exitProcess(0)
+    }
+
+    private fun respondToUpdate(update: Update) = when (update.type) {
+
+        /*UpdateType.DECK_CHANGED -> {
+            Personalisation.updateTimeOfCurrentDeckReview()
+            showCorrectPanel()
+        }*/
+        UpdateType.PROGRAMSTATE_CHANGED -> {
+            mainState = MainWindowState.valueOf(update.contents)
+            //reviewPanel.refresh() // there may be new cards to refresh
+            updateOnScreenInformation()
+            showCorrectPanel()
+        }
+        /*UpdateType.DECK_SWAPPED -> {
+            val newState =
+                if (mustReviewNow()) MainWindowState.REVIEWING
+                else MainWindowState.REACTIVE
+            BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, newState.name))
+        }*/
+        else -> doNothing
+    }
+
+    // Gives the message label its correct (possibly updated) value.
+    private fun updateOnScreenInformation() {
+        //updateMenuIfNeeded()
+        informationPanel.updateMessageLabel()
+        //updateWindowTitle()
     }
 }
