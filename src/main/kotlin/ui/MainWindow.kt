@@ -14,7 +14,7 @@ import kotlin.system.exitProcess
 enum class MainWindowState { LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
 
 class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
-    private var mainState = MainWindowState.LIST_ENTRIES
+    private var mainState = MainWindowState.REVIEWING
 
     private val entryPanel = JPanel()
 
@@ -128,7 +128,8 @@ class MainWindow(reviewPanel: ReviewPanel) : JFrame() {
     private fun addMenu() {
         jMenuBar = JMenuBar()
         val fileMenu = JMenu("File")
-        fileMenu.add(createMenuItem("New Encyclopedia", 'o') { createEncyFile() })
+        fileMenu.add(createMenuItem("New Encyclopedia", 'o', ::createEncyFile))
+        fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
         val encyMenu = JMenu("Encyclopedia Settings")
         encyMenu.add(createMenuItem("Study Settings", 't') {StudyOptionsWindow.display()})
         val modeMenu = JMenu("Mode")

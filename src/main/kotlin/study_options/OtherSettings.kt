@@ -1,6 +1,7 @@
 package study_options
 
 import data.doublesEqualWithinThousands
+import data.toTimeInterval
 import java.util.*
 import javax.print.attribute.standard.MediaSize
 
@@ -44,11 +45,9 @@ class OtherSettings(
     )
 
     override fun parse(lines: List<String>) {
-        lines.forEach { line ->
-            val sessionSizeParse = parseLabel(line, sessionSizeLabel, String::toIntOrNull)
-            if (sessionSizeParse.isSuccess) reviewSessionSize = sessionSizeParse.getOrThrow()
-            val idealSuccessPercentageParse = parseLabel(line, idealSuccessPercentageLabel, String::toDouble)
-            if (idealSuccessPercentageParse.isSuccess) idealSuccessPercentage = idealSuccessPercentageParse.getOrThrow()
+        lines.forEach {
+            parseLabel(it, sessionSizeLabel, OtherSettings::reviewSessionSize, this, String::toIntOrNull)
+            parseLabel(it, idealSuccessPercentageLabel, OtherSettings::idealSuccessPercentage, this, String::toDouble)
         }
     }
 }

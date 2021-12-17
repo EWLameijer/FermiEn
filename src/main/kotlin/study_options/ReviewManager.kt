@@ -29,6 +29,9 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         BlackBoard.register(this, UpdateType.CARD_CHANGED)
         BlackBoard.register(this, UpdateType.DECK_CHANGED)
     }*/
+    init {
+        reviewPanel.manager = this
+    }
 
     private var entriesToBeReviewed = mutableListOf<Entry>()
     //private var cardsReviewed = mutableSetOf<Card>()
@@ -40,8 +43,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
 
     // Should the answer (back of the card) be shown to the user? 'No'/false when the user is trying to recall the answer,
     // 'Yes'/true when the user needs to check the answer.
-    private var showAnswer: Boolean = false
-
     private var initialized = false
 
     /* fun reviewResults(): List<study_options.Review> {
@@ -77,14 +78,11 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     } */
 
 
-    fun currentEntry(): Entry? =
+    private fun currentEntry(): Entry? =
         if (entriesToBeReviewed.isEmpty() || counter >= entriesToBeReviewed.size) null
         else entriesToBeReviewed[counter]
 
-    fun currentFront(): String {
-        ensureReviewSessionIsValid()
-        return currentEntry()?.question?.toPanelDisplayString() ?: ""
-    }
+    private fun currentFront() = currentEntry()?.question?.toPanelDisplayString() ?: ""
 
     private fun currentBack() = currentEntry()?.answer?.toPanelDisplayString() ?: ""
 
@@ -106,16 +104,9 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         else -> doNothing
     }
 
-    fun showAnswer() {
-        ensureReviewSessionIsValid()
-        showAnswer = true
-        updatePanels()
-    }
-
     private fun updatePanels() {
         if (activeEntryExists()) {
-            val currentBack = if (showAnswer) currentBack() else EMPTY_STRING
-            reviewPanel!!.updatePanels(currentFront(), currentBack, showAnswer)
+            reviewPanel!!.display(currentEntry()!!)
         }
     }
 
@@ -126,7 +117,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
 
     private fun continueReviewSession() {
         initialized = true
-        val maxNumReviews = 20 // currentDeck.studyOptions.otherSettings?.reviewSessionSize
+        val maxNumReviews = Settings.studyOptions.otherSettings.reviewSessionSize
         val reviewableEntries = EntryManager.reviewableEntries()
         val numberOfReviewableEntries = reviewableEntries.size
         log("Number of reviewable cards is $numberOfReviewableEntries")
@@ -150,7 +141,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     private fun startCardReview() {
-        showAnswer = false
         updatePanels()
     }
 

@@ -78,17 +78,10 @@ class IntervalSettings(
 
     override fun parse(lines: List<String>) {
         lines.forEach {
-            val initialIntervalParse = parseLabel(it, initialIntervalLabel, String::toTimeInterval)
-            if (initialIntervalParse.isSuccess) initialInterval = initialIntervalParse.getOrThrow()
-
-            val rememberedIntervalParse = parseLabel(it, rememberedIntervalLabel, String::toTimeInterval)
-            if (rememberedIntervalParse.isSuccess) rememberedInterval = rememberedIntervalParse.getOrThrow()
-
-            val forgottenIntervalParse = parseLabel(it, forgottenIntervalLabel, String::toTimeInterval)
-            if (forgottenIntervalParse.isSuccess) forgottenInterval = forgottenIntervalParse.getOrThrow()
-
-            val lengtheningFactorParse = parseLabel(it, lengtheningFactorLabel, String::toDouble)
-            if (lengtheningFactorParse.isSuccess) lengtheningFactor = lengtheningFactorParse.getOrThrow()
+            parseLabel(it, initialIntervalLabel, IntervalSettings::initialInterval, this, String::toTimeInterval)
+            parseLabel(it, rememberedIntervalLabel, IntervalSettings::rememberedInterval, this, String::toTimeInterval)
+            parseLabel(it, forgottenIntervalLabel, IntervalSettings::forgottenInterval, this, String::toTimeInterval)
+            parseLabel(it, lengtheningFactorLabel, IntervalSettings::lengtheningFactor, this, String::toDouble)
         }
     }
 }

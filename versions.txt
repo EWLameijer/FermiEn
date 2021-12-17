@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.16.0 2021-12-17 reviews can now take place, but finishing the last review is not handled yet. Added menu item for quitting.
 0.15.0 2021-12-16 now saves a (study) settings file too per encyclopedia, and can load it as well.
 0.14.0 2021-12-16 debug data.Entry, debug Load Eb's Default values, debug Update constructor error: must give second parameter when the program state changes.
 0.13.0 2021-12-15 now enable switching to review window, added option to save last-used encyclopedia, review window now has buttons and panels

@@ -1,5 +1,7 @@
 package study_options
 
+import kotlin.reflect.KMutableProperty1
+
 abstract class PropertyPossessor {
     protected abstract fun properties(): Map<String, Any?>
 
@@ -10,11 +12,14 @@ abstract class PropertyPossessor {
 
     abstract fun parse(lines: List<String>)
 
-    fun <T> parseLabel(
+    fun <V : PropertyPossessor, T> parseLabel(
         line: String,
         label: String,
+        property: KMutableProperty1<V, T>,
+        parent: V,
         converter: String.() -> T
-    ): Result<T> =
-        if (line.startsWith(label)) Result.success(line.split(separator)[1].converter())
-        else Result.failure(IllegalArgumentException())
+    ) {
+        if (line.startsWith(label)) property.set(parent, line.split(separator)[1].converter())
+    }
+
 }

@@ -7,17 +7,9 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-neverending loop at:
-	at study_options.ReviewManager.updatePanels(ReviewManager.kt:116)
-	at study_options.ReviewManager.startCardReview(ReviewManager.kt:151)
-	at study_options.ReviewManager.continueReviewSession(ReviewManager.kt:146)
-	at study_options.ReviewManager.initializeReviewSession(ReviewManager.kt:122)
-	at study_options.ReviewManager.ensureReviewSessionIsValid(ReviewManager.kt:91)
-	at study_options.ReviewManager.currentFront(ReviewManager.kt:83)
-	at study_options.ReviewManager.updatePanels(ReviewManager.kt:116)
-
-
 1. ensure that reviews take place!
+    Handle last review: make review panel blank, and should switch to summary panel. Perhaps best to make summary and
+    review alternatives; That Ctrl-R can also show: no reviews coming
 2. load and save reviews so far
 4. add way to change priority of card
 5. make priorities affect repetition order
@@ -25,6 +17,7 @@ neverending loop at:
 7. implement way to import text files, including duplicate detection
 8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)
 
+?check that it works correctly when opening new encyclopedias
 ?fill the notes with 100 CS entries, like #Haskell
 ?remove leading empty lines from entries? (toLines=> filter)
 ?text C# will like google look for separate terms?

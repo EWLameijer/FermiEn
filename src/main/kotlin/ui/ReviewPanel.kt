@@ -1,11 +1,18 @@
 package ui
 
+import EMPTY_STRING
 import createKeyPressSensitiveButton
+import data.Entry
+import data.toHorizontalString
+import study_options.ReviewManager
+import study_options.ReviewResult
 import java.awt.*
 import java.awt.event.ComponentListener
 import java.beans.EventHandler
 import javax.swing.JPanel
 import javax.swing.JTextArea
+
+enum class ReviewState { ANSWER_HIDDEN, ANSWER_SHOWN }
 
 class ReviewPanel : JPanel() {
 
@@ -14,8 +21,10 @@ class ReviewPanel : JPanel() {
     private val situationalButtonPanel = JPanel()
     private val fixedButtonPanel = JPanel()
     private val reviewHistoryArea = JTextArea("test")
-    private val showButton = createKeyPressSensitiveButton("Show Answer", 's', ::showAnswer)
-    private val forgottenButton = createKeyPressSensitiveButton("Forgotten", 'f') { registerAnswer(false) }
+    private var reviewState = ReviewState.ANSWER_HIDDEN
+    private var entry: Entry? = null
+
+    var manager: ReviewManager? = null
 
     init {
         this.isFocusable = true
@@ -67,12 +76,12 @@ class ReviewPanel : JPanel() {
         // is shown or when it is not yet shown.
         val buttonPanelForHiddenBack = JPanel().apply {
             layout = FlowLayout()
-            add(showButton)
+            add(createKeyPressSensitiveButton("Show Answer", 's', ::showAnswer))
         }
 
         val buttonPanelForShownBack = JPanel().apply {
-            add(createKeyPressSensitiveButton("Remembered", 'r') { registerAnswer(true) })
-            add(forgottenButton)
+            add(createKeyPressSensitiveButton("Remembered", 'r') { registerAnswer(ReviewResult.SUCCESS) })
+            add(createKeyPressSensitiveButton("Forgotten", 'f') { registerAnswer(ReviewResult.FAILURE) })
         }
         val situationalButtonPanelConstraints = GridBagConstraints().apply {
             gridx = 0
@@ -84,8 +93,8 @@ class ReviewPanel : JPanel() {
             fill = GridBagConstraints.BOTH
         }
         situationalButtonPanel.layout = CardLayout()
-        situationalButtonPanel.add(buttonPanelForHiddenBack, HIDDEN_ANSWER)
-        situationalButtonPanel.add(buttonPanelForShownBack, SHOWN_ANSWER)
+        situationalButtonPanel.add(buttonPanelForHiddenBack, ReviewState.ANSWER_HIDDEN.name)
+        situationalButtonPanel.add(buttonPanelForShownBack, ReviewState.ANSWER_SHOWN.name)
         situationalButtonPanel.background = Color.GREEN
         add(situationalButtonPanel, situationalButtonPanelConstraints)
     }
@@ -139,37 +148,30 @@ class ReviewPanel : JPanel() {
 
     private fun editCard() = Unit // CardEditingManager(false, ReviewManager.currentCard())
 
-
-    private fun registerAnswer(wasRemembered: Boolean) {
-        showPanel(HIDDEN_ANSWER)
-        //ReviewManager.wasRemembered(wasRemembered)
+    private fun registerAnswer(wasRemembered: ReviewResult) {
+        manager!!.wasRemembered(wasRemembered)
         repaint()
     }
 
     private fun showAnswer() {
-        showPanel(SHOWN_ANSWER)
-        //ReviewManager.showAnswer()
+        reviewState = ReviewState.ANSWER_SHOWN
+        showPanel()
         repaint()
     }
 
-    private fun showPanel(panelName: String) {
+    private fun showPanel() {
         val cardLayout = situationalButtonPanel.layout as CardLayout
-        cardLayout.show(situationalButtonPanel, panelName)
+        cardLayout.show(situationalButtonPanel, reviewState.name)
+        val backText =
+            if (reviewState == ReviewState.ANSWER_SHOWN) entry!!.answer.toPanelDisplayString() else EMPTY_STRING
+        backOfCardPanel.setText(backText)
     }
 
     public override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        frontOfCardPanel.setText("" /*ReviewManager.currentFront()*/)
     }
 
     fun refresh() = repaint()
-
-    fun updatePanels(frontText: String, backText: String, showAnswer: Boolean) {
-        frontOfCardPanel.setText(frontText)
-        backOfCardPanel.setText(backText)
-        showPanel(if (showAnswer) SHOWN_ANSWER else HIDDEN_ANSWER)
-        updateSidePanel(frontText, showAnswer)
-    }
 
     /*private fun Card.reviewInstant(reviewIndex: Int): Instant =
         if (reviewIndex >= 0) getReviews()[reviewIndex].instant else creationInstant*/
@@ -180,21 +182,16 @@ class ReviewPanel : JPanel() {
         reviewHistoryArea.text = card.reviewHistoryText()*/
     }
 
-    fun updateShowButton(timeRemaining: Long) {
-        showButton.text = "Show (in ${timeRemaining}s)"
-    }
+    private fun shouldShowAnswer() = reviewState == ReviewState.ANSWER_SHOWN
 
-    fun updateForgottenButton(timeRemaining: Long) {
-        forgottenButton.text = "Forgotten (in ${timeRemaining}s)"
-    }
-
-    fun resetButtonTexts() {
-        showButton.text = "Show"
-        forgottenButton.text = "Forgotten"
-    }
-
-    companion object {
-        private const val HIDDEN_ANSWER = "HIDDEN_ANSWER"
-        private const val SHOWN_ANSWER = "SHOWN_ANSWER"
+    fun display(currentEntry: Entry) {
+        reviewState = ReviewState.ANSWER_HIDDEN
+        entry = currentEntry
+        val frontText = currentEntry.question.toPanelDisplayString()
+        frontOfCardPanel.setText(frontText)
+        backOfCardPanel.setText(EMPTY_STRING)
+        showPanel()
+        updateSidePanel(frontText, shouldShowAnswer())
+        refresh()
     }
 }
