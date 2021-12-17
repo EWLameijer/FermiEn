@@ -3,6 +3,7 @@ package data
 import Settings
 import prettyPrint
 import study_options.Review
+import study_options.toReviews
 import ui.EntryEditingWindow
 import java.io.File
 import java.time.Duration
@@ -14,9 +15,7 @@ data class Entry(val question: StorageString, val answer: StorageString) {
 
     var creationInstant: Instant? = null
 
-    private val reviews = mutableListOf<Review>()
-
-
+    var reviews = mutableListOf<Review>()
 
     fun reviews() = reviews.toList()
 
@@ -96,17 +95,23 @@ object EntryManager {
 
     private fun addEntryRepetitionData(repetitionData: String) {
         val (horizontalQuestion, creationInstantString, importanceStr) = repetitionData.split('\t')
+        val reviews = repetitionData.split('\t').drop(3).toReviews()
         val relevantEntry = entries.find { it.question.toHorizontalString() == horizontalQuestion }
         if (relevantEntry != null) {
             relevantEntry.creationInstant = Instant.parse(creationInstantString)
             relevantEntry.importance = importanceStr.toInt()
+            relevantEntry.reviews = reviews.toMutableList()
         }
     }
 
     fun saveEntriesToFile() {
         File(Settings.currentFile()).writeText(entries.joinToString(separator = "\n") { "${it.question.s}\t${it.answer.s}" })
         File(Settings.currentRepetitionsFile()).writeText(entries.joinToString(separator = "\n") {
-            "${it.question.toHorizontalString()}\t${it.creationInstant ?: Instant.now()}\t${it.importance ?: 10}"
+            val compactQuestion = it.question.toHorizontalString()
+            val creationInstant = it.creationInstant ?: Instant.now()
+            val importance = it.importance ?: 10
+            val reviews = it.reviews().joinToString(separator="\t") { review -> "${review.instant}\t${review.result.abbreviation}" }
+            "$compactQuestion\t$creationInstant\t$importance\t$reviews"
         })
         File(Settings.currentSettingsFile()).writeText(Settings.studyOptions.toString())
         Settings.save()

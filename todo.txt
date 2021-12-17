@@ -7,10 +7,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-1. ensure that reviews take place!
-1) BUG: back to reviews -> SHOULD BE INFORMATION WINDOW, NOT REVIEWING WINDOW
-
-2. load and save reviews so far
+1. bug: if no reviews to do: do NOT open with review window!
 4. add way to change priority of card
 5. make priorities affect repetition order
 6. add analysis to optimize learning
@@ -23,15 +20,3 @@ backslashes.
 ?text C# will like google look for separate terms?
 ?save entries in alphabetic order?
 ?give the window a non-standard Java icon?
-
-
-
-
-
-
-
-
-=> logical extension: make some kind of GUI/Form that enables me as user to change the default filename to read from/
-write to
--> will also need a settings file to save that filename
-

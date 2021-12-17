@@ -19,7 +19,7 @@ import kotlin.system.exitProcess
 
 enum class MainWindowState { INFORMATIONAL, LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
 
-class MainWindow(reviewManager: ReviewManager) : JFrame() {
+class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private var mainState = MainWindowState.REVIEWING
 
     private val entryPanel = JPanel()
@@ -132,7 +132,6 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun showCorrectPanel() {
-        println("showcorrectPanel")
         val cardLayout = modesContainer.layout as CardLayout
         if (mainState == MainWindowState.REACTIVE) cardLayout.show(modesContainer, MainWindowState.INFORMATIONAL.name)
         else cardLayout.show(modesContainer, mainState.name)
@@ -179,7 +178,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun startReviewing() {
-        mainState = MainWindowState.REVIEWING
+        mainState = if (reviewManager.hasNextCard()) MainWindowState.REVIEWING else MainWindowState.INFORMATIONAL
         showCorrectPanel()
     }
 
