@@ -1,6 +1,5 @@
 package study_options
 
-import EMPTY_STRING
 import Update
 import data.Entry
 import UpdateType
@@ -9,7 +8,7 @@ import data.toHorizontalString
 import doNothing
 import eventhandling.BlackBoard
 import log
-import ui.MainWindowState
+import ui.main_window.MainWindowState
 import ui.ReviewPanel
 import java.util.ArrayList
 
@@ -118,6 +117,9 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         if (!initialized) continueReviewSession()
     }
 
+    private fun List<Entry>.sortOnPriorityAndRipeness() =
+        sortedWith(compareByDescending<Entry> { it.importance }.thenByDescending { it.getRipenessFactor() })
+
     private fun continueReviewSession() {
         initialized = true
         val maxNumReviews = Settings.studyOptions.otherSettings.reviewSessionSize
@@ -131,8 +133,8 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         // be rehearsed first, as other cards probably need to be relearned anyway,
         // and we should try to contain the damage.
         val (newlyReviewedEntries, repeatReviewedEntries) = reviewableEntries.partition { it.numReviews() == 0 }
-        val sortedReviewedEntries = repeatReviewedEntries.sortedByDescending { it.getRipenessFactor() }
-        val sortedNewCards = newlyReviewedEntries.sortedByDescending { it.getRipenessFactor() }
+        val sortedReviewedEntries = repeatReviewedEntries.sortOnPriorityAndRipeness()
+        val sortedNewCards = newlyReviewedEntries.sortOnPriorityAndRipeness()
         val prioritizedReviewList = sortedReviewedEntries + sortedNewCards
 
         // get the first n for the review

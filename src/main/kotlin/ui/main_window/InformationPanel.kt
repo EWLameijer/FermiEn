@@ -6,7 +6,6 @@ import data.EntryManager
 import data.durationToString
 import eventhandling.BlackBoard
 import study_options.ReviewManager
-import ui.MainWindowState
 import java.awt.BorderLayout
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

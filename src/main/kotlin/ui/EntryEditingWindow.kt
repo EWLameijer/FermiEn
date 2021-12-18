@@ -3,6 +3,7 @@ package ui
 import data.Entry
 import data.EntryManager
 import ProgrammableAction
+import UnfocusableButton
 import createKeyListener
 import data.toHorizontalString
 import data.toStorageString
@@ -14,6 +15,25 @@ import javax.swing.JComponent.WHEN_FOCUSED
 
 
 class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
+    private val priorityLabel = JLabel(priorityText())
+
+    private val changePriorityButton = UnfocusableButton("Change priority") { changePriority() }
+
+    private fun priorityText() = if (entry == null) "" else "Priority ${entry!!.importance}"
+
+    private fun changePriority() {
+        val newPriorityAsString = JOptionPane.showInputDialog(this, "Enter new priority (1-10)", entry!!.importance)
+        val newPriority = newPriorityAsString.toIntOrNull()
+        if (newPriority == null || newPriority < 1 || newPriority > 10) JOptionPane.showMessageDialog(
+            this,
+            "'$newPriorityAsString' is an invalid value - enter a value between 1 and 10"
+        ) else {
+            entry!!.importance = newPriority
+            priorityLabel.text = "Priority $newPriority"
+        }
+    }
+
+
     private val cardFrontPane = JTextPane().apply {
         makeTabTransferFocus(this)
     }
@@ -136,6 +156,8 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
 
     private fun addButtonPanel() {
         val buttonPane = JPanel().apply {
+            add(priorityLabel)
+            if (entry != null) add(changePriorityButton)
             add(okButton)
         }
         val buttonPaneConstraints = GridBagConstraints().apply {

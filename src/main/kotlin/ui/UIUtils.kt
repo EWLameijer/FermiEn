@@ -1,4 +1,5 @@
 import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.event.DocumentEvent
@@ -30,3 +31,10 @@ fun createKeyPressSensitiveButton(text: String, key: Char, action: () -> Unit): 
 
 fun createKeyPressSensitiveButton(text: String, key: String, action: () -> Unit): JButton =
     createKeyPressSensitiveButton(text, KeyStroke.getKeyStroke(key), action)
+
+class UnfocusableButton (text: String, action: ActionListener) : JButton(text) {
+    init {
+        addActionListener(action)
+        isFocusable = false
+    }
+}

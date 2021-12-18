@@ -7,9 +7,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-4a.
-4. add way to change priority of card
-5. make priorities affect repetition order
+5.
 6. add analysis to optimize learning
 7. implement way to import text files, including duplicate detection
 8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)

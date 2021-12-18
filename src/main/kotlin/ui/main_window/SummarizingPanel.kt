@@ -7,6 +7,7 @@ import eventhandling.BlackBoard
 import study_options.Review
 import study_options.ReviewManager
 import study_options.ReviewResult
+import ui.main_window.MainWindowState
 import java.awt.CardLayout
 import java.awt.Graphics
 import java.awt.event.ComponentListener

@@ -3,7 +3,6 @@ package ui
 
 import Update
 import createKeyListener
-import data.EntryManager
 import data.stringToDouble
 import data.stringToInt
 import data.toRegionalString
@@ -14,6 +13,7 @@ import study_options.OtherSettings
 import study_options.StudyOptions
 import ui.loose_components.LabelledTextField
 import ui.loose_components.TimeInputElement
+import ui.main_window.MainWindowState
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.awt.event.KeyEvent

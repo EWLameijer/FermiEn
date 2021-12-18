@@ -1,15 +1,16 @@
-package ui
+package ui.main_window
 
 import data.EntryManager
 import Settings
 import Update
-import com.sun.tools.javac.Main
 import createKeyListener
 import doNothing
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
 import study_options.ReviewManager
-import ui.main_window.InformationPanel
+import ui.EntryEditingWindow
+import ui.StudyOptionsWindow
+import ui.SummarizingPanel
 import java.awt.*
 import java.awt.event.*
 import javax.swing.*
@@ -35,8 +36,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private val goToEntryListMenuItem = createMenuItem("Go to list of entries", 'l') { goToEntryList() }
 
     private val nameOfLastUsedEncyDirectory = ""
-
-
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -92,7 +91,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
                 val point = mouseEvent.point
                 val row = table.rowAtPoint(point)
                 if (mouseEvent.clickCount == 2 && table.selectedRow != -1) {
-                    println("Clicked row $row")
                     val key = table.getValueAt(row, 0) as String
                     EntryManager.editEntryByQuestion(key)
                 }
@@ -150,7 +148,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         fileMenu.add(createMenuItem("New Encyclopedia", 'o', ::createEncyFile))
         fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
         val encyMenu = JMenu("Encyclopedia Settings")
-        encyMenu.add(createMenuItem("Study Settings", 't') {StudyOptionsWindow.display()})
+        encyMenu.add(createMenuItem("Study Settings", 't') { StudyOptionsWindow.display() })
         val modeMenu = JMenu("Mode")
         modeMenu.add(startReviewingMenuItem)
         modeMenu.add(goToEntryListMenuItem)

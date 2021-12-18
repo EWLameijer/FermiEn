@@ -3,7 +3,7 @@ import data.StorageString
 import study_options.Review
 import study_options.ReviewManager
 import study_options.StudyOptions
-import ui.MainWindow
+import ui.main_window.MainWindow
 import ui.ReviewPanel
 import java.io.File
 import java.time.Duration
