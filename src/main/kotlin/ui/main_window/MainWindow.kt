@@ -36,7 +36,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private val nameOfLastUsedEncyDirectory = ""
 
-    private var messageUpdater: Timer? = null
+
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -131,8 +131,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
                 saveAndQuit()
             }
         })
-        messageUpdater = Timer(100) { showCorrectPanel() }
-        messageUpdater!!.start()
+
         updateOnScreenInformation()
         showCorrectPanel()
     }

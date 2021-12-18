@@ -13,9 +13,12 @@ import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JPanel
 import data.pluralize
+import javax.swing.Timer
 
 class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
     private val messageLabel = JLabel()
+
+    private var messageUpdater: Timer? = null
 
     // button the user can press to start reviewing. Only visible if the user for some reason decides to not review
     // cards yet (usually by having one rounds of review, and then stopping the reviewing)
@@ -33,6 +36,8 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
         layout = BorderLayout()
         add(messageLabel, BorderLayout.CENTER)
         add(startReviewingButton, BorderLayout.SOUTH)
+        messageUpdater = Timer(100) { updateMessageLabel() }
+        messageUpdater!!.start()
     }
 
 
@@ -96,8 +101,7 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
     private val uiCommands = """<br>
             Ctrl+N to add an entry.<br>
             Ctrl+Q to quit.<br>
+            Ctrl+L to show the list of entries.<br>
             Ctrl+O to create a new encyclopedia.<br>
             Ctrl+T to view/edit the study options.<br>""".trimIndent()
-
-
 }

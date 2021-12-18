@@ -7,9 +7,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-2. bug:
-3. bug: update text in informational window to be correct (correct keybinds and such)
-4a. bug: update text/time until next review
+4a.
 4. add way to change priority of card
 5. make priorities affect repetition order
 6. add analysis to optimize learning
