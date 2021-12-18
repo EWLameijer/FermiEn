@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.22.0 2021-12-18 bugfix: no contains 20 20 entries; save entries in alphabetic order; remove leading blank lines; added delete button
 0.21.0 2021-12-18 Pressing OK if card not changed should do nothing; put number of cards and number of points in title.
 0.20.0 2021-12-18 Add analysis to optimize learning; allow loading of existing (double-tabbed) files.
 0.19.0 2021-12-18 Show priority of card in edit window; allow updating of priority, made priorities affect repetition order

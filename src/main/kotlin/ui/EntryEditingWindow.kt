@@ -17,6 +17,8 @@ import javax.swing.JComponent.WHEN_FOCUSED
 class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private val priorityLabel = JLabel(priorityText())
 
+    private val deleteButton = UnfocusableButton("Delete") { EntryManager.removeEntry(entry!!) }
+
     private val changePriorityButton = UnfocusableButton("Change priority") { changePriority() }
 
     private fun priorityText() = if (entry == null) "" else "Priority ${entry!!.importance}"
@@ -162,7 +164,10 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private fun addButtonPanel() {
         val buttonPane = JPanel().apply {
             add(priorityLabel)
-            if (entry != null) add(changePriorityButton)
+            if (entry != null) {
+                add(changePriorityButton)
+                add(deleteButton)
+            }
             add(okButton)
         }
         val buttonPaneConstraints = GridBagConstraints().apply {

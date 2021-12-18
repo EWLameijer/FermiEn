@@ -43,7 +43,7 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
     private fun deckSizeMessage(): String {
         val numEntries = EntryManager.entries().size
         val plural = "entry".pluralize(numEntries)
-        return "The current encyclopedia contains $numEntries $plural."
+        return "The current encyclopedia contains $plural."
     }
 
     /*private fun totalReviewTimeMessage(): String {
@@ -104,6 +104,8 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
             Ctrl+N to add an entry.<br>
             Ctrl+Q to quit.<br>
             Ctrl+L to show the list of entries.<br>
+            Ctrl+R to return to reviewing mode (this screen is shown if no reviews are left).<br>
             Ctrl+O to create a new encyclopedia.<br>
-            Ctrl+T to view/edit the study options.<br>""".trimIndent()
+            Ctrl+T to view/edit the study options.<br>
+            Ctrl+Z to produce an analysis log file""".trimIndent()
 }

@@ -118,8 +118,9 @@ object EntryManager {
     }
 
     fun saveEntriesToFile() {
-        File(Settings.currentFile()).writeText(entries.joinToString(separator = "\n") { "${it.question.s}\t${it.answer.s}" })
-        File(Settings.currentRepetitionsFile()).writeText(entries.joinToString(separator = "\n") {
+        val sortedEntries = entries.sortedBy { it.question.toHorizontalString() }
+        File(Settings.currentFile()).writeText(sortedEntries.joinToString(separator = "\n") { "${it.question.s}\t${it.answer.s}" })
+        File(Settings.currentRepetitionsFile()).writeText(sortedEntries.joinToString(separator = "\n") {
             val compactQuestion = it.question.toHorizontalString()
             val creationInstant = it.creationInstant ?: Instant.now()
             val importance = it.importance ?: 10

@@ -62,13 +62,13 @@ fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(st
 fun StorageString.toHorizontalString() = s.replace(storageNewline, " ").replace(storageBackslash, "\\")
     .drop(1).dropLast(1).trim()
 
-fun String.toStorageString() = StorageString(
-    "\"${
-        this.map(::storageRepresentationOf).dropLastWhile {
-            it == storageNewline || it == " " || it == ""
-        }.joinToString(separator = "").removeStorageTrailingSpaces()
-    }\""
-)
+fun String.toStorageString(): StorageString {
+    val withoutLeadingEmptyLines = this.split('\n').dropWhile { it.isBlank() }.joinToString(separator = "\n")
+    val withoutTrailingSpaces = withoutLeadingEmptyLines.map(::storageRepresentationOf).dropLastWhile {
+        it == storageNewline || it == " " || it == ""
+    }.joinToString(separator = "").removeStorageTrailingSpaces()
+    return StorageString("\"$withoutTrailingSpaces\"")
+}
 
 fun stringToDouble(string: String): Double? {
     // Get a numberFormat object. Note that the number it returns will be Long
@@ -155,7 +155,7 @@ private fun getMinutesAndMore(durationAsMinutes: Long) = buildString {
 }
 
 
-fun String.pluralize(number: Int) =  "$number " + when (number) {
+fun String.pluralize(number: Int) = "$number " + when (number) {
     1 -> this
     else -> if (last() == 'y') dropLast(1) + "ies" else this + "s"
 }
