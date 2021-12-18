@@ -94,12 +94,10 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
 
     //Returns the commands of the user interface as a string, which can be used to instruct the user on Eb's use.
     private val uiCommands = """<br>
-            Ctrl+N to add a card.<br>
+            Ctrl+N to add an entry.<br>
             Ctrl+Q to quit.<br>
-            Ctrl+K to create a deck.<br>
-            Ctrl+L to load a deck.<br>
-            Ctrl+T to view/edit the study options.<br>
-            Ctrl+R to view/edit the deck archiving options.<br>""".trimIndent()
+            Ctrl+O to create a new encyclopedia.<br>
+            Ctrl+T to view/edit the study options.<br>""".trimIndent()
 
 
 }

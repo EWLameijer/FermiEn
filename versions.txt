@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.18.1 2021-12-18 [BUGFIX] bug: if no reviews to do: do NOT open with review window; fill informational window even if no reviews to do
 0.18.0 2021-12-17 back to review now shows information panel if there are no reviews to go; load and save reviews so far
 0.17.0 2021-12-17 show summary after review completion; hid going to next round of reviews; enable going back to information window
 0.16.0 2021-12-17 reviews can now take place, but finishing the last review is not handled yet. Added menu item for quitting.

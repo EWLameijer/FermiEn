@@ -7,13 +7,17 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-1. bug: if no reviews to do: do NOT open with review window!
+2. bug:
+3. bug: update text in informational window to be correct (correct keybinds and such)
+4a. bug: update text/time until next review
 4. add way to change priority of card
 5. make priorities affect repetition order
 6. add analysis to optimize learning
 7. implement way to import text files, including duplicate detection
 8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)
 
+? check that all buttons work
+? print, read, clean up code
 ?check that it works correctly when opening new encyclopedias
 ?fill the notes with 100 CS entries, like #Haskell
 ?remove leading empty lines from entries? (toLines=> filter)

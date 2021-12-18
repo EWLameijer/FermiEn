@@ -20,7 +20,7 @@ import kotlin.system.exitProcess
 enum class MainWindowState { INFORMATIONAL, LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
 
 class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
-    private var mainState = MainWindowState.REVIEWING
+    private var mainState = if (reviewManager.hasNextCard()) MainWindowState.REVIEWING else MainWindowState.LIST_ENTRIES
 
     private val entryPanel = JPanel()
 
@@ -31,9 +31,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private val informationPanel = InformationPanel(reviewManager)
 
     private val startReviewingMenuItem = createMenuItem("Start reviewing", 'r') { startReviewing() }
+
     private val goToEntryListMenuItem = createMenuItem("Go to list of entries", 'l') { goToEntryList() }
 
     private val nameOfLastUsedEncyDirectory = ""
+
+    private var messageUpdater: Timer? = null
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -128,6 +131,9 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
                 saveAndQuit()
             }
         })
+        messageUpdater = Timer(100) { showCorrectPanel() }
+        messageUpdater!!.start()
+        updateOnScreenInformation()
         showCorrectPanel()
     }
 
