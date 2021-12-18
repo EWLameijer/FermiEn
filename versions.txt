@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.20.0 2021-12-18 Add analysis to optimize learning; allow loading of existing (double-tabbed) files.
 0.19.0 2021-12-18 Show priority of card in edit window; allow updating of priority, made priorities affect repetition order
 0.18.2 2021-12-18 [BUGFIX] updated text in informational window to be correct (correct keybinds and such), now time to next review is updated correctly
 0.18.1 2021-12-18 [BUGFIX] bug: if no reviews to do: do NOT open with review window; fill informational window even if no reviews to do

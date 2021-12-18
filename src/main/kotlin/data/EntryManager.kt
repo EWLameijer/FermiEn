@@ -2,6 +2,7 @@ package data
 
 import Settings
 import prettyPrint
+import study_options.Analyzer
 import study_options.Review
 import study_options.toReviews
 import ui.EntryEditingWindow
@@ -29,29 +30,32 @@ data class Entry(val question: StorageString, val answer: StorageString) {
 
     fun numReviews() = reviews.size
 
-    fun timeUntilNextReview() : Duration = Duration.between(Instant.now(), nextReviewInstant())
+    fun timeUntilNextReview(): Duration = Duration.between(Instant.now(), nextReviewInstant())
 
     private fun nextReviewInstant(): Temporal {
         val startOfCountingTime = if (hasBeenReviewed()) lastReview()!!.instant else creationInstant
         val waitTime = plannedIntervalDuration()
-
         return waitTime.addTo(startOfCountingTime)
     }
 
     fun getRipenessFactor() = timeUntilNextReview().seconds.toDouble()
 
     private fun plannedIntervalDuration(): Duration {
-        /*val reviewPattern: String =
-            card.getReviews().map { if (it.wasSuccess) 'S' else 'F' }.joinToString(separator = "")
-        return recommendationsMap[reviewPattern] // calculate wait time from optimized settings
+        val reviewPattern: String = reviews.map { it.result.abbreviation }.joinToString(separator = "")
+        return EntryManager.recommendationsMap[reviewPattern] // calculate wait time from optimized settings
         // else: not enough data to determine best settings; use user-provided defaults
-            ?: */
-        return Settings.intervalDurationFromUserSettings(reviews.toList())
+            ?: return Settings.intervalDurationFromUserSettings(reviews.toList())
     }
 
     private fun hasBeenReviewed() = reviews.size > 0
 
     private fun lastReview(): Review? = if (reviews.isEmpty()) null else reviews.last()
+
+    private fun reviewInstant(reviewIndex: Int): Instant =
+        if (reviewIndex >= 0) reviews[reviewIndex].instant else creationInstant!!
+
+    fun waitingTimeBeforeRelevantReview(reviewIndex: Int): Duration =
+        Duration.between(reviewInstant(reviewIndex - 1), reviewInstant(reviewIndex))
 
 }
 
@@ -63,6 +67,8 @@ fun String.toEntry(): Entry {
 
 object EntryManager {
     private var encyLoadInstant: Instant? = null
+
+    var recommendationsMap: Map<String, Duration?> = mapOf()
 
     fun encyLoadInstant() = encyLoadInstant
 
@@ -87,15 +93,19 @@ object EntryManager {
             encyLoadInstant = Instant.now()
         }
         val repetitionsFile = File(Settings.currentRepetitionsFile())
-        if (repetitionsFile.isFile) repetitionsFile.readLines().map(EntryManager::addEntryRepetitionData)
+        if (repetitionsFile.isFile) {
+            repetitionsFile.readLines().map(EntryManager::addEntryRepetitionData)
+            recommendationsMap = Analyzer.getRecommendationsMap()
+        }
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
 
     }
 
     private fun addEntryRepetitionData(repetitionData: String) {
-        val (horizontalQuestion, creationInstantString, importanceStr) = repetitionData.split('\t')
-        val reviews = repetitionData.split('\t').drop(3).toReviews()
+        val repetitionParts = repetitionData.split('\t')
+        val (horizontalQuestion, creationInstantString, importanceStr) = repetitionParts
+        val reviews = repetitionParts.drop(3).toReviews()
         val relevantEntry = entries.find { it.question.toHorizontalString() == horizontalQuestion }
         if (relevantEntry != null) {
             relevantEntry.creationInstant = Instant.parse(creationInstantString)
@@ -110,8 +120,10 @@ object EntryManager {
             val compactQuestion = it.question.toHorizontalString()
             val creationInstant = it.creationInstant ?: Instant.now()
             val importance = it.importance ?: 10
-            val reviews = it.reviews().joinToString(separator="\t") { review -> "${review.instant}\t${review.result.abbreviation}" }
-            "$compactQuestion\t$creationInstant\t$importance\t$reviews"
+            val rawReviews = it.reviews()
+                .joinToString(separator = "\t") { review -> "${review.instant}\t${review.result.abbreviation}" }
+            val reviews = if (rawReviews == "") "" else "\t$rawReviews"
+            "$compactQuestion\t$creationInstant\t$importance$reviews"
         })
         File(Settings.currentSettingsFile()).writeText(Settings.studyOptions.toString())
         Settings.save()
@@ -135,6 +147,7 @@ object EntryManager {
     fun containsEntryWithQuestion(question: String) = entries.any { it.toHorizontalDisplay().first == question }
 
     fun addEntry(entry: Entry) {
+        if (entry.question.toHorizontalString() in entries.map {it.question.toHorizontalString()}) return
         entry.apply {
             importance = 10
             creationInstant = Instant.now()

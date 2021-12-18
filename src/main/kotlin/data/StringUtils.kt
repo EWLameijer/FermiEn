@@ -6,6 +6,8 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParsePosition
 import java.time.Duration
+import java.time.LocalDateTime
+import java.time.temporal.ChronoField
 import java.util.regex.Pattern
 
 @JvmInline
@@ -155,6 +157,24 @@ private fun getMinutesAndMore(durationAsMinutes: Long) = buildString {
 fun pluralize(word: String, number: Int) = when (number) {
     1 -> word
     else -> if (word.last() == 'y') word.dropLast(1) + "ies" else word + "s"
+}
+
+// ensures 1, 2, 3 are printed as "01", "02" and "03" etc.
+fun Int.asTwoDigitString(): String {
+    val twoDigitFormat = "%02d"
+    return twoDigitFormat.format(this)
+}
+
+val EOL: String = System.getProperty("line.separator")
+
+fun getDateString(): String {
+    val now = LocalDateTime.now()
+    return (now[ChronoField.YEAR] % 100).asTwoDigitString() +
+            now[ChronoField.MONTH_OF_YEAR].asTwoDigitString() +
+            (now[ChronoField.DAY_OF_MONTH]).asTwoDigitString() +
+            "_" +
+            now[ChronoField.HOUR_OF_DAY].asTwoDigitString() +
+            now[ChronoField.MINUTE_OF_HOUR].asTwoDigitString()
 }
 
 /**

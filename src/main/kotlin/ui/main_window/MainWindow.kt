@@ -4,15 +4,19 @@ import data.EntryManager
 import Settings
 import Update
 import createKeyListener
+import data.Entry
+import data.toStorageString
 import doNothing
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
+import study_options.Analyzer
 import study_options.ReviewManager
 import ui.EntryEditingWindow
 import ui.StudyOptionsWindow
 import ui.SummarizingPanel
 import java.awt.*
 import java.awt.event.*
+import java.io.File
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
@@ -146,9 +150,11 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         jMenuBar = JMenuBar()
         val fileMenu = JMenu("File")
         fileMenu.add(createMenuItem("New Encyclopedia", 'o', ::createEncyFile))
+        fileMenu.add(createMenuItem("Import Text", 'i',::importText))
         fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
         val encyMenu = JMenu("Encyclopedia Settings")
         encyMenu.add(createMenuItem("Study Settings", 't') { StudyOptionsWindow.display() })
+        encyMenu.add(createMenuItem("Analyze Ency", 'z') { Analyzer.run() })
         val modeMenu = JMenu("Mode")
         modeMenu.add(startReviewingMenuItem)
         modeMenu.add(goToEntryListMenuItem)
@@ -159,6 +165,25 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         jMenuBar.add(entryMenu)
         jMenuBar.add(modeMenu)
     }
+
+    private fun importText() {
+        val chooser = JFileChooser(nameOfLastUsedEncyDirectory).apply {
+            fileFilter = FileNameExtensionFilter("Text files", "txt")
+        }
+        val result = chooser.showOpenDialog(this)
+        if (result == JFileChooser.CANCEL_OPTION) {
+            return
+        } else {
+            val selectedFile = chooser.selectedFile
+            File(selectedFile.absolutePath).readLines().forEach{ EntryManager.addEntry(doubleTabToEntry(it))}
+        }
+    }
+
+    private fun doubleTabToEntry(line: String) : Entry {
+        val (question, answer) = line.split("\t\t")
+        return Entry(question.toStorageString(), answer.toStorageString())
+    }
+
 
     private fun createEncyFile() {
         val chooser = JFileChooser(nameOfLastUsedEncyDirectory).apply {
