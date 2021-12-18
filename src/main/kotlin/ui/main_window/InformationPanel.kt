@@ -12,12 +12,13 @@ import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JPanel
 import data.pluralize
+import fermiEnVersion
 import javax.swing.Timer
 
 class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
     private val messageLabel = JLabel()
 
-    private var messageUpdater: Timer? = null
+
 
     // button the user can press to start reviewing. Only visible if the user for some reason decides to not review
     // cards yet (usually by having one rounds of review, and then stopping the reviewing)
@@ -35,14 +36,13 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
         layout = BorderLayout()
         add(messageLabel, BorderLayout.CENTER)
         add(startReviewingButton, BorderLayout.SOUTH)
-        messageUpdater = Timer(100) { updateMessageLabel() }
-        messageUpdater!!.start()
+
     }
 
 
     private fun deckSizeMessage(): String {
         val numEntries = EntryManager.entries().size
-        val plural = pluralize("entry", numEntries)
+        val plural = "entry".pluralize(numEntries)
         return "The current encyclopedia contains $numEntries $plural."
     }
 
@@ -84,6 +84,7 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
 
     // Updates the message label (the information inside the main window, like time to next review)
     fun updateMessageLabel() {
+
         messageLabel.text = buildString {
             append("<html>")
             append(deckSizeMessage() + "<br>")
@@ -95,6 +96,8 @@ class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
             append("</html>")
         }
     }
+
+
 
     //Returns the commands of the user interface as a string, which can be used to instruct the user on Eb's use.
     private val uiCommands = """<br>

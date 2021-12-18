@@ -8,9 +8,9 @@ import ui.ReviewPanel
 import java.io.File
 import java.time.Duration
 
-val version = getFermiEnVersion()
+val version = fermiEnVersion()
 
-fun getFermiEnVersion() = File("versions.txt").readLines()[6].split(' ').first()
+fun fermiEnVersion() = File("versions.txt").readLines()[6].split(' ').first()
 
 fun prettyPrint(s: StorageString) = s.toLines().forEach(::println)
 

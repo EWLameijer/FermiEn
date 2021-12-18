@@ -96,22 +96,27 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         if (entry != null) { // are you trying to replace the card/front?
             val originalQuestion = entry!!.question.toHorizontalString()
             val originalAnswer = entry!!.answer.toHorizontalString()
-            val buttons = getFrontChangeButtons()
-            JOptionPane.showOptionDialog(
-                null,
-                """Replace the card
+            if (question().toHorizontalString() == originalQuestion && answer().toHorizontalString() == originalAnswer) closeWindow()
+            else { //because closeWindow does not stop the process...
+                val buttons = getFrontChangeButtons()
+                JOptionPane.showOptionDialog(
+                    null,
+                    """Replace the card
                            '$originalQuestion' / '$originalAnswer' with
                            '${question().toHorizontalString()}' / '${answer().toHorizontalString()}'?""",
-                "Are you sure you want to update the current card?", 0,
-                JOptionPane.QUESTION_MESSAGE, null, buttons, null
-            )
+                    "Are you sure you want to update the current card?", 0,
+                    JOptionPane.QUESTION_MESSAGE, null, buttons, null
+                )
+            }
         } else {
             submitEntry()
         }
     }
 
     private fun submitEntry() {
-        EntryManager.addEntry(Entry(question(), answer()))
+        val newEntry = Entry(question(), answer())
+        newEntry.importance = entry?.importance ?: 10
+        EntryManager.addEntry(newEntry)
         clear()
     }
 

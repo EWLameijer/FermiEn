@@ -5,10 +5,12 @@ import Settings
 import Update
 import createKeyListener
 import data.Entry
+import data.pluralize
 import data.toStorageString
 import doNothing
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
+import fermiEnVersion
 import study_options.Analyzer
 import study_options.ReviewManager
 import ui.EntryEditingWindow
@@ -40,6 +42,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private val goToEntryListMenuItem = createMenuItem("Go to list of entries", 'l') { goToEntryList() }
 
     private val nameOfLastUsedEncyDirectory = ""
+
+    private var messageUpdater: Timer? = null
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -136,6 +140,27 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
         updateOnScreenInformation()
         showCorrectPanel()
+        messageUpdater = Timer(100) {
+            updateWindowTitle()
+            informationPanel.updateMessageLabel()
+        }
+        messageUpdater!!.start()
+    }
+
+    // Updates the title of the window, which contains information like the number of cards in the deck
+    private fun updateWindowTitle() {
+        val numReviewingPoints = EntryManager.reviewingPoints()
+
+        //val shortCutCode = getShortCutCode(currentDeck.name)
+        var title =
+            "FermiEn ${fermiEnVersion()}: ${Settings.currentFile().takeLastWhile { it != '\\' }.removeSuffix(".txt")}"
+        /*if (state == MainWindowState.REVIEWING) {
+    title += (", ${"card".pluralize(ReviewManager.cardsToGoYet())} yet to be reviewed in the current session")
+}*/
+        val entries = EntryManager.entries().size
+        title += ", ${"entry".pluralize(entries)} in deck, ${"point".pluralize(numReviewingPoints)}"
+
+        this.title = title
     }
 
     private fun showCorrectPanel() {
@@ -150,7 +175,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         jMenuBar = JMenuBar()
         val fileMenu = JMenu("File")
         fileMenu.add(createMenuItem("New Encyclopedia", 'o', ::createEncyFile))
-        fileMenu.add(createMenuItem("Import Text", 'i',::importText))
+        fileMenu.add(createMenuItem("Import Text", 'i', ::importText))
         fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
         val encyMenu = JMenu("Encyclopedia Settings")
         encyMenu.add(createMenuItem("Study Settings", 't') { StudyOptionsWindow.display() })
@@ -175,11 +200,11 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             return
         } else {
             val selectedFile = chooser.selectedFile
-            File(selectedFile.absolutePath).readLines().forEach{ EntryManager.addEntry(doubleTabToEntry(it))}
+            File(selectedFile.absolutePath).readLines().forEach { EntryManager.addEntry(doubleTabToEntry(it)) }
         }
     }
 
-    private fun doubleTabToEntry(line: String) : Entry {
+    private fun doubleTabToEntry(line: String): Entry {
         val (question, answer) = line.split("\t\t")
         return Entry(question.toStorageString(), answer.toStorageString())
     }

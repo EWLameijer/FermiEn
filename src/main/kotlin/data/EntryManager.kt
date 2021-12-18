@@ -4,6 +4,7 @@ import Settings
 import prettyPrint
 import study_options.Analyzer
 import study_options.Review
+import study_options.ReviewResult
 import study_options.toReviews
 import ui.EntryEditingWindow
 import java.io.File
@@ -59,7 +60,6 @@ data class Entry(val question: StorageString, val answer: StorageString) {
 
 }
 
-
 fun String.toEntry(): Entry {
     val (question, answer) = split('\t')
     return Entry(StorageString(question), StorageString(answer))
@@ -71,6 +71,9 @@ object EntryManager {
     var recommendationsMap: Map<String, Duration?> = mapOf()
 
     fun encyLoadInstant() = encyLoadInstant
+
+    fun reviewingPoints() =
+        entries.sumOf { it.reviews().takeLastWhile { rev -> rev.result == ReviewResult.SUCCESS }.size }
 
     fun timeUntilNextReview(): Duration? = entries.minOfOrNull { it.timeUntilNextReview() }
 
@@ -147,7 +150,7 @@ object EntryManager {
     fun containsEntryWithQuestion(question: String) = entries.any { it.toHorizontalDisplay().first == question }
 
     fun addEntry(entry: Entry) {
-        if (entry.question.toHorizontalString() in entries.map {it.question.toHorizontalString()}) return
+        if (entry.question.toHorizontalString() in entries.map { it.question.toHorizontalString() }) return
         entry.apply {
             importance = 10
             creationInstant = Instant.now()

@@ -154,9 +154,10 @@ private fun getMinutesAndMore(durationAsMinutes: Long) = buildString {
     }
 }
 
-fun pluralize(word: String, number: Int) = when (number) {
-    1 -> word
-    else -> if (word.last() == 'y') word.dropLast(1) + "ies" else word + "s"
+
+fun String.pluralize(number: Int) =  "$number " + when (number) {
+    1 -> this
+    else -> if (last() == 'y') dropLast(1) + "ies" else this + "s"
 }
 
 // ensures 1, 2, 3 are printed as "01", "02" and "03" etc.
