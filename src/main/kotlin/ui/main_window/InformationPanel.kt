@@ -1,24 +1,19 @@
 package ui.main_window
 
 import Update
-import createKeyPressSensitiveButton
+import ui.createKeyPressSensitiveButton
 import data.EntryManager
 import data.durationToString
 import eventhandling.BlackBoard
-import study_options.ReviewManager
 import java.awt.BorderLayout
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JPanel
 import data.pluralize
-import fermiEnVersion
-import javax.swing.Timer
 
-class InformationPanel(private val reviewManager: ReviewManager) : JPanel() {
+class InformationPanel : JPanel() {
     private val messageLabel = JLabel()
-
-
 
     // button the user can press to start reviewing. Only visible if the user for some reason decides to not review
     // cards yet (usually by having one rounds of review, and then stopping the reviewing)

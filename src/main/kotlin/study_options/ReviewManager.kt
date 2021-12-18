@@ -4,8 +4,6 @@ import Update
 import data.Entry
 import UpdateType
 import data.EntryManager
-import data.toHorizontalString
-import doNothing
 import eventhandling.BlackBoard
 import log
 import ui.main_window.MainWindowState
@@ -47,7 +45,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         return EntryManager.entries().flatMap { it.getReviewsAfter(EntryManager.encyLoadInstant()!!) }
     }
 
-    fun reviewedEntries(): List<Entry> {
+    private fun reviewedEntries(): List<Entry> {
         ensureReviewSessionIsValid()
         return EntryManager.entries().filter { it.reviews().last().instant > EntryManager.encyLoadInstant()!! }
     }
@@ -84,11 +82,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         if (entriesToBeReviewed.isEmpty() || counter >= entriesToBeReviewed.size) null
         else entriesToBeReviewed[counter]
 
-    private fun currentFront() = currentEntry()?.question?.toPanelDisplayString() ?: ""
-
-    private fun currentBack() = currentEntry()?.answer?.toPanelDisplayString() ?: ""
-
-
     private fun ensureReviewSessionIsValid() {
         initializeReviewSession()
     }
@@ -99,16 +92,17 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         moveToNextReviewOrEnd()
     }
 
+    /*
     fun respondToUpdate(update: UpdateType) = when (update) {
         UpdateType.ENTRY_CHANGED -> updatePanels()
         UpdateType.ENCY_CHANGED -> updateCollection() // It can be that the current card (or another) has been deleted
         UpdateType.ENCY_SWAPPED -> initializeReviewSession()
         else -> doNothing
-    }
+    }*/
 
     private fun updatePanels() {
         if (activeEntryExists()) {
-            reviewPanel!!.display(currentEntry()!!)
+            reviewPanel.display(currentEntry()!!)
         }
     }
 
@@ -163,15 +157,9 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     // is there a next card to study?
     fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
 
-    // The number of cards that still need to be reviewed in this session
-    fun cardsToGoYet(): Int {
-        ensureReviewSessionIsValid()
-        return entriesToBeReviewed.size - counter
-    }
-
-    // If cards are added to (or, more importantly, removed from) the deck, ensure
+        // If cards are added to (or, more importantly, removed from) the deck, ensure
     // that the card also disappears from the list of cards to be reviewed
-    private fun updateCollection() {
+    /*private fun updateCollection() {
         if (entriesToBeReviewed.isEmpty()) {
             updatePanels()
             return
@@ -192,10 +180,10 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         } else {
             updatePanels()
         }
-    }
+    }*/
 
     // Allows the GUI to initialize the panel that displays the reviews
-    fun setPanel(inputReviewPanel: ReviewPanel) {
+    /*fun setPanel(inputReviewPanel: ReviewPanel) {
         reviewPanel = inputReviewPanel
-    }
+    }*/
 }

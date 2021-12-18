@@ -69,7 +69,7 @@ class IntervalSettings(
     private val forgottenIntervalLabel = "forgotten interval"
     private val lengtheningFactorLabel = "lengthening factor"
 
-    override fun properties() = mapOf<String, Any>(
+    override fun properties() = mapOf(
         initialIntervalLabel to initialInterval,
         rememberedIntervalLabel to rememberedInterval,
         forgottenIntervalLabel to forgottenInterval,

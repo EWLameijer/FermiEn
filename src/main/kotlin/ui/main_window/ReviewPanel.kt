@@ -1,9 +1,7 @@
 package ui
 
 import EMPTY_STRING
-import createKeyPressSensitiveButton
 import data.Entry
-import data.toHorizontalString
 import study_options.ReviewManager
 import study_options.ReviewResult
 import java.awt.*
@@ -171,16 +169,7 @@ class ReviewPanel : JPanel() {
         super.paintComponent(g)
     }
 
-    fun refresh() = repaint()
-
-    /*private fun Card.reviewInstant(reviewIndex: Int): Instant =
-        if (reviewIndex >= 0) getReviews()[reviewIndex].instant else creationInstant*/
-
-    private fun updateSidePanel(frontText: String, showAnswer: Boolean) {
-        /*reviewHistoryArea.isVisible = showAnswer
-        val card = DeckManager.currentDeck().cardCollection.getCardWithFront(Hint(frontText))!!
-        reviewHistoryArea.text = card.reviewHistoryText()*/
-    }
+    private fun refresh() = repaint()
 
     private fun shouldShowAnswer() = reviewState == ReviewState.ANSWER_SHOWN
 
@@ -191,7 +180,6 @@ class ReviewPanel : JPanel() {
         frontOfCardPanel.setText(frontText)
         backOfCardPanel.setText(EMPTY_STRING)
         showPanel()
-        updateSidePanel(frontText, shouldShowAnswer())
         refresh()
     }
 }

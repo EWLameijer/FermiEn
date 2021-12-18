@@ -1,6 +1,5 @@
 package data
 
-import java.io.Serializable
 import java.util.Objects
 
 /**

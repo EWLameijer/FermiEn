@@ -1,9 +1,9 @@
+package ui
+
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.*
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
 
 class ProgrammableAction(private val m_action: () -> Unit) : AbstractAction() {
     override fun actionPerformed(ae: ActionEvent) = m_action()

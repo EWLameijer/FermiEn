@@ -13,8 +13,6 @@ class StudyOptions(
     var intervalSettings: IntervalSettings = IntervalSettings(),
     var otherSettings: OtherSettings = OtherSettings()
 ) {
-    var modifiedSinceLoad: Boolean = false
-
     override fun equals(other: Any?) = when {
         this === other -> true
         other == null -> false

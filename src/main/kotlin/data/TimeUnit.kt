@@ -1,4 +1,4 @@
-package data;
+package data
 
 import java.time.Duration
 import java.util.Vector
@@ -9,7 +9,7 @@ import java.util.Vector
  *
  * Returns the name for the unit in a form that is suitable for the user
  * interface (so not MINUTE, which the .toString() would produce, but
- * "minute(s)".
+ * "minute(s))".
  *
  * @author Eric-Wubbo Lameijer
  */

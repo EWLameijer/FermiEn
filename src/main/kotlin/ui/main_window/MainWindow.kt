@@ -3,7 +3,7 @@ package ui.main_window
 import data.EntryManager
 import Settings
 import Update
-import createKeyListener
+import ui.createKeyListener
 import data.Entry
 import data.pluralize
 import data.toStorageString
@@ -35,7 +35,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private val summarizingPanel = SummarizingPanel(reviewManager)
 
-    private val informationPanel = InformationPanel(reviewManager)
+    private val informationPanel = InformationPanel()
 
     private val startReviewingMenuItem = createMenuItem("Start reviewing", 'r') { startReviewing() }
 

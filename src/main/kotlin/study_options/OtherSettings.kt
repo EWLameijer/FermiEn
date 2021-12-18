@@ -1,9 +1,7 @@
 package study_options
 
 import data.doublesEqualWithinThousands
-import data.toTimeInterval
 import java.util.*
-import javax.print.attribute.standard.MediaSize
 
 // the default maximum number of cards to be reviewed in a single reviewing session
 private const val defaultReviewSessionSize = 20

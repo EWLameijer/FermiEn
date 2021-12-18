@@ -1,4 +1,4 @@
-package ui.loose_components;
+package ui.loose_components
 
 import Update
 import eventhandling.BlackBoard

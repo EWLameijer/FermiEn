@@ -1,6 +1,5 @@
 package data
 
-import EMPTY_STRING
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -46,6 +45,7 @@ value class StorageString(val s: String) {
 }
 
 const val storageNewline = """\n"""
+
 const val storageBackslash = """\\"""
 
 fun storageRepresentationOf(ch: Char) = when (ch) {
@@ -59,8 +59,8 @@ fun storageRepresentationOf(ch: Char) = when (ch) {
 fun String.removeStorageTrailingSpaces() = split(storageNewline).joinToString(storageNewline) { it.trimEnd() }
 
 // replace newlines by spaces, remove surrounding ""
-fun StorageString.toHorizontalString() = s.replace(storageNewline, " ").replace(storageBackslash, "\\")
-    .drop(1).dropLast(1).trim()
+fun StorageString.toHorizontalString() =
+    s.replace(storageNewline, " ").replace(storageBackslash, "\\").drop(1).dropLast(1).trim()
 
 fun String.toStorageString(): StorageString {
     val withoutLeadingEmptyLines = this.split('\n').dropWhile { it.isBlank() }.joinToString(separator = "\n")
@@ -96,11 +96,11 @@ fun doubleToMaxPrecisionString(number: Double, maxPrecision: Int): String {
         "Utilities.doubleToMaxPrecisionString error: the given precision should be 0 or positive."
     }
 
-    val numberFormatter = DecimalFormat()
-    numberFormatter.isGroupingUsed = false
-    numberFormatter.maximumFractionDigits = maxPrecision
-    numberFormatter.roundingMode = RoundingMode.HALF_UP
-    return numberFormatter.format(number)
+    return DecimalFormat().apply {
+        isGroupingUsed = false
+        maximumFractionDigits = maxPrecision
+        roundingMode = RoundingMode.HALF_UP
+    }.format(number)
 }
 
 // returns whether the given string is fully filled with a valid integer (...-2,-1,0,1,2,...).
@@ -154,7 +154,6 @@ private fun getMinutesAndMore(durationAsMinutes: Long) = buildString {
     }
 }
 
-
 fun String.pluralize(number: Int) = "$number " + when (number) {
     1 -> this
     else -> if (last() == 'y') dropLast(1) + "ies" else this + "s"
@@ -172,7 +171,7 @@ fun getDateString(): String {
     val now = LocalDateTime.now()
     return (now[ChronoField.YEAR] % 100).asTwoDigitString() +
             now[ChronoField.MONTH_OF_YEAR].asTwoDigitString() +
-            (now[ChronoField.DAY_OF_MONTH]).asTwoDigitString() +
+            now[ChronoField.DAY_OF_MONTH].asTwoDigitString() +
             "_" +
             now[ChronoField.HOUR_OF_DAY].asTwoDigitString() +
             now[ChronoField.MINUTE_OF_HOUR].asTwoDigitString()

@@ -17,7 +17,7 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 
 /**
- * A TimeInputElement contains a textfield and combobox that allow the user to
+ * A TimeInputElement contains a text field and combo box that allow the user to
  * input say "5.5 minutes" or "3 hours".
  *
  * @author Eric-Wubbo Lameijer

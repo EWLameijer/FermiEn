@@ -2,9 +2,6 @@ package ui
 
 import data.Entry
 import data.EntryManager
-import ProgrammableAction
-import UnfocusableButton
-import createKeyListener
 import data.toHorizontalString
 import data.toStorageString
 import java.awt.*
@@ -17,7 +14,10 @@ import javax.swing.JComponent.WHEN_FOCUSED
 class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private val priorityLabel = JLabel(priorityText())
 
-    private val deleteButton = UnfocusableButton("Delete") { EntryManager.removeEntry(entry!!) }
+    private val deleteButton = UnfocusableButton("Delete") {
+        EntryManager.removeEntry(entry!!)
+        clear()
+    }
 
     private val changePriorityButton = UnfocusableButton("Change priority") { changePriority() }
 
