@@ -12,8 +12,8 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.Temporal
 
-data class Entry(val question: StorageString, val answer: StorageString) {
-    var importance: Int? = null
+data class Entry(val question: StorageString, val answer: StorageString, var importance: Int? = null) {
+
 
     var creationInstant: Instant? = null
 
@@ -151,7 +151,7 @@ object EntryManager {
     fun addEntry(entry: Entry) {
         if (entry.question.toHorizontalString() in questions()) return
         entry.apply {
-            importance = 10
+            importance = importance ?: 10
             creationInstant = Instant.now()
         }
         entries += entry

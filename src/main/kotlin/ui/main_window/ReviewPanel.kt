@@ -1,14 +1,15 @@
-package ui
+package ui.main_window
 
 import EMPTY_STRING
 import data.Entry
 import study_options.ReviewManager
 import study_options.ReviewResult
+import ui.CardPanel
+import ui.createKeyPressSensitiveButton
 import java.awt.*
 import java.awt.event.ComponentListener
 import java.beans.EventHandler
 import javax.swing.JPanel
-import javax.swing.JTextArea
 
 enum class ReviewState { ANSWER_HIDDEN, ANSWER_SHOWN }
 

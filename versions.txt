@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.24.0 2021-12-19 Make 'Replace card' respond to the user typing 'r', bugfix: if you change priority, and then change the card, the new card should have the new priority, NOT the default priority.
 0.23.2 2021-12-19 [BUGFIX] fixed bug at return EntryManager.entries().map { it.reviews().first() }; if fronts are the same, 'keep both cards' shouldn't be suggested.
 0.23.1 2021-12-19 [BUGFIX] remove "test" from the side of the reviewing window, remove View Score button from reviewing window (doesn't do anything)
 0.23.0 2021-12-19 gave the windows a non-Java icon; fixed "Comparison method violates its general contract!" bug

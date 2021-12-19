@@ -4,7 +4,7 @@ import study_options.Review
 import study_options.ReviewManager
 import study_options.StudyOptions
 import ui.main_window.MainWindow
-import ui.ReviewPanel
+import ui.main_window.ReviewPanel
 import java.io.File
 import java.time.Duration
 

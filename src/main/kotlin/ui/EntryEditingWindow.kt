@@ -32,7 +32,6 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         }
     }
 
-
     private val cardFrontPane = JTextPane().apply {
         makeTabTransferFocus(this)
     }
@@ -98,7 +97,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
 
     private fun answer() = cardBackPane.text.toStorageString()
 
-    private fun originalQuestion() : StorageString? = entry?.question
+    private fun originalQuestion(): StorageString? = entry?.question
 
     private fun saveNewEntry() {
         if (entry != null) { // are you trying to replace the card/front?
@@ -119,34 +118,29 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         } else {
             submitEntry()
         }
+        createKeyListener(KeyEvent.VK_ESCAPE) { clearOrExit() } // set escape back
     }
 
     private fun submitEntry() {
-        val newEntry = Entry(question(), answer())
-        newEntry.importance = entry?.importance ?: 10
+        val newEntry = Entry(question(), answer(), entry?.importance)
         EntryManager.addEntry(newEntry)
         clear()
     }
 
     private fun getFrontChangeButtons(): Array<JButton> {
-        val replaceButton = JButton("Replace card").apply {
-            addActionListener {
-                EntryManager.removeEntry(entry!!)
-                submitEntry()
-                closeOptionPane()
-            }
+        val replaceButton = createKeyPressSensitiveButton("Replace card", 'r') {
+            EntryManager.removeEntry(entry!!)
+            submitEntry()
+            closeOptionPane()
         }
-        val keepBothButton = JButton("Keep both cards").apply {
-            addActionListener {
-                submitEntry()
-                closeOptionPane()
-            }
+        val keepBothButton = createKeyPressSensitiveButton("Keep both cards", 'k') {
+            submitEntry()
+            closeOptionPane()
         }
-        val cancelCardSubmissionButton = JButton("Cancel this submission").apply {
-            addActionListener {
-                closeOptionPane()
-            }
+        val cancelCardSubmissionButton = createKeyPressSensitiveButton("Cancel this submission", 'c') {
+            closeOptionPane()
         }
+        createKeyListener(KeyEvent.VK_ESCAPE) { closeOptionPane() }
         val buttons = mutableListOf(replaceButton, cancelCardSubmissionButton)
         if (!question().flattenedEquals(originalQuestion()!!)) buttons.add(1, keepBothButton)
         return buttons.toTypedArray()

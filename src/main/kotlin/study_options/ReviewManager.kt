@@ -7,7 +7,7 @@ import data.EntryManager
 import eventhandling.BlackBoard
 import log
 import ui.main_window.MainWindowState
-import ui.ReviewPanel
+import ui.main_window.ReviewPanel
 import java.util.ArrayList
 
 import java.time.Instant
