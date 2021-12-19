@@ -15,6 +15,7 @@ import study_options.Analyzer
 import study_options.ReviewManager
 import ui.EntryEditingWindow
 import ui.StudyOptionsWindow
+import ui.main_window.MainWindowState.*
 import java.awt.*
 import java.awt.event.*
 import java.io.File
@@ -26,7 +27,7 @@ import kotlin.system.exitProcess
 enum class MainWindowState { INFORMATIONAL, LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
 
 class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
-    private var mainState = if (reviewManager.hasNextCard()) MainWindowState.REVIEWING else MainWindowState.LIST_ENTRIES
+    private var mainState = if (reviewManager.hasNextCard()) REVIEWING else LIST_ENTRIES
 
     private val entryPanel = JPanel()
 
@@ -123,10 +124,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
         entryPanel.add(searchField, searchBoxConstraints)
         entryPanel.add(scrollPane, tableConstraints)
-        modesContainer.add(entryPanel, MainWindowState.LIST_ENTRIES.name)
-        modesContainer.add(reviewManager.reviewPanel, MainWindowState.REVIEWING.name)
-        modesContainer.add(summarizingPanel, MainWindowState.SUMMARIZING.name)
-        modesContainer.add(informationPanel, MainWindowState.INFORMATIONAL.name)
+
+        // note: container.add needs string, so .name here (or "$"), despite it seeming overkill
+        modesContainer.add(entryPanel, LIST_ENTRIES.name)
+        modesContainer.add(reviewManager.reviewPanel, REVIEWING.name)
+        modesContainer.add(summarizingPanel, SUMMARIZING.name)
+        modesContainer.add(informationPanel, INFORMATIONAL.name)
         add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -165,10 +168,10 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private fun showCorrectPanel() {
         val cardLayout = modesContainer.layout as CardLayout
-        if (mainState == MainWindowState.REACTIVE) cardLayout.show(modesContainer, MainWindowState.INFORMATIONAL.name)
+        if (mainState == REACTIVE) cardLayout.show(modesContainer, INFORMATIONAL.name)
         else cardLayout.show(modesContainer, mainState.name)
-        goToEntryListMenuItem.isEnabled = mainState != MainWindowState.LIST_ENTRIES
-        startReviewingMenuItem.isEnabled = mainState == MainWindowState.LIST_ENTRIES
+        goToEntryListMenuItem.isEnabled = mainState != LIST_ENTRIES
+        startReviewingMenuItem.isEnabled = mainState == LIST_ENTRIES
     }
 
     private fun addMenu() {
@@ -226,12 +229,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun goToEntryList() {
-        mainState = MainWindowState.LIST_ENTRIES
+        mainState = LIST_ENTRIES
         showCorrectPanel()
     }
 
     private fun startReviewing() {
-        mainState = if (reviewManager.hasNextCard()) MainWindowState.REVIEWING else MainWindowState.INFORMATIONAL
+        mainState = if (reviewManager.hasNextCard()) REVIEWING else INFORMATIONAL
         showCorrectPanel()
     }
 

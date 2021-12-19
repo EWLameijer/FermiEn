@@ -6,6 +6,7 @@ import genericEqualsWith
 import java.time.Duration
 import java.util.*
 import kotlin.math.pow
+import study_options.ReviewResult.*
 
 private val defaultInitialInterval = TimeInterval(14.0, TimeUnit.HOUR)
 private val defaultRememberedInterval = TimeInterval(3.0, TimeUnit.DAY)
@@ -42,7 +43,7 @@ class IntervalSettings(
         when (val lastReview = reviews.lastOrNull()) {
             null -> initialInterval.asDuration()
             else -> {
-                if (lastReview.result == ReviewResult.SUCCESS) getIntervalAfterSuccessfulReview(reviews)
+                if (lastReview.result == SUCCESS) getIntervalAfterSuccessfulReview(reviews)
                 else forgottenInterval.asDuration()
             }
         }
@@ -56,7 +57,7 @@ class IntervalSettings(
         // However, if previous reviews also have been successful, the wait time
         // should be longer (using exponential growth by default, though may want
         // to do something more sophisticated in the future).
-        val streakLength = reviews.takeLastWhile { it.result == ReviewResult.SUCCESS }.size
+        val streakLength = reviews.takeLastWhile { it.result == SUCCESS }.size
         val numberOfLengthenings = streakLength - 1 // 2 reviews = lengthen 1x.
         return multiplyDurationBy(waitTime, lengtheningFactor.pow(numberOfLengthenings.toDouble()))
     }

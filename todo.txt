@@ -7,7 +7,11 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
+	at study_options.ReviewManager.reviewedEntries(ReviewManager.kt:50)
+	at study_options.ReviewManager.getNonFirstReviews(ReviewManager.kt:69)
+	at ui.main_window.SummarizingPanel.getReport(SummarizingPanel.kt:132)
 
+BUG: if text in review window is large, it doesn't scroll?
 !?text C# will like google look for separate terms?
 !make replacement window friendlier in case of long strings...
 8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)

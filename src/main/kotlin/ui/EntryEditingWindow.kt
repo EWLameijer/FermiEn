@@ -79,6 +79,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     }
 
     private fun clearOrExit() {
+        if (entry != null) closeWindow()
         if (cardFrontPane.text.isNotBlank() || cardBackPane.text.isNotBlank()) clear() else closeWindow()
     }
 

@@ -5,11 +5,13 @@ import data.Entry
 import study_options.ReviewManager
 import study_options.ReviewResult
 import ui.CardPanel
+import ui.EntryEditingWindow
 import ui.createKeyPressSensitiveButton
 import java.awt.*
 import java.awt.event.ComponentListener
 import java.beans.EventHandler
 import javax.swing.JPanel
+import ui.main_window.ReviewState.*
 
 enum class ReviewState { ANSWER_HIDDEN, ANSWER_SHOWN }
 
@@ -20,7 +22,7 @@ class ReviewPanel : JPanel() {
     private val situationalButtonPanel = JPanel()
     private val fixedButtonPanel = JPanel()
     //private val reviewHistoryArea = JTextArea("test")
-    private var reviewState = ReviewState.ANSWER_HIDDEN
+    private var reviewingState = ANSWER_HIDDEN
     private var entry: Entry? = null
 
     var manager: ReviewManager? = null
@@ -92,8 +94,8 @@ class ReviewPanel : JPanel() {
             fill = GridBagConstraints.BOTH
         }
         situationalButtonPanel.layout = CardLayout()
-        situationalButtonPanel.add(buttonPanelForHiddenBack, ReviewState.ANSWER_HIDDEN.name)
-        situationalButtonPanel.add(buttonPanelForShownBack, ReviewState.ANSWER_SHOWN.name)
+        situationalButtonPanel.add(buttonPanelForHiddenBack, ANSWER_HIDDEN.name)
+        situationalButtonPanel.add(buttonPanelForShownBack, ANSWER_SHOWN.name)
         situationalButtonPanel.background = Color.GREEN
         add(situationalButtonPanel, situationalButtonPanelConstraints)
     }
@@ -145,7 +147,7 @@ class ReviewPanel : JPanel() {
         add(sidePanel, sidePanelConstraints)
     }
 
-    private fun editCard() = Unit // CardEditingManager(false, ReviewManager.currentCard())
+    private fun editCard() = EntryEditingWindow(entry)
 
     private fun registerAnswer(wasRemembered: ReviewResult) {
         manager!!.wasRemembered(wasRemembered)
@@ -153,16 +155,16 @@ class ReviewPanel : JPanel() {
     }
 
     private fun showAnswer() {
-        reviewState = ReviewState.ANSWER_SHOWN
+        reviewingState = ANSWER_SHOWN
         showPanel()
         repaint()
     }
 
     private fun showPanel() {
         val cardLayout = situationalButtonPanel.layout as CardLayout
-        cardLayout.show(situationalButtonPanel, reviewState.name)
+        cardLayout.show(situationalButtonPanel, reviewingState.name)
         val backText =
-            if (reviewState == ReviewState.ANSWER_SHOWN) entry!!.answer.toPanelDisplayString() else EMPTY_STRING
+            if (reviewingState == ANSWER_SHOWN) entry!!.answer.toPanelDisplayString() else EMPTY_STRING
         backOfCardPanel.setText(backText)
     }
 
@@ -172,10 +174,10 @@ class ReviewPanel : JPanel() {
 
     private fun refresh() = repaint()
 
-    private fun shouldShowAnswer() = reviewState == ReviewState.ANSWER_SHOWN
+    private fun shouldShowAnswer() = reviewingState == ANSWER_SHOWN
 
     fun display(currentEntry: Entry) {
-        reviewState = ReviewState.ANSWER_HIDDEN
+        reviewingState = ANSWER_HIDDEN
         entry = currentEntry
         val frontText = currentEntry.question.toPanelDisplayString()
         frontOfCardPanel.setText(frontText)
