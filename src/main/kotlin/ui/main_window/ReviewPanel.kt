@@ -18,7 +18,7 @@ class ReviewPanel : JPanel() {
     private val backOfCardPanel = CardPanel()
     private val situationalButtonPanel = JPanel()
     private val fixedButtonPanel = JPanel()
-    private val reviewHistoryArea = JTextArea("test")
+    //private val reviewHistoryArea = JTextArea("test")
     private var reviewState = ReviewState.ANSWER_HIDDEN
     private var entry: Entry? = null
 
@@ -60,7 +60,7 @@ class ReviewPanel : JPanel() {
                 ReviewManager.currentCard()!!
             )*/
         })
-        fixedButtonPanel.add(createKeyPressSensitiveButton("View score", 'v', ::showScore))
+        //fixedButtonPanel.add(createKeyPressSensitiveButton("View score", 'v', ::showScore))
         add(fixedButtonPanel, fixedButtonPanelConstraints)
     }
 
@@ -139,7 +139,7 @@ class ReviewPanel : JPanel() {
         }
         val sidePanel = JPanel()
 
-        sidePanel.add(reviewHistoryArea)
+        //sidePanel.add(reviewHistoryArea)
         sidePanel.background = Color.RED
         add(sidePanel, sidePanelConstraints)
     }

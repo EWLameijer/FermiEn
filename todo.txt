@@ -7,6 +7,12 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
+
+Bugfix: bug at return EntryManager.entries().map { it.reviews().first() }
+Bugfix: if fronts are the same, you shouldn't suggest 'keep both cards'
+Feature: make replace card respond to R char
+Bugfix: if you change priority, and then change the card, the new card should have the new priority, NOT the default priority
+
 ?? When applicable Bugfix: changing contents should NOT change priority of card
 !make replacement window friendlier in case of long strings...
 8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)
