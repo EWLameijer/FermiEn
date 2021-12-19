@@ -58,7 +58,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
 
     fun getNewFirstReviews(): List<Review> {
         ensureReviewSessionIsValid()
-        return EntryManager.entries().map { it.reviews().first() }
+        return EntryManager.entries().mapNotNull { it.reviews().firstOrNull() }
             .filter { it.instant > EntryManager.encyLoadInstant() }
     }
 
@@ -157,7 +157,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     // is there a next card to study?
     fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
 
-        // If cards are added to (or, more importantly, removed from) the deck, ensure
+    // If cards are added to (or, more importantly, removed from) the deck, ensure
     // that the card also disappears from the list of cards to be reviewed
     /*private fun updateCollection() {
         if (entriesToBeReviewed.isEmpty()) {

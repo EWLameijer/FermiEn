@@ -42,6 +42,8 @@ value class StorageString(val s: String) {
                 "StorageString.processBackSlashedCharacter(): \"\\$ch\" is an unknown character."
             )
         }
+
+    fun flattenedEquals(other: StorageString) = this.toHorizontalString() == other.toHorizontalString()
 }
 
 const val storageNewline = """\n"""

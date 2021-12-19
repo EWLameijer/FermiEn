@@ -1,9 +1,6 @@
 package ui
 
-import data.Entry
-import data.EntryManager
-import data.toHorizontalString
-import data.toStorageString
+import data.*
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent
@@ -101,17 +98,19 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
 
     private fun answer() = cardBackPane.text.toStorageString()
 
+    private fun originalQuestion() : StorageString? = entry?.question
+
     private fun saveNewEntry() {
         if (entry != null) { // are you trying to replace the card/front?
-            val originalQuestion = entry!!.question.toHorizontalString()
-            val originalAnswer = entry!!.answer.toHorizontalString()
-            if (question().toHorizontalString() == originalQuestion && answer().toHorizontalString() == originalAnswer) closeWindow()
+            val originalQuestion = originalQuestion()!!
+            val originalAnswer = entry!!.answer
+            if (question().flattenedEquals(originalQuestion) && answer().flattenedEquals(originalAnswer)) closeWindow()
             else { //because closeWindow does not stop the process...
                 val buttons = getFrontChangeButtons()
                 JOptionPane.showOptionDialog(
                     null,
                     """Replace the card
-                           '$originalQuestion' / '$originalAnswer' with
+                           '${originalQuestion.toHorizontalString()}' / '${originalAnswer.toHorizontalString()}' with
                            '${question().toHorizontalString()}' / '${answer().toHorizontalString()}'?""",
                     "Are you sure you want to update the current card?", 0,
                     JOptionPane.QUESTION_MESSAGE, null, buttons, null
@@ -148,7 +147,9 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
                 closeOptionPane()
             }
         }
-        return arrayOf(replaceButton, keepBothButton, cancelCardSubmissionButton)
+        val buttons = mutableListOf(replaceButton, cancelCardSubmissionButton)
+        if (!question().flattenedEquals(originalQuestion()!!)) buttons.add(1, keepBothButton)
+        return buttons.toTypedArray()
     }
 
     private fun closeOptionPane() = JOptionPane.getRootFrame().dispose()

@@ -8,8 +8,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 
-Bugfix: bug at return EntryManager.entries().map { it.reviews().first() }
-Bugfix: if fronts are the same, you shouldn't suggest 'keep both cards'
+
 Feature: make replace card respond to R char
 Bugfix: if you change priority, and then change the card, the new card should have the new priority, NOT the default priority
 
