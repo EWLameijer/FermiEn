@@ -1,5 +1,6 @@
 package study_options
 
+import genericEqualsWith
 import java.util.Objects
 
 /**
@@ -13,16 +14,10 @@ class StudyOptions(
     var intervalSettings: IntervalSettings = IntervalSettings(),
     var otherSettings: OtherSettings = OtherSettings()
 ) {
-    override fun equals(other: Any?) = when {
-        this === other -> true
-        other == null -> false
-        javaClass != other.javaClass -> false
-        else -> {
-            val otherOptions = other as StudyOptions
-            intervalSettings == otherOptions.intervalSettings &&
-                    otherSettings == otherOptions.otherSettings
-
-        }
+    override fun equals(other: Any?) = genericEqualsWith(other) {
+        val otherOptions = other as StudyOptions
+        intervalSettings == otherOptions.intervalSettings &&
+                otherSettings == otherOptions.otherSettings
     }
 
     override fun hashCode() = Objects.hash(intervalSettings, otherSettings)

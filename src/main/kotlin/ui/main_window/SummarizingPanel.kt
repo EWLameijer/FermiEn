@@ -1,12 +1,11 @@
-package ui
-
+package ui.main_window
 
 import Update
 import eventhandling.BlackBoard
 import study_options.Review
 import study_options.ReviewManager
 import study_options.ReviewResult
-import ui.main_window.MainWindowState
+import ui.createKeyPressSensitiveButton
 import java.awt.CardLayout
 import java.awt.Graphics
 import java.awt.event.ComponentListener
@@ -14,7 +13,7 @@ import java.beans.EventHandler
 import java.io.File
 import javax.swing.*
 
-enum class SummarizingState { REVIEWS_DONE, YET_REVIEWS_TO_DO}
+enum class SummarizingState { REVIEWS_DONE, YET_REVIEWS_TO_DO }
 
 class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
     private var report = JLabel()
@@ -45,43 +44,49 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
             )
         )
 
-        reviewsCompletedPanel.addComponentListener(
-            EventHandler.create(
-                ComponentListener::class.java, this,
-                "requestFocusInWindow", null, "componentShown"
+        reviewsCompletedPanel.apply {
+            addComponentListener(
+                EventHandler.create(
+                    ComponentListener::class.java, this,
+                    "requestFocusInWindow", null, "componentShown"
+                )
             )
-        )
+            add(
+                createKeyPressSensitiveButton(
+                    "Back to information screen",
+                    "pressed ENTER"
+                ) { toReactiveMode() })
+        }
 
-        reviewsCompletedPanel.add(
-            createKeyPressSensitiveButton(
-                "Back to information screen",
-                "pressed ENTER"
-            ) { toReactiveMode() })
 
-        stillReviewsToDoPanel.addComponentListener(
-            EventHandler.create(
-                ComponentListener::class.java, this,
-                "requestFocusInWindow", null, "componentShown"
+        stillReviewsToDoPanel.apply {
+            addComponentListener(
+                EventHandler.create(
+                    ComponentListener::class.java, this,
+                    "requestFocusInWindow", null, "componentShown"
+                )
             )
-        )
+            add(
+                createKeyPressSensitiveButton(
+                    "Go to next round of reviews",
+                    'g'
+                ) { backToReviewingMode() })
+            add(
+                createKeyPressSensitiveButton(
+                    "Back to information screen",
+                    'b'
+                ) { backToInformationMode() })
+        }
 
-        stillReviewsToDoPanel.add(
-            createKeyPressSensitiveButton(
-                "Go to next round of reviews",
-                'g'
-            ) { backToReviewingMode() })
-        stillReviewsToDoPanel.add(
-            createKeyPressSensitiveButton(
-                "Back to information screen",
-                'b'
-            ) { backToInformationMode() })
-
-        buttonPanel.layout = CardLayout()
-        buttonPanel.add(reviewsCompletedPanel, SummarizingState.REVIEWS_DONE.name)
-        buttonPanel.add(stillReviewsToDoPanel, SummarizingState.YET_REVIEWS_TO_DO.name)
+        buttonPanel.apply {
+            layout = CardLayout()
+            add(reviewsCompletedPanel, SummarizingState.REVIEWS_DONE.name)
+            add(stillReviewsToDoPanel, SummarizingState.YET_REVIEWS_TO_DO.name)
+        }
         add(report)
         add(buttonPanel)
     }
+
 
     private fun toReactiveMode() {
         //updateStudyIntervals()
@@ -109,7 +114,8 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
         File("log.txt").writeText(report.text.replace("<br>", "\n").replace("<.*?>".toRegex(), ""))
         val cardLayout = buttonPanel.layout as CardLayout
 
-        summarizingState = if (reviewManager.hasNextCard())  SummarizingState.YET_REVIEWS_TO_DO else SummarizingState.REVIEWS_DONE
+        summarizingState =
+            if (reviewManager.hasNextCard()) SummarizingState.YET_REVIEWS_TO_DO else SummarizingState.REVIEWS_DONE
         cardLayout.show(buttonPanel, summarizingState.name)
     }
 
@@ -119,7 +125,8 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
         val allReviews = reviewManager.reviewResults()
         append(successStatistics(allReviews, "Total reviews"))
 
-        val firstTimeReviews = reviewManager.getNewFirstReviews() // reviewedCards.filter { it.getReviews().size == it.getReviewsAfter(DeckManager.deckLoadTime()).size }
+        val firstTimeReviews =
+            reviewManager.getNewFirstReviews() // reviewedCards.filter { it.getReviews().size == it.getReviewsAfter(DeckManager.deckLoadTime()).size }
         val (previouslySucceededReviews, previouslyFailedReviews) = reviewManager.getNonFirstReviews()
         append(successStatistics(previouslySucceededReviews, "Previously succeeded cards"))
         append(successStatistics(previouslyFailedReviews, "Previously failed cards"))

@@ -63,7 +63,7 @@ fun List<String>.getAt(key: String): String? {
 fun main() {
     println("FermiEn version $version: Start\n")
     EntryManager.loadEntries()
-    EntryManager.printEntries()
+    //EntryManager.printEntries()
     val reviewPanel = ReviewPanel()
     val reviewManager = ReviewManager(reviewPanel)
     reviewManager.initializeReviewSession()

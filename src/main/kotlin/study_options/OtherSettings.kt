@@ -1,6 +1,7 @@
 package study_options
 
 import data.doublesEqualWithinThousands
+import genericEqualsWith
 import java.util.*
 
 // the default maximum number of cards to be reviewed in a single reviewing session
@@ -14,19 +15,15 @@ class OtherSettings(
     var reviewSessionSize: Int? = defaultReviewSessionSize, // if not specified, review all/infinite cards
     var idealSuccessPercentage: Double = defaultSuccessTarget
 ) : PropertyPossessor() {
-    override fun equals(other: Any?) = when {
-        this === other -> true
-        other == null -> false
-        javaClass != other.javaClass -> false
-        else -> {
-            val otherOptions = other as OtherSettings
-            reviewSessionSize == otherOptions.reviewSessionSize &&
-                    doublesEqualWithinThousands(
-                        idealSuccessPercentage,
-                        otherOptions.idealSuccessPercentage
-                    )
-        }
+    override fun equals(other: Any?) = genericEqualsWith(other) {
+        val otherOptions = other as OtherSettings
+        reviewSessionSize == otherOptions.reviewSessionSize &&
+                doublesEqualWithinThousands(
+                    idealSuccessPercentage,
+                    otherOptions.idealSuccessPercentage
+                )
     }
+
 
     override fun hashCode() =
         Objects.hash(

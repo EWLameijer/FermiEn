@@ -31,7 +31,7 @@ data class Entry(val question: StorageString, val answer: StorageString) {
 
     fun numReviews() = reviews.size
 
-    fun timeUntilNextReview(): Duration = Duration.between(Instant.now(), nextReviewInstant())
+    fun timeUntilNextReview(): Duration = Duration.between(EntryManager.encyLoadInstant(), nextReviewInstant())
 
     private fun nextReviewInstant(): Temporal {
         val startOfCountingTime = if (hasBeenReviewed()) lastReview()!!.instant else creationInstant
@@ -102,18 +102,16 @@ object EntryManager {
         }
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
-
     }
 
     private fun addEntryRepetitionData(repetitionData: String) {
         val repetitionParts = repetitionData.split('\t')
         val (horizontalQuestion, creationInstantString, importanceStr) = repetitionParts
-        val reviews = repetitionParts.drop(3).toReviews()
-        val relevantEntry = entries.find { it.question.toHorizontalString() == horizontalQuestion }
-        if (relevantEntry != null) {
-            relevantEntry.creationInstant = Instant.parse(creationInstantString)
-            relevantEntry.importance = importanceStr.toInt()
-            relevantEntry.reviews = reviews.toMutableList()
+        val registeredReviews = repetitionParts.drop(3).toReviews()
+        entries.find { it.question.toHorizontalString() == horizontalQuestion }?.apply {
+            creationInstant = Instant.parse(creationInstantString)
+            importance = importanceStr.toInt()
+            reviews = registeredReviews.toMutableList()
         }
     }
 
@@ -148,10 +146,10 @@ object EntryManager {
         EntryEditingWindow(selectedEntry)
     }
 
-    fun containsEntryWithQuestion(question: String) = entries.any { it.toHorizontalDisplay().first == question }
+    private fun questions(): Set<String> = entries.map { it.toHorizontalDisplay().first }.toSet()
 
     fun addEntry(entry: Entry) {
-        if (entry.question.toHorizontalString() in entries.map { it.question.toHorizontalString() }) return
+        if (entry.question.toHorizontalString() in questions()) return
         entry.apply {
             importance = 10
             creationInstant = Instant.now()

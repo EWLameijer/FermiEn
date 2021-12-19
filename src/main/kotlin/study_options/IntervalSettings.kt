@@ -2,6 +2,7 @@ package study_options
 
 
 import data.*
+import genericEqualsWith
 import java.time.Duration
 import java.util.*
 import kotlin.math.pow
@@ -18,19 +19,15 @@ class IntervalSettings(
     var forgottenInterval: TimeInterval = defaultForgottenInterval,
     var lengtheningFactor: Double = defaultLengtheningFactor
 ) : PropertyPossessor() {
-    override fun equals(other: Any?) = when {
-        this === other -> true
-        other == null -> false
-        javaClass != other.javaClass -> false
-        else -> {
-            val otherOptions = other as IntervalSettings
-            initialInterval == otherOptions.initialInterval &&
-                    rememberedInterval == otherOptions.rememberedInterval &&
-                    doublesEqualWithinThousands(lengtheningFactor, otherOptions.lengtheningFactor) &&
-                    forgottenInterval == otherOptions.forgottenInterval
+    override fun equals(other: Any?) = genericEqualsWith(other) {
+        val otherOptions = other as IntervalSettings
+        initialInterval == otherOptions.initialInterval &&
+                rememberedInterval == otherOptions.rememberedInterval &&
+                doublesEqualWithinThousands(lengtheningFactor, otherOptions.lengtheningFactor) &&
+                forgottenInterval == otherOptions.forgottenInterval
 
-        }
     }
+
 
     override fun hashCode() =
         Objects.hash(

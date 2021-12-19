@@ -74,6 +74,12 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         setSize(650, 400)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         isVisible = true
+        iconImage = ImageIcon("FermiEn_neg.png").image
+        updateTitle()
+    }
+
+    private fun updateTitle() {
+        title = if (entry == null) "Add entry" else "Edit entry"
     }
 
     private fun clearOrExit() {
@@ -88,6 +94,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         entry = null
         cardFrontPane.text = ""
         cardBackPane.text = ""
+        updateTitle()
     }
 
     private fun question() = cardFrontPane.text.toStorageString()

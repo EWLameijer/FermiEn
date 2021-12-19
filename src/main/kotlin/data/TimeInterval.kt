@@ -1,5 +1,6 @@
 package data
 
+import genericEqualsWith
 import java.util.Objects
 
 /**
@@ -10,19 +11,14 @@ import java.util.Objects
  *
  * @author Eric-Wubbo Lameijer
  */
-class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit)  {
+class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit) {
     init {
-        require(scalar >= 0) { "TimeInterval.setTo() error: negative time intervals are not permitted."}
+        require(scalar >= 0) { "TimeInterval.setTo() error: negative time intervals are not permitted." }
     }
 
-    override fun equals(other: Any?) = when {
-        this === other -> true
-        other == null -> false
-        javaClass != other.javaClass ->false
-        else -> {
-            val otherInterval = other as TimeInterval?
-            doublesEqualWithinThousands(scalar, otherInterval!!.scalar) && unit == otherInterval.unit
-        }
+    override fun equals(other: Any?) = genericEqualsWith(other) {
+        val otherInterval = other as TimeInterval
+        doublesEqualWithinThousands(scalar, otherInterval.scalar) && unit == otherInterval.unit
     }
 
     override fun hashCode() = Objects.hash(scalar, unit)
@@ -34,6 +30,6 @@ class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit)  {
 
 fun String.toTimeInterval(): TimeInterval {
     val (scalarStr, unitStr) = split(' ')
-    val correctUnit = TimeUnit.values().find { it.userInterfaceName == unitStr}!!
+    val correctUnit = TimeUnit.values().find { it.userInterfaceName == unitStr }!!
     return TimeInterval(scalarStr.toDouble(), correctUnit)
 }

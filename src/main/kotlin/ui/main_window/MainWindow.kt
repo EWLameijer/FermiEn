@@ -15,7 +15,6 @@ import study_options.Analyzer
 import study_options.ReviewManager
 import ui.EntryEditingWindow
 import ui.StudyOptionsWindow
-import ui.SummarizingPanel
 import java.awt.*
 import java.awt.event.*
 import java.io.File
@@ -145,6 +144,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             informationPanel.updateMessageLabel()
         }
         messageUpdater!!.start()
+        iconImage = ImageIcon("FermiEn.png").image
     }
 
     // Updates the title of the window, which contains information like the number of cards in the deck
