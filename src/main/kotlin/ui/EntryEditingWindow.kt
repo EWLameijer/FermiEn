@@ -89,7 +89,10 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
 
     private fun clear() {
         entry = null
-        cardFrontPane.text = ""
+        cardFrontPane.apply {
+            text = ""
+            requestFocusInWindow()
+        }
         cardBackPane.text = ""
         updateTitle()
     }
@@ -125,7 +128,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private fun submitEntry() {
         val newEntry = Entry(question(), answer(), entry?.importance)
         EntryManager.addEntry(newEntry)
-        clear()
+        clearOrExit() // enable adding new cards, but modifying an existing card should not result in a 'card chain'
     }
 
     private fun getFrontChangeButtons(): Array<JButton> {

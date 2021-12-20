@@ -1,12 +1,9 @@
 package ui.main_window
 
-import data.EntryManager
 import Settings
 import Update
+import data.*
 import ui.createKeyListener
-import data.Entry
-import data.pluralize
-import data.toStorageString
 import doNothing
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
@@ -28,7 +25,7 @@ import kotlin.system.exitProcess
 // together (WITH whether there are cards to review now) they indicate one of four possible panels.
 
 enum class MainWindowMode { DISPLAY, REVIEW }
-enum class ReviewingState { INFORMATIONAL, REACTIVE, REVIEWING, SUMMARIZING  }
+enum class ReviewingState { INFORMATIONAL, REACTIVE, REVIEWING, SUMMARIZING }
 
 const val displayId = "DISPLAY"
 const val reviewingId = "REVIEWING"
@@ -36,7 +33,7 @@ const val informationalId = "INFORMATIONAL"
 const val summarizingId = "SUMMARIZING"
 
 class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
-    private var reviewState = ReviewingState.REVIEWING
+    private var reviewState = ReviewingState.REACTIVE
     private var mainMode = if (reviewManager.hasNextCard()) MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
     private val entryPanel = JPanel()
@@ -171,23 +168,25 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
         //val shortCutCode = getShortCutCode(currentDeck.name)
         var title =
-            "FermiEn ${fermiEnVersion()}: ${Settings.currentFile().takeLastWhile { it != '\\' }.removeSuffix(".txt")}"
+            "FermiEn ${fermiEnVersion()}: ${Settings.currentFile().fileNamePart()}"
         /*if (state == MainWindowState.REVIEWING) {
     title += (", ${"card".pluralize(ReviewManager.cardsToGoYet())} yet to be reviewed in the current session")
 }*/
         val entries = EntryManager.entries().size
         title += ", ${"entry".pluralize(entries)} in deck, ${"point".pluralize(numReviewingPoints)}"
-
         this.title = title
     }
 
-    fun getCorrectPanelId() = if (mainMode == MainWindowMode.DISPLAY) displayId
-    else when(reviewState) {
-        ReviewingState.INFORMATIONAL -> informationalId
-        ReviewingState.REVIEWING -> reviewingId
-        ReviewingState.SUMMARIZING -> summarizingId
-        ReviewingState.REACTIVE -> if (EntryManager.reviewableEntries().isNotEmpty()) reviewingId else informationalId
-    }
+    private fun getCorrectPanelId() =
+        if (mainMode == MainWindowMode.DISPLAY) displayId
+        else when (reviewState) {
+            ReviewingState.INFORMATIONAL -> informationalId
+            ReviewingState.REVIEWING -> reviewingId
+            ReviewingState.SUMMARIZING -> summarizingId
+            ReviewingState.REACTIVE -> if (EntryManager.reviewableEntries()
+                    .isNotEmpty()
+            ) reviewingId else informationalId
+        }
 
     private fun showCorrectPanel() {
         val cardLayout = modesContainer.layout as CardLayout

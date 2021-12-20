@@ -1,5 +1,6 @@
 package data
 
+import java.io.File
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -80,6 +81,8 @@ fun stringToDouble(string: String): Double? {
     val number = numberFormat.parse(string, parsePosition)
     return if (parsePosition.index == 0) null else number.toDouble()
 }
+
+fun String.fileNamePart() = substringAfterLast(File.separator).substringBefore(".")
 
 /**
  * Converts a floating point number to a string with a maximum precision, but
