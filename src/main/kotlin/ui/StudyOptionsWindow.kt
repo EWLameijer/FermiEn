@@ -12,7 +12,7 @@ import study_options.OtherSettings
 import study_options.StudyOptions
 import ui.loose_components.LabelledTextField
 import ui.loose_components.TimeInputElement
-import ui.main_window.MainWindowState
+import ui.main_window.ReviewingState
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.awt.event.KeyEvent
@@ -131,7 +131,7 @@ class StudyOptionsWindow : JFrame() {
 
     private fun saveSettingsToDeck() {
         Settings.studyOptions = gatherUIDataIntoStudyOptionsObject()
-        BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, MainWindowState.REACTIVE.name))
+        BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, ReviewingState.REACTIVE.name))
         updateFrame() // Should be set to 'no unsaved changes' again.
     }
 

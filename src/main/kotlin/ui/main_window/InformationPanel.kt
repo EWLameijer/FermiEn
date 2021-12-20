@@ -11,8 +11,9 @@ import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JPanel
 import data.pluralize
+import study_options.ReviewManager
 
-class InformationPanel : JPanel() {
+class InformationPanel(val reviewManager: ReviewManager) : JPanel() {
     private val messageLabel = JLabel()
 
     // button the user can press to start reviewing. Only visible if the user for some reason decides to not review
@@ -23,8 +24,8 @@ class InformationPanel : JPanel() {
         }
 
     private fun startReviewing() {
-        //reviewManager.resetTimers()
-        BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, MainWindowState.REACTIVE.name))
+        reviewManager.initializeReviewSession()
+        BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, ReviewingState.REACTIVE.name))
     }
 
     init {

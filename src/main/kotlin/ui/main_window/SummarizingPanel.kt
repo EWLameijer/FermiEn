@@ -13,7 +13,6 @@ import java.beans.EventHandler
 import java.io.File
 import javax.swing.*
 import UpdateType.*
-import ui.main_window.MainWindowState.*
 import ui.main_window.SummarizingState.*
 
 enum class SummarizingState { REVIEWS_DONE, YET_REVIEWS_TO_DO }
@@ -27,7 +26,7 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
 
     private fun backToInformationMode() {
         //updateStudyIntervals()
-        BlackBoard.post(Update(PROGRAMSTATE_CHANGED, INFORMATIONAL.name))
+        BlackBoard.post(Update(PROGRAMSTATE_CHANGED, ReviewingState.INFORMATIONAL.name))
     }
 
     /*private fun updateStudyIntervals() {
@@ -36,7 +35,7 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
     }*/
 
     private fun backToReviewingMode() {
-        BlackBoard.post(Update(PROGRAMSTATE_CHANGED, REACTIVE.name))
+        BlackBoard.post(Update(PROGRAMSTATE_CHANGED, ReviewingState.REACTIVE.name))
     }
 
     init {
@@ -92,7 +91,7 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
 
     private fun toReactiveMode() {
         //updateStudyIntervals()
-        BlackBoard.post(Update(PROGRAMSTATE_CHANGED, REACTIVE.name))
+        BlackBoard.post(Update(PROGRAMSTATE_CHANGED, ReviewingState.REACTIVE.name))
     }
 
     private fun successStatistics(reviews: List<Review>, text: String) = buildString {

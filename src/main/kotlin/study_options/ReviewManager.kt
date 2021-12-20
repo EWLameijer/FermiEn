@@ -6,8 +6,8 @@ import UpdateType
 import data.EntryManager
 import eventhandling.BlackBoard
 import log
-import ui.main_window.MainWindowState
 import ui.main_window.ReviewPanel
+import ui.main_window.ReviewingState
 import java.util.ArrayList
 
 import java.time.Instant
@@ -154,7 +154,8 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
             counter++
             startCardReview()
         } else {
-            BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, MainWindowState.SUMMARIZING.name))
+            initialized = false
+            BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, ReviewingState.SUMMARIZING.name))
         }
     }
 

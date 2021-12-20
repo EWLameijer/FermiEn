@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.25.1 2021-12-20 [BUGFIX] Fixed to make "Review now" (when having done X reviews) work properly
 0.25.0 2021-12-20 Fix bug with empty list at "reviewedEntries". Escape in list window now also focuses on search field.
 0.24.1 2021-12-20 [BUGFIX] Make escape immediate close edit window instead of blanking it first; make edit card from review window work
 0.24.0 2021-12-19 Make 'Replace card' respond to the user typing 'r', bugfix: if you change priority, and then change the card, the new card should have the new priority, NOT the default priority.

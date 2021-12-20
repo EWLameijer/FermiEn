@@ -15,7 +15,6 @@ import study_options.Analyzer
 import study_options.ReviewManager
 import ui.EntryEditingWindow
 import ui.StudyOptionsWindow
-import ui.main_window.MainWindowState.*
 import java.awt.*
 import java.awt.event.*
 import java.io.File
@@ -24,10 +23,21 @@ import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
 
-enum class MainWindowState { INFORMATIONAL, LIST_ENTRIES, REACTIVE, REVIEWING, SUMMARIZING }
+// MainWindowMode is what is in the main window. Is either Display or Reviewing
+// ReviewingState is either INFORMATIONAL, SUMMARIZING, REACTIVE or REVIEWING
+// together (WITH whether there are cards to review now) they indicate one of four possible panels.
+
+enum class MainWindowMode { DISPLAY, REVIEW }
+enum class ReviewingState { INFORMATIONAL, REACTIVE, REVIEWING, SUMMARIZING  }
+
+const val displayId = "DISPLAY"
+const val reviewingId = "REVIEWING"
+const val informationalId = "INFORMATIONAL"
+const val summarizingId = "SUMMARIZING"
 
 class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
-    private var mainState = if (reviewManager.hasNextCard()) REVIEWING else LIST_ENTRIES
+    private var reviewState = ReviewingState.REVIEWING
+    private var mainMode = if (reviewManager.hasNextCard()) MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
     private val entryPanel = JPanel()
 
@@ -35,7 +45,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private val summarizingPanel = SummarizingPanel(reviewManager)
 
-    private val informationPanel = InformationPanel()
+    private val informationPanel = InformationPanel(reviewManager)
 
     private val startReviewingMenuItem = createMenuItem("Start reviewing", 'r') { startReviewing() }
 
@@ -131,10 +141,10 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         entryPanel.add(scrollPane, tableConstraints)
 
         // note: container.add needs string, so .name here (or "$"), despite it seeming overkill
-        modesContainer.add(entryPanel, LIST_ENTRIES.name)
-        modesContainer.add(reviewManager.reviewPanel, REVIEWING.name)
-        modesContainer.add(summarizingPanel, SUMMARIZING.name)
-        modesContainer.add(informationPanel, INFORMATIONAL.name)
+        modesContainer.add(entryPanel, displayId)
+        modesContainer.add(reviewManager.reviewPanel, reviewingId)
+        modesContainer.add(summarizingPanel, summarizingId)
+        modesContainer.add(informationPanel, informationalId)
         add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -171,12 +181,19 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         this.title = title
     }
 
+    fun getCorrectPanelId() = if (mainMode == MainWindowMode.DISPLAY) displayId
+    else when(reviewState) {
+        ReviewingState.INFORMATIONAL -> informationalId
+        ReviewingState.REVIEWING -> reviewingId
+        ReviewingState.SUMMARIZING -> summarizingId
+        ReviewingState.REACTIVE -> if (EntryManager.reviewableEntries().isNotEmpty()) reviewingId else informationalId
+    }
+
     private fun showCorrectPanel() {
         val cardLayout = modesContainer.layout as CardLayout
-        if (mainState == REACTIVE) cardLayout.show(modesContainer, INFORMATIONAL.name)
-        else cardLayout.show(modesContainer, mainState.name)
-        goToEntryListMenuItem.isEnabled = mainState != LIST_ENTRIES
-        startReviewingMenuItem.isEnabled = mainState == LIST_ENTRIES
+        cardLayout.show(modesContainer, getCorrectPanelId())
+        goToEntryListMenuItem.isEnabled = mainMode != MainWindowMode.DISPLAY
+        startReviewingMenuItem.isEnabled = mainMode == MainWindowMode.DISPLAY
     }
 
     private fun addMenu() {
@@ -234,12 +251,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun goToEntryList() {
-        mainState = LIST_ENTRIES
+        mainMode = MainWindowMode.DISPLAY
         showCorrectPanel()
     }
 
     private fun startReviewing() {
-        mainState = if (reviewManager.hasNextCard()) REVIEWING else INFORMATIONAL
+        mainMode = MainWindowMode.REVIEW
         showCorrectPanel()
     }
 
@@ -262,7 +279,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             showCorrectPanel()
         }*/
         UpdateType.PROGRAMSTATE_CHANGED -> {
-            mainState = MainWindowState.valueOf(update.contents)
+            reviewState = ReviewingState.valueOf(update.contents)
             //reviewPanel.refresh() // there may be new cards to refresh
             updateOnScreenInformation()
             showCorrectPanel()
