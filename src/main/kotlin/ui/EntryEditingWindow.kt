@@ -150,7 +150,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         return buttons.toTypedArray()
     }
 
-    private fun closeOptionPane() = JOptionPane.getRootFrame().dispose()
+
 
     private fun addCardPanel() {
         val upperPanel = JSplitPane(JSplitPane.VERTICAL_SPLIT, JScrollPane(cardFrontPane), JScrollPane(cardBackPane))

@@ -1,9 +1,6 @@
 package study_options
 
-import data.EOL
-import data.Entry
-import data.EntryManager
-import data.getDateString
+import data.*
 import fermiEnVersion
 import java.io.BufferedWriter
 import java.io.FileOutputStream

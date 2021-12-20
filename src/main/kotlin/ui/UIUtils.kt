@@ -5,6 +5,8 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.*
 
+fun closeOptionPane() = JOptionPane.getRootFrame().dispose()
+
 class ProgrammableAction(private val m_action: () -> Unit) : AbstractAction() {
     override fun actionPerformed(ae: ActionEvent) = m_action()
 }

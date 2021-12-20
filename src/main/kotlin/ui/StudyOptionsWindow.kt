@@ -2,6 +2,7 @@ package ui
 
 
 import Update
+import data.Settings
 import data.stringToDouble
 import data.stringToInt
 import data.toRegionalString

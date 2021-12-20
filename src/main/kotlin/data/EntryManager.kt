@@ -1,6 +1,7 @@
 package data
 
-import Settings
+import Update
+import eventhandling.BlackBoard
 import prettyPrint
 import study_options.Analyzer
 import study_options.Review
@@ -12,13 +13,11 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.Temporal
 
-data class Entry(val question: StorageString, val answer: StorageString, var importance: Int? = null) {
-    var creationInstant: Instant? = null
-
+data class Entry(val question: StorageString, val answer: StorageString, var importance: Int? = null, var creationInstant: Instant? = null) {
     private var reviews = mutableListOf<Review>()
 
-    fun initReviewsWith(initialReviews:List<Review>) {
-        require(reviews.isEmpty()) { "Entry.initReviews(): erroneous trying to initialize reviews twice!"}
+    fun initReviewsWith(initialReviews: List<Review>) {
+        require(reviews.isEmpty()) { "Entry.initReviews(): erroneous trying to initialize reviews twice!" }
         reviews = initialReviews.toMutableList()
     }
 
@@ -65,7 +64,7 @@ data class Entry(val question: StorageString, val answer: StorageString, var imp
 
 fun String.toEntry(): Entry {
     val (question, answer) = split('\t')
-    return Entry(StorageString(question), StorageString(answer))
+    return Entry(StorageString(question), StorageString(answer), 10, Instant.now())
 }
 
 object EntryManager {
@@ -92,11 +91,15 @@ object EntryManager {
         notifyListeners()
     }
 
-    fun loadEntries() {
-        val entriesFile = File(Settings.currentFile())
+    fun loadEntriesFrom(fileName: String) : Boolean {
+        var loadSucceeded = false
+        val entriesFile = File(fileName)
         if (entriesFile.isFile) {
+            clearEntries()
             entries += entriesFile.readLines().map { it.toEntry() }
             encyLoadInstant = Instant.now()
+            loadSucceeded = true
+            Settings.setCurrentFile(entriesFile)
         }
         val repetitionsFile = File(Settings.currentRepetitionsFile())
         if (repetitionsFile.isFile) {
@@ -105,7 +108,12 @@ object EntryManager {
         }
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
+        notifyListeners()
+        BlackBoard.post(Update(UpdateType.ENCY_SWAPPED))
+        return loadSucceeded
     }
+
+    fun loadEntries() = loadEntriesFrom(Settings.currentFile())
 
     private fun addEntryRepetitionData(repetitionData: String) {
         val repetitionParts = repetitionData.split('\t')

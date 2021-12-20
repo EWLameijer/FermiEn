@@ -1,14 +1,13 @@
 package study_options
 
+import DEFAULT_SEPARATOR
 import kotlin.reflect.KMutableProperty1
 
 abstract class PropertyPossessor {
     protected abstract fun properties(): Map<String, Any?>
 
-    private val separator = ": "
-
     override fun toString() =
-        properties().toList().joinToString(separator = "") { "${it.first}$separator${it.second}\n" }
+        properties().toList().joinToString(separator = "") { "${it.first}$DEFAULT_SEPARATOR${it.second}\n" }
 
     abstract fun parse(lines: List<String>)
 
@@ -19,7 +18,7 @@ abstract class PropertyPossessor {
         parent: V,
         converter: String.() -> T
     ) {
-        if (line.startsWith(label)) property.set(parent, line.split(separator)[1].converter())
+        if (line.startsWith(label)) property.set(parent, line.split(DEFAULT_SEPARATOR)[1].converter())
     }
 
 }

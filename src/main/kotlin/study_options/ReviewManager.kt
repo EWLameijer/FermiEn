@@ -4,6 +4,8 @@ import Update
 import data.Entry
 import UpdateType
 import data.EntryManager
+import data.Settings
+import doNothing
 import eventhandling.BlackBoard
 import log
 import ui.main_window.ReviewPanel
@@ -19,12 +21,10 @@ import kotlin.math.min
  * @author Eric-Wubbo Lameijer
  */
 class ReviewManager(var reviewPanel: ReviewPanel) {
-    /*init {
-        BlackBoard.register(this, UpdateType.DECK_SWAPPED)
-        BlackBoard.register(this, UpdateType.CARD_CHANGED)
-        BlackBoard.register(this, UpdateType.DECK_CHANGED)
-    }*/
     init {
+        BlackBoard.register(::respondToUpdate, UpdateType.ENCY_SWAPPED)
+        //    ..BlackBoard.register(this, UpdateType.CARD_CHANGED)
+        //BlackBoard.register(this, UpdateType.DECK_CHANGED)
         reviewPanel.manager = this
     }
 
@@ -96,13 +96,12 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         moveToNextReviewOrEnd()
     }
 
-    /*
-    fun respondToUpdate(update: UpdateType) = when (update) {
-        UpdateType.ENTRY_CHANGED -> updatePanels()
-        UpdateType.ENCY_CHANGED -> updateCollection() // It can be that the current card (or another) has been deleted
-        UpdateType.ENCY_SWAPPED -> initializeReviewSession()
+    private fun respondToUpdate(update: Update) = when (update.type) {
+        //UpdateType.ENTRY_CHANGED -> updatePanels()
+        //UpdateType.ENCY_CHANGED -> updateCollection() // It can be that the current card (or another) has been deleted
+        UpdateType.ENCY_SWAPPED -> continueReviewSession()
         else -> doNothing
-    }*/
+    }
 
     private fun updatePanels() {
         if (activeEntryExists()) {

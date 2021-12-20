@@ -1,6 +1,5 @@
 package ui.main_window
 
-import Settings
 import Update
 import data.*
 import ui.createKeyListener
@@ -10,6 +9,7 @@ import eventhandling.DelegatingDocumentListener
 import fermiEnVersion
 import study_options.Analyzer
 import study_options.ReviewManager
+import ui.DeckShortcutsPopup
 import ui.EntryEditingWindow
 import ui.StudyOptionsWindow
 import java.awt.*
@@ -51,6 +51,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private val nameOfLastUsedEncyDirectory = ""
 
     private var messageUpdater: Timer? = null
+
+    val fileMenu = JMenu("File")
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -95,6 +97,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             }
         }
         BlackBoard.register(::respondToUpdate, UpdateType.PROGRAMSTATE_CHANGED)
+        BlackBoard.register(::respondToUpdate, UpdateType.ENCY_SWAPPED)
 
         addMenu()
         val tableModel = UnchangeableTableModel()
@@ -166,9 +169,9 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private fun updateWindowTitle() {
         val numReviewingPoints = EntryManager.reviewingPoints()
 
-        //val shortCutCode = getShortCutCode(currentDeck.name)
-        var title =
-            "FermiEn ${fermiEnVersion()}: ${Settings.currentFile().fileNamePart()}"
+        val shortCutCode = getShortCutCode(Settings.getShortcutIdOfCurrentDeck())
+        //currentDeck.name)
+        var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile().fileNamePart()}"
         /*if (state == MainWindowState.REVIEWING) {
     title += (", ${"card".pluralize(ReviewManager.cardsToGoYet())} yet to be reviewed in the current session")
 }*/
@@ -176,6 +179,13 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         title += ", ${"entry".pluralize(entries)} in deck, ${"point".pluralize(numReviewingPoints)}"
         this.title = title
     }
+
+    private fun getShortCutCode(id: Int?) =
+        if (id == null) ""
+        else {
+            val (command, realIndex) = if (id > 9) 'A' to id - 10 else 'C' to id
+            "[$command$realIndex]"
+        }
 
     private fun getCorrectPanelId() =
         if (mainMode == MainWindowMode.DISPLAY) displayId
@@ -195,12 +205,30 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         startReviewingMenuItem.isEnabled = mainMode == MainWindowMode.DISPLAY
     }
 
-    private fun addMenu() {
-        jMenuBar = JMenuBar()
-        val fileMenu = JMenu("File")
+    private fun rebuildFileMenu() {
+        fileMenu.removeAll()
         fileMenu.add(createMenuItem("New Encyclopedia", 'o', ::createEncyFile))
+        fileMenu.add(createMenuItem("Load Encyclopedia", 'l', ::loadEncyFile))
         fileMenu.add(createMenuItem("Import Text", 'i', ::importText))
         fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
+        addDeckLoadingMenuItems(fileMenu)
+    }
+
+    private fun loadEncyFile() {
+        do {
+            val deckName = JOptionPane.showInputDialog(
+                null,
+                "Please give name for encyclopedia to be loaded"
+            )
+                ?: // Cancel button pressed
+                return
+            if (EntryManager.loadEntriesFrom(deckName)) return
+        } while (true)
+    }
+
+    private fun addMenu() {
+        jMenuBar = JMenuBar()
+        rebuildFileMenu()
         val encyMenu = JMenu("Encyclopedia Settings")
         encyMenu.add(createMenuItem("Study Settings", 't') { StudyOptionsWindow.display() })
         encyMenu.add(createMenuItem("Analyze Ency", 'z') { Analyzer.run() })
@@ -213,6 +241,40 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         jMenuBar.add(encyMenu)
         jMenuBar.add(entryMenu)
         jMenuBar.add(modeMenu)
+    }
+
+    private fun manageDeckShortcuts() {
+        DeckShortcutsPopup().updateShortcuts()
+        rebuildFileMenu()
+    }
+
+    private fun addDeckLoadingMenuItems(fileMenu: JMenu) {
+        fileMenu.addSeparator()
+        fileMenu.add(createMenuItem("Manage deck-shortcuts", '0', ::manageDeckShortcuts))
+        (1..9).filter { Settings.shortcuts[it] != null }.forEach { digit ->
+            val encyFileName = Settings.shortcuts[digit]!!
+            fileMenu.add(
+                createMenuItem(
+                    "Load deck '${encyFileName.fileNamePart()}'",
+                    digit.digitToChar()
+                ) { EntryManager.loadEntriesFrom(encyFileName) })
+        }
+        (10..Settings.maxNumShortcuts).filter { Settings.shortcuts[it] != null }
+            .forEach { rawIndex ->
+                val encyFileName = Settings.shortcuts[rawIndex]!!
+                val digit = rawIndex - 10 // deck 11 becomes Alt+1 etc.
+                fileMenu.add(
+                    createAltMenuItem(
+                        "Load deck '${encyFileName.fileNamePart()}'",
+                        digit.digitToChar()
+                    ) { EntryManager.loadEntriesFrom(encyFileName) })
+            }
+    }
+
+    private fun createAltMenuItem(label: String, actionKey: Char, listener: () -> Unit) = JMenuItem(label).apply {
+        accelerator =
+            KeyStroke.getKeyStroke(KeyEvent.getExtendedKeyCodeForChar(actionKey.code), ActionEvent.ALT_MASK)
+        addActionListener { listener() }
     }
 
     private fun importText() {
@@ -272,11 +334,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun respondToUpdate(update: Update) = when (update.type) {
-
-        /*UpdateType.DECK_CHANGED -> {
-            Personalisation.updateTimeOfCurrentDeckReview()
+        UpdateType.ENCY_SWAPPED -> {
+            //Personalisation.updateTimeOfCurrentDeckReview()
+            informationPanel.updateMessageLabel()
+            updateWindowTitle()
             showCorrectPanel()
-        }*/
+        }
         UpdateType.PROGRAMSTATE_CHANGED -> {
             reviewState = ReviewingState.valueOf(update.contents)
             //reviewPanel.refresh() // there may be new cards to refresh
@@ -299,3 +362,4 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         //updateWindowTitle()
     }
 }
+
