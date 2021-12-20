@@ -45,9 +45,13 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         return EntryManager.entries().flatMap { it.getReviewsAfter(EntryManager.encyLoadInstant()!!) }
     }
 
-    private fun reviewedEntries(): List<Entry> {
+    private fun entriesReviewedInThisSession(): List<Entry> {
         ensureReviewSessionIsValid()
-        return EntryManager.entries().filter { it.reviews().last().instant > EntryManager.encyLoadInstant()!! }
+        return EntryManager.entries()
+            .filter {
+                val reviewsSoFar = it.reviews()
+                reviewsSoFar.isNotEmpty() && reviewsSoFar.last().instant > EntryManager.encyLoadInstant()!!
+            }
     }
 
 
@@ -66,7 +70,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         ensureReviewSessionIsValid()
         val previouslySucceeded = mutableListOf<Review>()
         val previouslyFailed = mutableListOf<Review>()
-        reviewedEntries().forEach { entry ->
+        entriesReviewedInThisSession().forEach { entry ->
             val reversedReviews = entry.reviews().reversed()
             for (index in 0 until reversedReviews.lastIndex) { // for each review EXCEPT the 'first review'
                 val review = reversedReviews[index]

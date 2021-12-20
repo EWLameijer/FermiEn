@@ -13,11 +13,14 @@ import java.time.Instant
 import java.time.temporal.Temporal
 
 data class Entry(val question: StorageString, val answer: StorageString, var importance: Int? = null) {
-
-
     var creationInstant: Instant? = null
 
-    var reviews = mutableListOf<Review>()
+    private var reviews = mutableListOf<Review>()
+
+    fun initReviewsWith(initialReviews:List<Review>) {
+        require(reviews.isEmpty()) { "Entry.initReviews(): erroneous trying to initialize reviews twice!"}
+        reviews = initialReviews.toMutableList()
+    }
 
     fun reviews() = reviews.toList()
 
@@ -111,7 +114,7 @@ object EntryManager {
         entries.find { it.question.toHorizontalString() == horizontalQuestion }?.apply {
             creationInstant = Instant.parse(creationInstantString)
             importance = importanceStr.toInt()
-            reviews = registeredReviews.toMutableList()
+            initReviewsWith(registeredReviews)
         }
     }
 

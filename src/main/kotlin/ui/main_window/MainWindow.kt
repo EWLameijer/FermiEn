@@ -81,7 +81,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     init {
         EntryManager.registerAsListener(::updateTable)
         modesContainer.layout = CardLayout()
-        createKeyListener(KeyEvent.VK_ESCAPE) { searchField.text = "" }
+        createKeyListener(KeyEvent.VK_ESCAPE) {
+            with(searchField) {
+                text = ""
+                requestFocusInWindow()
+            }
+        }
         BlackBoard.register(::respondToUpdate, UpdateType.PROGRAMSTATE_CHANGED)
 
         addMenu()
