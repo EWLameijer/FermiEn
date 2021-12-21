@@ -120,7 +120,7 @@ object Analyzer {
     }
 
     fun run() {
-        val fileName = Settings.currentFile().replace(".txt", "-log-${getDateString()}.txt")
+        val fileName = Settings.currentFile()!!.replace(".txt", "-log-${getDateString()}.txt")
         val outputStreamWriter = OutputStreamWriter(FileOutputStream(fileName), "UTF-8")
         BufferedWriter(outputStreamWriter).use { writer ->
             writeAnalysisFile(writer)

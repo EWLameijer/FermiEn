@@ -14,22 +14,19 @@ object Settings {
     private var currentFile: String? = null
     var studyOptions = StudyOptions()
 
-    fun currentFile(): String {
-        if (currentFile == null) {
-            val statusFile = File(statusFileName)
-            if (statusFile.isFile) {
-                val lines = File(statusFileName).readLines()
-                currentFile = lines.getAt(lastLoadedEncyKey)
-            }
-            currentFile = currentFile ?: "notes.txt"
-        }
-        return currentFile!!
+    fun lastFileOfPreviousSession(): String {
+        val statusFile = File(statusFileName)
+        val possibleLastFileOfPreviousSession =  if (statusFile.isFile) File(statusFileName).readLines().getAt(lastLoadedEncyKey) else null
+        return possibleLastFileOfPreviousSession ?: "notes.txt"
+
     }
 
     fun currentRepetitionsFile(): String {
-        val entryFile = currentFile()
+        val entryFile = currentFile!!
         return entryFile.replace(".txt", "_reps.txt")
     }
+
+    fun currentFile() = currentFile
 
     fun setCurrentFile(selectedFile: File?) {
         currentFile = selectedFile!!.absolutePath
@@ -46,23 +43,16 @@ object Settings {
         studyOptions.intervalSettings.calculateNextIntervalDuration(reviews)
 
     fun currentSettingsFile(): String {
-        val entryFile = currentFile()
+        val entryFile = currentFile!!
         return entryFile.replace(".txt", "_settings.txt")
     }
 
     const val maxNumShortcuts = 19
 
     val shortcuts = loadDeckShortcutsAndFilePaths()
-    private var deckShortcutKeys = shortcuts.keys.sorted()
 
     private fun getShortcutLinesForFile(): List<String> =
         (1..maxNumShortcuts).filter { shortcuts[it] != null }.map { "$it: ${shortcuts[it]}" }
-
-    fun shortcutsHaveChanged() = deckShortcutKeys != shortcuts.keys.sorted()
-
-    fun updateShortcuts() {
-        deckShortcutKeys = shortcuts.keys.sorted()
-    }
 
     private fun loadDeckShortcutsAndFilePaths(): MutableMap<Int, String> {
         val shortcutToFilePath = mutableMapOf<Int, String>()
@@ -101,6 +91,6 @@ object Settings {
             }*/
 
     fun getShortcutIdOfCurrentDeck(): Int? =
-        shortcuts.filterValues { it == currentFile() }.toList().firstOrNull()?.first
+        shortcuts.filterValues { it == currentFile!! }.toList().firstOrNull()?.first
 
 }

@@ -67,11 +67,6 @@ class ReviewPanel : JPanel() {
         add(fixedButtonPanel, fixedButtonPanelConstraints)
     }
 
-    private fun showScore() {
-        //ReviewManager.reportTime()
-        //BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, ui.main_window.MainWindowState.SUMMARIZING.name))
-    }
-
     private fun initSituationalPanel() {
         // for buttons that depend on the situation, like when the back of the card
         // is shown or when it is not yet shown.
@@ -173,8 +168,6 @@ class ReviewPanel : JPanel() {
     }
 
     private fun refresh() = repaint()
-
-    private fun shouldShowAnswer() = reviewingState == ANSWER_SHOWN
 
     fun display(currentEntry: Entry) {
         reviewingState = ANSWER_HIDDEN

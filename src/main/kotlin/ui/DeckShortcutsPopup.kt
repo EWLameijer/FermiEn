@@ -1,7 +1,6 @@
 package ui
 
 import data.Settings
-import data.fileNamePart
 import javax.swing.JButton
 import javax.swing.JOptionPane
 
@@ -9,7 +8,7 @@ class DeckShortcutsPopup {
     private val shortcutsWithDeckData = Settings.shortcuts
 
     fun updateShortcuts() {
-        val currentDeckName = Settings.currentFile()
+        val currentDeckName = Settings.currentFile()!!
         val currentDeckIndices = shortcutsWithDeckData.filterValues { it == currentDeckName }.keys
         val currentDeckIndex = if (currentDeckIndices.isEmpty()) null else currentDeckIndices.first()
 

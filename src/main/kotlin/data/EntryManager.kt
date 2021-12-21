@@ -2,7 +2,6 @@ package data
 
 import Update
 import eventhandling.BlackBoard
-import prettyPrint
 import study_options.Analyzer
 import study_options.Review
 import study_options.ReviewResult
@@ -95,6 +94,7 @@ object EntryManager {
         var loadSucceeded = false
         val entriesFile = File(fileName)
         if (entriesFile.isFile) {
+            saveEntriesToFile()
             clearEntries()
             entries += entriesFile.readLines().map { it.toEntry() }
             encyLoadInstant = Instant.now()
@@ -113,7 +113,7 @@ object EntryManager {
         return loadSucceeded
     }
 
-    fun loadEntries() = loadEntriesFrom(Settings.currentFile())
+    fun loadEntries() = loadEntriesFrom(Settings.lastFileOfPreviousSession())
 
     private fun addEntryRepetitionData(repetitionData: String) {
         val repetitionParts = repetitionData.split('\t')
@@ -127,8 +127,9 @@ object EntryManager {
     }
 
     fun saveEntriesToFile() {
+        val currentFile = Settings.currentFile() ?: return // no current file? No save needed
         val sortedEntries = entries.sortedBy { it.question.toHorizontalString() }
-        File(Settings.currentFile()).writeText(sortedEntries.joinToString(separator = "\n") { "${it.question.s}\t${it.answer.s}" })
+        File(currentFile).writeText(sortedEntries.joinToString(separator = "\n") { "${it.question.s}\t${it.answer.s}" })
         File(Settings.currentRepetitionsFile()).writeText(sortedEntries.joinToString(separator = "\n") {
             val compactQuestion = it.question.toHorizontalString()
             val creationInstant = it.creationInstant ?: Instant.now()
@@ -140,16 +141,6 @@ object EntryManager {
         })
         File(Settings.currentSettingsFile()).writeText(Settings.studyOptions.toString())
         Settings.save()
-    }
-
-    fun printEntries() {
-        entries.forEach {
-            println("Question: ")
-            prettyPrint(it.question)
-            println("Answer: ")
-            prettyPrint(it.answer)
-            println()
-        }
     }
 
     fun editEntryByQuestion(question: String) {

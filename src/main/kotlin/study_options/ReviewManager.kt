@@ -7,7 +7,6 @@ import data.EntryManager
 import data.Settings
 import doNothing
 import eventhandling.BlackBoard
-import log
 import ui.main_window.ReviewPanel
 import ui.main_window.ReviewingState
 import java.util.ArrayList
@@ -53,7 +52,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
                 reviewsSoFar.isNotEmpty() && reviewsSoFar.last().instant > EntryManager.encyLoadInstant()!!
             }
     }
-
 
     /*fun reviewedCards(): List<Card> {
         ensureReviewSessionIsValid()
@@ -122,7 +120,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         val maxNumReviews = Settings.studyOptions.otherSettings.reviewSessionSize
         val reviewableEntries = EntryManager.reviewableEntries()
         val numberOfReviewableEntries = reviewableEntries.size
-        log("Number of reviewable cards is $numberOfReviewableEntries")
         val numCardsToBeReviewed =
             if (maxNumReviews == null) numberOfReviewableEntries
             else min(maxNumReviews, numberOfReviewableEntries)

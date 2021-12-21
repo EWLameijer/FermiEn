@@ -29,15 +29,12 @@ class IntervalSettings(
 
     }
 
-
-    override fun hashCode() =
-        Objects.hash(
-            initialInterval,
-            rememberedInterval,
-            forgottenInterval,
-            lengtheningFactor
-        )
-
+    override fun hashCode() = Objects.hash(
+        initialInterval,
+        rememberedInterval,
+        forgottenInterval,
+        lengtheningFactor
+    )
 
     fun calculateNextIntervalDuration(reviews: List<Review>): Duration =
         when (val lastReview = reviews.lastOrNull()) {

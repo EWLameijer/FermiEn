@@ -3,6 +3,7 @@ package study_options
 import DEFAULT_SEPARATOR
 import kotlin.reflect.KMutableProperty1
 
+// abstract class instead of interface since I'm overriding toString
 abstract class PropertyPossessor {
     protected abstract fun properties(): Map<String, Any?>
 

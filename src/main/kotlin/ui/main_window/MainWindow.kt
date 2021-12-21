@@ -32,7 +32,7 @@ const val reviewingId = "REVIEWING"
 const val informationalId = "INFORMATIONAL"
 const val summarizingId = "SUMMARIZING"
 
-class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
+class MainWindow(reviewManager: ReviewManager) : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
     private var mainMode = if (reviewManager.hasNextCard()) MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
@@ -52,7 +52,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private var messageUpdater: Timer? = null
 
-    val fileMenu = JMenu("File")
+    private val fileMenu = JMenu("File")
 
     class UnchangeableTableModel : DefaultTableModel() {
         override fun isCellEditable(row: Int, column: Int): Boolean {
@@ -83,8 +83,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {
-        val term = searchField.text.lowercase()
-        return term in entry.first.lowercase() || term in entry.second.lowercase()
+        val terms = searchField.text.lowercase().split(' ')
+        return terms.all { it in entry.first.lowercase() || it in entry.second.lowercase() }
     }
 
     init {
@@ -171,7 +171,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
         val shortCutCode = getShortCutCode(Settings.getShortcutIdOfCurrentDeck())
         //currentDeck.name)
-        var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile().fileNamePart()}"
+        var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
         /*if (state == MainWindowState.REVIEWING) {
     title += (", ${"card".pluralize(ReviewManager.cardsToGoYet())} yet to be reviewed in the current session")
 }*/

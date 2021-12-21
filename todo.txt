@@ -8,11 +8,8 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 BUG: if text in review window is large, it doesn't scroll?
-!?text C# will like google look for separate terms?
 !make replacement window friendlier in case of long strings...
-8. add option to create/manage encyclopedias, like Eb has (Ctrl+1 etc.)
 
 ? check that all buttons work
 ? print, read, clean up code
-?check that it works correctly when opening new encyclopedias
 
