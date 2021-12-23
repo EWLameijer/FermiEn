@@ -2,6 +2,7 @@ package ui.main_window
 
 import EMPTY_STRING
 import data.Entry
+import data.EntryManager
 import study_options.ReviewManager
 import study_options.ReviewResult
 import ui.CardPanel
@@ -28,6 +29,7 @@ class ReviewPanel : JPanel() {
     var manager: ReviewManager? = null
 
     init {
+        EntryManager.registerAsListener { respondToDeckChange() }
         this.isFocusable = true
         addComponentListener(
             EventHandler.create(
@@ -56,12 +58,9 @@ class ReviewPanel : JPanel() {
             weighty = 1.0
             fill = GridBagConstraints.BOTH
         }
-        fixedButtonPanel.add(createKeyPressSensitiveButton("Edit card", 'e') { editCard() })
-        fixedButtonPanel.add(createKeyPressSensitiveButton("Delete card", 'd') {
-            /*deleteCard(
-                backOfCardPanel,
-                ReviewManager.currentCard()!!
-            )*/
+        fixedButtonPanel.add(createKeyPressSensitiveButton("Edit entry", 'e') { editCard() })
+        fixedButtonPanel.add(createKeyPressSensitiveButton("Delete entry", 'd') {
+            EntryManager.removeEntry(entry!!)
         })
         //fixedButtonPanel.add(createKeyPressSensitiveButton("View score", 'v', ::showScore))
         add(fixedButtonPanel, fixedButtonPanelConstraints)
