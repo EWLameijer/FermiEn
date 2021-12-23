@@ -84,6 +84,8 @@ fun stringToDouble(string: String): Double? {
 
 fun String.fileNamePart() = substringAfterLast(File.separator).substringBefore(".")
 
+fun String.pathPart() = substringBeforeLast(File.separator)
+
 /**
  * Converts a floating point number to a string with a maximum precision, but
  * does so in a display-friendly way, so that, if the precision is 2, for

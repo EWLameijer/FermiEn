@@ -75,7 +75,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     }
 
     private fun updateTitle() {
-        title = if (entry == null) "Add entry" else "Edit entry"
+        title = "${Settings.currentFile()!!.fileNamePart()}: " + if (entry == null) "add entry" else "edit entry"
     }
 
     private fun clearOrExit() {

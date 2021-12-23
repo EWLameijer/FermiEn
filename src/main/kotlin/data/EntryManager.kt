@@ -78,7 +78,7 @@ object EntryManager {
 
     fun timeUntilNextReview(): Duration? = entries.minOfOrNull { it.timeUntilNextReview() }
 
-    fun clearEntries() {
+    private fun clearEntries() {
         entries.clear()
         notifyListeners()
     }
@@ -151,13 +151,27 @@ object EntryManager {
     private fun questions(): Set<String> = entries.map { it.toHorizontalDisplay().first }.toSet()
 
     fun addEntry(entry: Entry) {
-        if (entry.question.toHorizontalString() in questions()) return
-        entry.apply {
-            importance = importance ?: 10
-            creationInstant = Instant.now()
+        if (entry.question.toHorizontalString() in questions()) {
+            val existingEntry = entries.find { it.question.flattenedEquals(entry.question)}!!
+            if (!existingEntry.answer.flattenedEquals(entry.answer)) {
+                println("Conflict, merging '${existingEntry.answer.toHorizontalString()} with ${entry.answer.toHorizontalString()}")
+                val replacementEntry = Entry(existingEntry.question,
+                    StorageString("${existingEntry.answer.s.dropLast(1)}; ${entry.answer.s.drop(1)}"),
+                    existingEntry.importance, Instant.now())
+                removeEntry(existingEntry)
+                entries += replacementEntry
+                notifyListeners()
+            } else {
+                println("Skipping! identical records ('${entry.question.toHorizontalString()}')")
+            }
+        } else {
+            entry.apply {
+                importance = importance ?: 10
+                creationInstant = Instant.now()
+            }
+            entries += entry
+            notifyListeners()
         }
-        entries += entry
-        notifyListeners()
     }
 
     private val entries = mutableListOf<Entry>()

@@ -4,6 +4,8 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.31.0 2021-12-23 display ency name above add/edit window too, bugfix: create ency works now;  make FermiEncy try load files from last-used directory.
+0.30.0 2021-12-22 Added option to insert FermiEn format encyclopedia files from the GUI
 0.29.0 2021-12-21 Solved bug in which switching deck made current (new) entries be forgotten; added option to search on multiple words (&&)
 0.28.0 2021-12-20 Added option to create deck shortcuts, also can now load encyclopedias
 0.27.0 2021-12-20 Editing a card closes the window on OK; adding a card allows to add another; clearing a card will return the cursor to the top field.

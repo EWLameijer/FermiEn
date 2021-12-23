@@ -48,7 +48,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private val goToEntryListMenuItem = createMenuItem("Go to list of entries", 'l') { goToEntryList() }
 
-    private val nameOfLastUsedEncyDirectory = ""
+    private fun nameOfLastUsedEncyDirectory() = Settings.currentFile()!!.pathPart()
 
     private var messageUpdater: Timer? = null
 
@@ -207,9 +207,9 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private fun rebuildFileMenu() {
         fileMenu.removeAll()
-        fileMenu.add(createMenuItem("New Encyclopedia", 'o', ::createEncyFile))
-        fileMenu.add(createMenuItem("Load Encyclopedia", 'l', ::loadEncyFile))
-        fileMenu.add(createMenuItem("Import Text", 'i', ::importText))
+        fileMenu.add(createMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile))
+        fileMenu.add(createMenuItem("Add Entries (Eb format)", 'e', ::importEbText))
+        fileMenu.add(createMenuItem("Add Entries (FermiEn format)", 'f', ::importEncyText))
         fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
         addDeckLoadingMenuItems(fileMenu)
     }
@@ -277,8 +277,12 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         addActionListener { listener() }
     }
 
-    private fun importText() {
-        val chooser = JFileChooser(nameOfLastUsedEncyDirectory).apply {
+    private fun importEbText() = importText(::ebConverter)
+
+    private fun importEncyText() = importText(::encyConverter)
+
+    private fun importText(fileConverter: (String) -> Unit) {
+        val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
             fileFilter = FileNameExtensionFilter("Text files", "txt")
         }
         val result = chooser.showOpenDialog(this)
@@ -286,8 +290,16 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
             return
         } else {
             val selectedFile = chooser.selectedFile
-            File(selectedFile.absolutePath).readLines().forEach { EntryManager.addEntry(doubleTabToEntry(it)) }
+            fileConverter(selectedFile.absolutePath)
         }
+    }
+
+    private fun ebConverter(filename: String) {
+        File(filename).readLines().forEach { EntryManager.addEntry(doubleTabToEntry(it)) }
+    }
+
+    private fun encyConverter(filename: String) {
+        File(filename).readLines().forEach { EntryManager.addEntry(it.toEntry()) }
     }
 
     private fun doubleTabToEntry(line: String): Entry {
@@ -297,17 +309,19 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
 
     private fun createEncyFile() {
-        val chooser = JFileChooser(nameOfLastUsedEncyDirectory).apply {
+        val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
             fileFilter = FileNameExtensionFilter("Encyclopedia files", "txt")
         }
         val result = chooser.showOpenDialog(this)
         if (result == JFileChooser.CANCEL_OPTION) {
             return
         } else {
-            EntryManager.saveEntriesToFile()
-            EntryManager.clearEntries()
             val selectedFile = chooser.selectedFile
-            Settings.setCurrentFile(selectedFile)
+            val selectedFilepath = selectedFile.absolutePath
+            if (!selectedFile.exists()) {
+                File(selectedFilepath).writeText("")
+            }
+            EntryManager.loadEntriesFrom(selectedFilepath)
         }
     }
 
