@@ -80,14 +80,14 @@ object EntryManager {
 
     private fun clearEntries() {
         entries.clear()
-        notifyListeners()
+        BlackBoard.post(Update(UpdateType.ENCY_CHANGED))
     }
 
     fun entries() = entries.toList()
 
     fun removeEntry(entry: Entry) {
         entries.remove(entry)
-        notifyListeners()
+        BlackBoard.post(Update(UpdateType.ENCY_CHANGED))
     }
 
     fun loadEntriesFrom(fileName: String) : Boolean {
@@ -108,7 +108,6 @@ object EntryManager {
         }
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
-        notifyListeners()
         BlackBoard.post(Update(UpdateType.ENCY_SWAPPED))
         return loadSucceeded
     }
@@ -160,7 +159,7 @@ object EntryManager {
                     existingEntry.importance, Instant.now())
                 removeEntry(existingEntry)
                 entries += replacementEntry
-                notifyListeners()
+                BlackBoard.post(Update(UpdateType.ENCY_CHANGED))
             } else {
                 println("Skipping! identical records ('${entry.question.toHorizontalString()}')")
             }
@@ -170,7 +169,7 @@ object EntryManager {
                 creationInstant = Instant.now()
             }
             entries += entry
-            notifyListeners()
+            BlackBoard.post(Update(UpdateType.ENCY_CHANGED))
         }
     }
 
@@ -180,14 +179,4 @@ object EntryManager {
 
     fun reviewableEntries(): List<Entry> =
         entries.filter { it.timeUntilNextReview().isNegative }
-
-    fun registerAsListener(listener: () -> Unit) {
-        listeners += listener
-    }
-
-    private fun notifyListeners() {
-        listeners.forEach { it() }
-    }
-
-    private val listeners = mutableSetOf<() -> Unit>()
 }

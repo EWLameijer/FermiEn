@@ -5,7 +5,6 @@ import UpdateType
 import java.util.ArrayList
 
 
-
 /**
  * The BlackBoard class serves as a kind of blackboard for central
  * communication. Events are posted to the blackboards with a message string,
@@ -27,5 +26,7 @@ object BlackBoard {
         listeners[update.type]?.forEach { it(update) }
     }
 
-    fun register(listener: UpdateAction, updateType: UpdateType) = (listeners[updateType] ?: error("")).add(listener)
+    fun register(listener: UpdateAction, vararg updateTypes: UpdateType) = updateTypes.forEach {
+        (listeners[it] ?: error("")).add(listener)
+    }
 }

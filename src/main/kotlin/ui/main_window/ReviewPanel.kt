@@ -29,7 +29,6 @@ class ReviewPanel : JPanel() {
     var manager: ReviewManager? = null
 
     init {
-        EntryManager.registerAsListener { respondToDeckChange() }
         this.isFocusable = true
         addComponentListener(
             EventHandler.create(

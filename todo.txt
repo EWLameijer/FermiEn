@@ -8,7 +8,7 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 /try add other programming encys [Kotlin etc.]
-// unify listeners (looking at EntryManager) to BlackBoard
+//
 !! BUG improving learning: how?
 ? bad reset of timer after deck swap?
 !! BUG: make delete card work (Java concurrency in practice)

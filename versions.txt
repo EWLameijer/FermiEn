@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.31.1 2021-12-24 unified listeners (looking at EntryManager) to BlackBoard, allowed deletion of entries; deleting last entry now returns to summarizing window
 0.31.0 2021-12-23 display ency name above add/edit window too, bugfix: create ency works now;  make FermiEncy try load files from last-used directory.
 0.30.0 2021-12-22 Added option to insert FermiEn format encyclopedia files from the GUI
 0.29.0 2021-12-21 Solved bug in which switching deck made current (new) entries be forgotten; added option to search on multiple words (&&)

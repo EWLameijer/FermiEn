@@ -88,7 +88,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     init {
-        EntryManager.registerAsListener(::updateTable)
+        BlackBoard.register({ updateTable() }, UpdateType.ENCY_CHANGED, UpdateType.ENCY_SWAPPED)
         modesContainer.layout = CardLayout()
         createKeyListener(KeyEvent.VK_ESCAPE) {
             with(searchField) {
@@ -214,18 +214,6 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         addDeckLoadingMenuItems(fileMenu)
     }
 
-    private fun loadEncyFile() {
-        do {
-            val deckName = JOptionPane.showInputDialog(
-                null,
-                "Please give name for encyclopedia to be loaded"
-            )
-                ?: // Cancel button pressed
-                return
-            if (EntryManager.loadEntriesFrom(deckName)) return
-        } while (true)
-    }
-
     private fun addMenu() {
         jMenuBar = JMenuBar()
         rebuildFileMenu()
@@ -306,7 +294,6 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         val (question, answer) = line.split("\t\t")
         return Entry(question.toStorageString(), answer.toStorageString())
     }
-
 
     private fun createEncyFile() {
         val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
