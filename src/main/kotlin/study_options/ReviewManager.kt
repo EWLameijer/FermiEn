@@ -152,7 +152,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     // is there a next card to study?
-    fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
+    fun hasNextCard() = counter <= entriesToBeReviewed.lastIndex
 
     // If cards are added to (or, more importantly, removed from) the deck, ensure
     // that the card also disappears from the list of cards to be reviewed

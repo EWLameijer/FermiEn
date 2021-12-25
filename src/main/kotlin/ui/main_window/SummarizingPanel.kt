@@ -88,7 +88,6 @@ class SummarizingPanel(private val reviewManager: ReviewManager) : JPanel() {
         add(buttonPanel)
     }
 
-
     private fun toReactiveMode() {
         //updateStudyIntervals()
         BlackBoard.post(Update(PROGRAMSTATE_CHANGED, ReviewingState.REACTIVE.name))

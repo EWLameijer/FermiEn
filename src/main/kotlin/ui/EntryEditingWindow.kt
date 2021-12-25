@@ -104,6 +104,10 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private fun originalQuestion(): StorageString? = entry?.question
 
     private fun saveNewEntry() {
+        if (question().toHorizontalString().isBlank()) {
+            JOptionPane.showMessageDialog(this, "Cannot add a card with a blank front")
+            return
+        }
         if (entry != null) { // are you trying to replace the card/front?
             val originalQuestion = originalQuestion()!!
             val originalAnswer = entry!!.answer
