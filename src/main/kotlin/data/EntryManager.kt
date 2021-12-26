@@ -32,7 +32,7 @@ data class Entry(val question: StorageString, val answer: StorageString, var imp
 
     fun numReviews() = reviews.size
 
-    fun timeUntilNextReview(): Duration = Duration.between(EntryManager.encyLoadInstant(), nextReviewInstant())
+    fun timeUntilNextReview(instant: Instant): Duration = Duration.between(instant, nextReviewInstant())
 
     private fun nextReviewInstant(): Temporal {
         val startOfCountingTime = if (hasBeenReviewed()) lastReview()!!.instant else creationInstant
@@ -40,7 +40,7 @@ data class Entry(val question: StorageString, val answer: StorageString, var imp
         return waitTime.addTo(startOfCountingTime)
     }
 
-    fun getRipenessFactor() = timeUntilNextReview().seconds.toDouble()
+    fun getRipenessFactor() = timeUntilNextReview(Instant.now()).seconds.toDouble()
 
     private fun plannedIntervalDuration(): Duration {
         val reviewPattern: String = reviews.map { it.result.abbreviation }.joinToString(separator = "")
@@ -76,7 +76,11 @@ object EntryManager {
     fun reviewingPoints() =
         entries.sumOf { it.reviews().takeLastWhile { rev -> rev.result == ReviewResult.SUCCESS }.size }
 
-    fun timeUntilNextReview(): Duration? = entries.minOfOrNull { it.timeUntilNextReview() }
+    fun timeUntilNextReview(): Duration? {
+        //println("${Instant.now()} calculating next review")
+        val now = Instant.now()
+        return entries.minOfOrNull { it.timeUntilNextReview(now) }
+    }
 
     private fun clearEntries() {
         entries.clear()
@@ -177,6 +181,7 @@ object EntryManager {
 
     fun getHorizontalRepresentation() = entries.map { it.toHorizontalDisplay() }
 
-    fun reviewableEntries(): List<Entry> =
-        entries.filter { it.timeUntilNextReview().isNegative }
+    fun reviewableEntries(): List<Entry> = Instant.now().run {
+        entries.filter { it.timeUntilNextReview(this).isNegative }
+    }
 }

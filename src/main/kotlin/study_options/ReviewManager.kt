@@ -20,7 +20,8 @@ import kotlin.math.min
  */
 class ReviewManager(var reviewPanel: ReviewPanel) {
     init {
-        BlackBoard.register({ respondToUpdate() }, UpdateType.ENCY_SWAPPED, UpdateType.ENCY_CHANGED)
+        BlackBoard.register({ respondToEncyUpdate() }, UpdateType.ENCY_CHANGED)
+        BlackBoard.register({ respondToEncySwap() }, UpdateType.ENCY_SWAPPED)
         //    ..BlackBoard.register(this, UpdateType.CARD_CHANGED)
         //BlackBoard.register(this, UpdateType.DECK_CHANGED)
         reviewPanel.manager = this
@@ -39,12 +40,10 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     private var initialized = false
 
     fun reviewResults(): List<Review> {
-        ensureReviewSessionIsValid()
         return EntryManager.entries().flatMap { it.getReviewsAfter(EntryManager.encyLoadInstant()!!) }
     }
 
     private fun entriesReviewedInThisSession(): List<Entry> {
-        ensureReviewSessionIsValid()
         return EntryManager.entries()
             .filter {
                 val reviewsSoFar = it.reviews()
@@ -58,13 +57,11 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }*/
 
     fun getNewFirstReviews(): List<Review> {
-        ensureReviewSessionIsValid()
         return EntryManager.entries().mapNotNull { it.reviews().firstOrNull() }
             .filter { it.instant > EntryManager.encyLoadInstant() }
     }
 
     fun getNonFirstReviews(): Pair<List<Review>, List<Review>> {
-        ensureReviewSessionIsValid()
         val previouslySucceeded = mutableListOf<Review>()
         val previouslyFailed = mutableListOf<Review>()
         entriesReviewedInThisSession().forEach { entry ->
@@ -83,29 +80,22 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         if (entriesToBeReviewed.isEmpty() || counter >= entriesToBeReviewed.size) null
         else entriesToBeReviewed[counter]
 
-    private fun ensureReviewSessionIsValid() {
-        initializeReviewSession()
-    }
-
     fun wasRemembered(reviewResult: ReviewResult) {
-        ensureReviewSessionIsValid()
         currentEntry()!!.addReview(Review(Instant.now(), reviewResult))
         moveToNextReviewOrEnd()
     }
 
-    private fun respondToUpdate() = continueReviewSession()
+    private fun respondToEncySwap() = continueReviewSession()
 
-    private fun updatePanels() {
-        if (activeEntryExists()) {
-            reviewPanel.display(currentEntry()!!)
-        } else {
-            BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED,ReviewingState.SUMMARIZING.name ))
-        }
+    private fun respondToEncyUpdate() {
+        val entriesReviewedSoFar = counter
+        val newState = if (entriesReviewedSoFar == 0) ReviewingState.REACTIVE
+        else ReviewingState.SUMMARIZING
+        BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, newState.name))
     }
 
     fun initializeReviewSession() {
-        //cardsReviewed = mutableSetOf() // don't carry old reviews with you.
-        if (!initialized) continueReviewSession()
+        continueReviewSession()
     }
 
     private fun List<Entry>.sortOnPriorityAndRipeness() =
@@ -119,6 +109,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         val numCardsToBeReviewed =
             if (maxNumReviews == null) numberOfReviewableEntries
             else min(maxNumReviews, numberOfReviewableEntries)
+        if (numCardsToBeReviewed == 0) return
         // now, for best effect, those cards which have expired more recently should
         // be rehearsed first, as other cards probably need to be relearned anyway,
         // and we should try to contain the damage.
@@ -136,10 +127,8 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     private fun startCardReview() {
-        updatePanels()
+        reviewPanel.display(currentEntry()!!)
     }
-
-    private fun activeEntryExists() = counter < entriesToBeReviewed.size
 
     private fun moveToNextReviewOrEnd() {
         if (hasNextCard()) {
@@ -152,7 +141,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     // is there a next card to study?
-    fun hasNextCard() = counter <= entriesToBeReviewed.lastIndex
+    fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
 
     // If cards are added to (or, more importantly, removed from) the deck, ensure
     // that the card also disappears from the list of cards to be reviewed

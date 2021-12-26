@@ -8,16 +8,8 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 /try add other programming encys [Kotlin etc.]
-?When adding card: does it update the timer?
-   TIMER IS FINE. Hypothesis: does not jump at the right time
-        -either panel is informational and does not show button
-        -or panel is reactive and does not work
-
-        1) investigate if panel is informational or reactive. Then think of next plan.
 
 !! BUG improving learning: how?
-? bad reset of timer after deck swap?
-!! BUG: make delete card work (Java concurrency in practice)
 !!Feature: automatically save 3 most recent versions
 !!Feature: auto-clean fourth save file
 !!Feature: restore from save file
