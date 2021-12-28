@@ -98,8 +98,10 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         continueReviewSession()
     }
 
-    private fun List<Entry>.sortOnPriorityAndRipeness() =
-        sortedWith(compareByDescending<Entry> { it.importance }.thenByDescending { it.getRipenessFactor() })
+    private fun List<Entry>.sortOnPriorityAndRipeness(): List<Entry> {
+        val now = Instant.now()
+        return sortedWith(compareByDescending<Entry> { it.importance }.thenByDescending { it.getRipenessFactor(now) })
+    }
 
     private fun continueReviewSession() {
         initialized = true

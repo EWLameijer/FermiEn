@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.32.0 2021-12-28 Automatically make backup files, also clean them after third backup. Small bugfix to keep sorting stable.
 0.31.3 2021-12-26 BUGFIX: now timer runs correctly when adding a new card; solved bug with deleting currently reviewed card not causing the next card or informational window to be shown
 0.31.2 2021-12-25 bugfix: now opens with review window, even if there is only a single review; forbids adding of card with blank front.
 0.31.1 2021-12-24 unified listeners (looking at EntryManager) to BlackBoard, allowed deletion of entries; deleting last entry now returns to summarizing window

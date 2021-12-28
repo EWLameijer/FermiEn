@@ -1,6 +1,7 @@
 package data
 
 import Update
+import backup
 import eventhandling.BlackBoard
 import study_options.Analyzer
 import study_options.Review
@@ -40,7 +41,7 @@ data class Entry(val question: StorageString, val answer: StorageString, var imp
         return waitTime.addTo(startOfCountingTime)
     }
 
-    fun getRipenessFactor() = timeUntilNextReview(Instant.now()).seconds.toDouble()
+    fun getRipenessFactor(instant: Instant) = timeUntilNextReview(instant).seconds.toDouble()
 
     private fun plannedIntervalDuration(): Duration {
         val reviewPattern: String = reviews.map { it.result.abbreviation }.joinToString(separator = "")
@@ -98,6 +99,7 @@ object EntryManager {
         var loadSucceeded = false
         val entriesFile = File(fileName)
         if (entriesFile.isFile) {
+            backup(fileName)
             saveEntriesToFile()
             clearEntries()
             entries += entriesFile.readLines().map { it.toEntry() }
@@ -107,6 +109,7 @@ object EntryManager {
         }
         val repetitionsFile = File(Settings.currentRepetitionsFile())
         if (repetitionsFile.isFile) {
+            backup(Settings.currentRepetitionsFile())
             repetitionsFile.readLines().map(EntryManager::addEntryRepetitionData)
             recommendationsMap = Analyzer.getRecommendationsMap()
         }

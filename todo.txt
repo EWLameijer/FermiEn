@@ -8,10 +8,9 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 /try add other programming encys [Kotlin etc.]
+Annoyances: 
 
 !! BUG improving learning: how?
-!!Feature: automatically save 3 most recent versions
-!!Feature: auto-clean fourth save file
 !!Feature: restore from save file
 !!Feature: allow list of entries below add entry window
 !!Feature: mouseover in list window for full entry
