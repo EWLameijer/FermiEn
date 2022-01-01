@@ -6,7 +6,11 @@ import java.io.File
 
 val version = fermiEnVersion()
 
-fun fermiEnVersion() = File("versions.txt").readLines()[6].split(' ').first()
+fun fermiEnVersion(): String =
+    with(File("versions.txt")) {
+        if (isFile) readLines()[6].split(' ').first()
+        else ""
+    }
 
 fun List<String>.getAt(key: String): String? {
     val selectedLine = firstOrNull { it.startsWith(key) }

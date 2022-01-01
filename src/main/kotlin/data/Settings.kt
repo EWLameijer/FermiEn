@@ -17,8 +17,10 @@ object Settings {
     fun lastFileOfPreviousSession(): String {
         val statusFile = File(statusFileName)
         val possibleLastFileOfPreviousSession =  if (statusFile.isFile) File(statusFileName).readLines().getAt(lastLoadedEncyKey) else null
-        return possibleLastFileOfPreviousSession ?: "notes.txt"
-
+        if (possibleLastFileOfPreviousSession != null) return possibleLastFileOfPreviousSession
+        val notesFile = File("notes.txt")
+        if (!notesFile.isFile) notesFile.writeText("")
+        return "notes.txt"
     }
 
     fun currentRepetitionsFile(): String {

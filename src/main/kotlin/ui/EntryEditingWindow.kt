@@ -7,7 +7,6 @@ import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.JComponent.WHEN_FOCUSED
 
-
 class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private val priorityLabel = JLabel(priorityText())
 
@@ -70,7 +69,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         setSize(650, 400)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         isVisible = true
-        iconImage = ImageIcon("FermiEn_neg.png").image
+        iconImage = ImageIcon("resources/FermiEn_neg.png").image
         updateTitle()
     }
 

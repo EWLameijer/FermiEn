@@ -162,7 +162,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
             informationPanel.updateMessageLabel()
         }
         messageUpdater!!.start()
-        iconImage = ImageIcon("FermiEn.png").image
+        iconImage = ImageIcon("resources/FermiEn.png").image
     }
 
     // Updates the title of the window, which contains information like the number of cards in the deck
@@ -315,6 +315,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     private fun goToEntryList() {
         mainMode = MainWindowMode.DISPLAY
         showCorrectPanel()
+        searchField.requestFocusInWindow()
     }
 
     private fun startReviewing() {

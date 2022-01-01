@@ -13,7 +13,12 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.Temporal
 
-data class Entry(val question: StorageString, val answer: StorageString, var importance: Int? = null, var creationInstant: Instant? = null) {
+data class Entry(
+    val question: StorageString,
+    val answer: StorageString,
+    var importance: Int? = null,
+    var creationInstant: Instant? = null
+) {
     private var reviews = mutableListOf<Review>()
 
     fun initReviewsWith(initialReviews: List<Review>) {
@@ -95,18 +100,16 @@ object EntryManager {
         BlackBoard.post(Update(UpdateType.ENCY_CHANGED))
     }
 
-    fun loadEntriesFrom(fileName: String) : Boolean {
-        var loadSucceeded = false
+    fun loadEntriesFrom(fileName: String): Boolean {
         val entriesFile = File(fileName)
-        if (entriesFile.isFile) {
-            backup(fileName)
-            saveEntriesToFile()
-            clearEntries()
-            entries += entriesFile.readLines().map { it.toEntry() }
-            encyLoadInstant = Instant.now()
-            loadSucceeded = true
-            Settings.setCurrentFile(entriesFile)
-        }
+        if (!entriesFile.isFile) return false
+
+        backup(fileName)
+        saveEntriesToFile()
+        clearEntries()
+        entries += entriesFile.readLines().map { it.toEntry() }
+        encyLoadInstant = Instant.now()
+        Settings.setCurrentFile(entriesFile)
         val repetitionsFile = File(Settings.currentRepetitionsFile())
         if (repetitionsFile.isFile) {
             backup(Settings.currentRepetitionsFile())
@@ -116,7 +119,7 @@ object EntryManager {
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
         BlackBoard.post(Update(UpdateType.ENCY_SWAPPED))
-        return loadSucceeded
+        return true
     }
 
     fun loadEntries() = loadEntriesFrom(Settings.lastFileOfPreviousSession())
@@ -158,12 +161,14 @@ object EntryManager {
 
     fun addEntry(entry: Entry) {
         if (entry.question.toHorizontalString() in questions()) {
-            val existingEntry = entries.find { it.question.flattenedEquals(entry.question)}!!
+            val existingEntry = entries.find { it.question.flattenedEquals(entry.question) }!!
             if (!existingEntry.answer.flattenedEquals(entry.answer)) {
                 println("Conflict, merging '${existingEntry.answer.toHorizontalString()} with ${entry.answer.toHorizontalString()}")
-                val replacementEntry = Entry(existingEntry.question,
+                val replacementEntry = Entry(
+                    existingEntry.question,
                     StorageString("${existingEntry.answer.s.dropLast(1)}; ${entry.answer.s.drop(1)}"),
-                    existingEntry.importance, Instant.now())
+                    existingEntry.importance, Instant.now()
+                )
                 removeEntry(existingEntry)
                 entries += replacementEntry
                 BlackBoard.post(Update(UpdateType.ENCY_CHANGED))

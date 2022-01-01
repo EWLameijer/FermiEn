@@ -8,7 +8,18 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 /try add other programming encys [Kotlin etc.]
-Annoyances: 
+Annoyances:
+1) debug the executable so it works well without fermien_status.txt
+
+16:47
+https://www.youtube.com/watch?v=d02PK8C5EaA :
+    -res at same level as src
+    getClass.getClassLoader.getResource("towngate.jog"
+17:04 => UGH. Don't understand it yet.
+17:05
+    On startup
+        WHAT if no
+
 
 !! BUG improving learning: how?
 !!Feature: restore from save file
