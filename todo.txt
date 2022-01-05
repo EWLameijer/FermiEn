@@ -7,9 +7,8 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-/try add other programming encys [Kotlin etc.]
 Annoyances:
-1) debug the executable so it works well without fermien_status.txt
+
 
 16:47
 https://www.youtube.com/watch?v=d02PK8C5EaA :

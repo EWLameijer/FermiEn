@@ -168,13 +168,8 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     // Updates the title of the window, which contains information like the number of cards in the deck
     private fun updateWindowTitle() {
         val numReviewingPoints = EntryManager.reviewingPoints()
-
         val shortCutCode = getShortCutCode(Settings.getShortcutIdOfCurrentDeck())
-        //currentDeck.name)
         var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
-        /*if (state == MainWindowState.REVIEWING) {
-    title += (", ${"card".pluralize(ReviewManager.cardsToGoYet())} yet to be reviewed in the current session")
-}*/
         val entries = EntryManager.entries().size
         title += ", ${"entry".pluralize(entries)} in deck, ${"point".pluralize(numReviewingPoints)}"
         this.title = title

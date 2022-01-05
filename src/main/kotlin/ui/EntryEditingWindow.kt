@@ -115,9 +115,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
                 val buttons = getFrontChangeButtons()
                 JOptionPane.showOptionDialog(
                     null,
-                    """Replace the card
-                           '${originalQuestion.toHorizontalString()}' / '${originalAnswer.toHorizontalString()}' with
-                           '${question().toHorizontalString()}' / '${answer().toHorizontalString()}'?""",
+                    stringCompareResult(originalAnswer),
                     "Are you sure you want to update the current card?", 0,
                     JOptionPane.QUESTION_MESSAGE, null, buttons, null
                 )
@@ -126,6 +124,35 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
             submitEntry()
         }
         createKeyListener(KeyEvent.VK_ESCAPE) { clearOrExit() } // set escape back
+    }
+
+    private fun stringCompareResult(originalAnswer: StorageString): String {
+        val (origQ, origA, newQ, newA) = listOf(
+            originalQuestion(),
+            originalAnswer,
+            question(),
+            answer()
+        ).map { it!!.toHorizontalString() }
+        val qComparison =
+            if (newQ != origQ) "Change the question<br>'${summarize(origQ)}' to<br>'${difference(origQ, newQ)}'" else ""
+        var aComparison =
+            if (newA != origA) "Change the answer<br>'${summarize(origA)}' to<br>'${difference(origA, newA)}'" else ""
+        val separator = if (qComparison.isNotEmpty() && aComparison.isNotEmpty()) "<br>and<br>" else ""
+        if (separator.isNotEmpty()) aComparison = aComparison.replaceFirst('C', 'c')
+        return "<html>$qComparison$separator$aComparison</html>"
+    }
+
+    private fun summarize(text: String): String {
+        val words = text.split(' ')
+        return if (words.size <= 6) text
+        else (words.take(3) + "..." + words.takeLast(3)).joinToString(" ")
+    }
+
+    private fun difference(originalText: String, newText: String): String {
+        val commonPrefix = originalText.commonPrefixWith(newText)
+        val commonSuffix = originalText.commonSuffixWith(newText)
+        val result = newText.removePrefix(commonPrefix).removeSuffix(commonSuffix)
+        return ("${summarize(commonPrefix)}<i>$result</i>${summarize(commonSuffix)}").linesOfMaxLength(50)
     }
 
     private fun submitEntry() {
@@ -152,7 +179,6 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         if (!question().flattenedEquals(originalQuestion()!!)) buttons.add(1, keepBothButton)
         return buttons.toTypedArray()
     }
-
 
 
     private fun addCardPanel() {
@@ -188,4 +214,20 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
         }
         add(buttonPane, buttonPaneConstraints)
     }
+}
+
+private fun String.linesOfMaxLength(maxLineLength: Int): String {
+    val words = split(' ')
+    val currentLine = StringBuilder()
+    val allLines = StringBuilder()
+    for (wordIndex in words.indices) {
+        if (currentLine.isNotEmpty()) currentLine.append(' ')
+        currentLine.append(words[wordIndex])
+        if (wordIndex == words.lastIndex || currentLine.length + words[wordIndex + 1].length + 1 > maxLineLength) {
+            if (allLines.isNotEmpty()) allLines.append("<br>")
+            allLines.append(currentLine)
+            currentLine.clear()
+        }
+    }
+    return allLines.toString()
 }
