@@ -1,8 +1,8 @@
 package ui.main_window
 
 import Update
+import UpdateType
 import data.*
-import ui.createKeyListener
 import doNothing
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
@@ -12,13 +12,18 @@ import study_options.ReviewManager
 import ui.DeckShortcutsPopup
 import ui.EntryEditingWindow
 import ui.StudyOptionsWindow
-import java.awt.*
+import ui.createKeyListener
+import java.awt.CardLayout
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
 import java.awt.event.*
 import java.io.File
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import javax.swing.table.DefaultTableModel
 import kotlin.system.exitProcess
+
 
 // MainWindowMode is what is in the main window. Is either Display or Reviewing
 // ReviewingState is either INFORMATIONAL, SUMMARIZING, REACTIVE or REVIEWING
@@ -61,7 +66,21 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         }
     }
 
-    private val table = JTable()
+    // from https://stackoverflow.com/questions/9467093/how-to-add-a-tooltip-to-a-cell-in-a-jtable
+    private  val table = object : JTable() {
+        override fun getToolTipText(e: MouseEvent): String? {
+            var tip: String? = null
+            val p = e.point
+            val rowIndex = rowAtPoint(p)
+            val colIndex = columnAtPoint(p)
+            try {
+                tip = getValueAt(rowIndex, colIndex).toString().linesOfMaxLength(100).inHtml()
+            } catch (_: RuntimeException) {
+                //catch null pointer exception if mouse is over an empty line
+            }
+            return tip
+        }
+    }
 
     private val scrollPane = JScrollPane(table)
 

@@ -23,7 +23,7 @@ https://www.youtube.com/watch?v=d02PK8C5EaA :
 !! BUG improving learning: how?
 !!Feature: restore from save file
 !!Feature: allow list of entries below add entry window
-!!Feature: mouseover in list window for full entry
+!!Feature:
 =>Eb: save and load as text
 ??Check if modify card while studying works well
 

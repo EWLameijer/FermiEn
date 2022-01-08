@@ -216,18 +216,4 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     }
 }
 
-private fun String.linesOfMaxLength(maxLineLength: Int): String {
-    val words = split(' ')
-    val currentLine = StringBuilder()
-    val allLines = StringBuilder()
-    for (wordIndex in words.indices) {
-        if (currentLine.isNotEmpty()) currentLine.append(' ')
-        currentLine.append(words[wordIndex])
-        if (wordIndex == words.lastIndex || currentLine.length + words[wordIndex + 1].length + 1 > maxLineLength) {
-            if (allLines.isNotEmpty()) allLines.append("<br>")
-            allLines.append(currentLine)
-            currentLine.clear()
-        }
-    }
-    return allLines.toString()
-}
+

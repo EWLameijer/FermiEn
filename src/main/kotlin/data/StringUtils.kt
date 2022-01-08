@@ -218,3 +218,21 @@ private fun representsFractionalNumber(string: String, maxPrecision: Int): Boole
 fun representsPositiveFractionalNumber(string: String, maxPrecision: Int) =
     if (string.startsWith("-")) false
     else representsFractionalNumber(string, maxPrecision)
+
+fun String.linesOfMaxLength(maxLineLength: Int): String {
+    val words = split(' ')
+    val currentLine = StringBuilder()
+    val allLines = StringBuilder()
+    for (wordIndex in words.indices) {
+        if (currentLine.isNotEmpty()) currentLine.append(' ')
+        currentLine.append(words[wordIndex])
+        if (wordIndex == words.lastIndex || currentLine.length + words[wordIndex + 1].length + 1 > maxLineLength) {
+            if (allLines.isNotEmpty()) allLines.append("<br>")
+            allLines.append(currentLine)
+            currentLine.clear()
+        }
+    }
+    return allLines.toString()
+}
+
+fun String.inHtml() = "<html>$this</html>"
