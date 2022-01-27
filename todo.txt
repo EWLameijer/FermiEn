@@ -10,6 +10,20 @@ backslashes.
 Annoyances:
 
 
+Projects
+    1. zorg dat je makkelijk kan editen zonder dupl
+    2. Maak het buildable met Gradle
+    3. probeer de plaatjes in de resources te krijgen!
+    // D3: Liefst input A relatie B
+
+
+Kan editen zonder dupl:
+1. Zorg dat Ctrl-N eerste keer een panel aan de linkerkant uitklapt OK
+2. Zorg dat Esc het weer terugklapt OK
+3. Probleem: het lijkt erop dat
+
+
+
 16:47
 https://www.youtube.com/watch?v=d02PK8C5EaA :
     -res at same level as src
@@ -23,7 +37,6 @@ https://www.youtube.com/watch?v=d02PK8C5EaA :
 !! BUG improving learning: how?
 !!Feature: restore from save file
 !!Feature: allow list of entries below add entry window
-!!Feature:
 =>Eb: save and load as text
 ??Check if modify card while studying works well
 

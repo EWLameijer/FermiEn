@@ -9,10 +9,7 @@ import eventhandling.DelegatingDocumentListener
 import fermiEnVersion
 import study_options.Analyzer
 import study_options.ReviewManager
-import ui.DeckShortcutsPopup
-import ui.EntryEditingWindow
-import ui.StudyOptionsWindow
-import ui.createKeyListener
+import ui.*
 import java.awt.CardLayout
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -39,9 +36,12 @@ const val summarizingId = "SUMMARIZING"
 
 class MainWindow(reviewManager: ReviewManager) : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
+
     private var mainMode = if (reviewManager.hasNextCard()) MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
     private val entryPanel = JPanel()
+
+    private lateinit var entryEditingPanel : EntryEditingPanel
 
     private val modesContainer = JPanel()
 
@@ -67,7 +67,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     // from https://stackoverflow.com/questions/9467093/how-to-add-a-tooltip-to-a-cell-in-a-jtable
-    private  val table = object : JTable() {
+    private val table = object : JTable() {
         override fun getToolTipText(e: MouseEvent): String? {
             var tip: String? = null
             val p = e.point
@@ -84,13 +84,14 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private val scrollPane = JScrollPane(table)
 
-    private val searchFieldListener = DelegatingDocumentListener { updateTable() }
+
 
     private val searchField = JTextField().apply {
         document.addDocumentListener(searchFieldListener)
     }
 
     private fun updateTable() {
+        println("Updating table!")
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
         tableModel.addColumn("answer")
@@ -101,9 +102,15 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         table.model = tableModel
     }
 
+    val searchFieldListener = DelegatingDocumentListener { updateTable() }
+
     private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {
-        val terms = searchField.text.lowercase().split(' ')
-        return terms.all { it in entry.first.lowercase() || it in entry.second.lowercase() }
+        // TODO: should also look at
+        val editWindowTerms =
+            if (entryEditingPanel.isVisible) entryEditingPanel.question().toHorizontalString() + " " else ""
+        val searchFieldTerms = searchField.text
+        val allTerms = (editWindowTerms + searchFieldTerms).lowercase().split(' ')
+        return allTerms.all { it in entry.first.lowercase() || it in entry.second.lowercase() }
     }
 
     init {
@@ -114,6 +121,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
                 text = ""
                 requestFocusInWindow()
             }
+            entryEditingPanel.isVisible = false
         }
         BlackBoard.register(::respondToUpdate, UpdateType.PROGRAMSTATE_CHANGED)
         BlackBoard.register(::respondToUpdate, UpdateType.ENCY_SWAPPED)
@@ -138,26 +146,8 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
                 }
             }
         })
-        entryPanel.layout = GridBagLayout()
-        val searchBoxConstraints = GridBagConstraints().apply {
-            gridx = 0
-            gridy = 0
-            weightx = 1.0
-            weighty = 1.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-        }
-        val tableConstraints = GridBagConstraints().apply {
-            gridx = 0
-            gridy = 1
-            weightx = 1.0
-            weighty = 1000.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-        }
-
-        entryPanel.add(searchField, searchBoxConstraints)
-        entryPanel.add(scrollPane, tableConstraints)
+        entryEditingPanel = EntryEditingPanel(this)
+        setupEntryPanel()
 
         // note: container.add needs string, so .name here (or "$"), despite it seeming overkill
         modesContainer.add(entryPanel, displayId)
@@ -182,6 +172,42 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         }
         messageUpdater!!.start()
         iconImage = ImageIcon("resources/FermiEn.png").image
+
+    }
+
+    private fun setupEntryPanel() {
+        val editCardConstraints = GridBagConstraints().apply {
+            gridx = 0
+            gridy = 0
+            weightx = 1.0
+            weighty = 1.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+            gridheight = 2
+        }
+        val searchBoxConstraints = GridBagConstraints().apply {
+            gridx = 1
+            gridy = 0
+            weightx = 1.0
+            weighty = 1.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+        }
+        val tableConstraints = GridBagConstraints().apply {
+            gridx = 1
+            gridy = 1
+            weightx = 1.0
+            weighty = 1000.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+        }
+        entryPanel.apply {
+            layout = GridBagLayout()
+            add(entryEditingPanel, editCardConstraints)
+            entryEditingPanel.isVisible = false;
+            add(searchField, searchBoxConstraints)
+            add(scrollPane, tableConstraints)
+        }
     }
 
     // Updates the title of the window, which contains information like the number of cards in the deck
@@ -238,7 +264,9 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         modeMenu.add(startReviewingMenuItem)
         modeMenu.add(goToEntryListMenuItem)
         val entryMenu = JMenu("Entry")
-        entryMenu.add(createMenuItem("Add Entry", 'n') { EntryEditingWindow() })
+        entryMenu.add(createMenuItem("Add Entry", 'n') {
+            entryEditingPanel.isVisible = true
+        })
         jMenuBar.add(fileMenu)
         jMenuBar.add(encyMenu)
         jMenuBar.add(entryMenu)
