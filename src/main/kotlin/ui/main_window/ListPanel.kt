@@ -87,15 +87,15 @@ class ListPanel : JPanel() {
         }
         entryEditingPanel = EntryEditingPanel(this)
         layout = GridBagLayout()
-        add(entryEditingPanel, getEditCardConstraints())
+        add(entryEditingPanel, editCardConstraints)
         entryEditingPanel.isVisible = false
-        add(searchField, getSearchBoxConstraints())
-        add(scrollPane, getTableConstraints())
+        add(searchField, searchBoxConstraints)
+        add(scrollPane, tableConstraints)
 
         initializeEntriesList()
     }
 
-    private fun getTableConstraints() {
+    private val tableConstraints =
         GridBagConstraints().apply {
             gridx = 1
             gridy = 1
@@ -104,9 +104,8 @@ class ListPanel : JPanel() {
             insets = Insets(0, 0, 0, 0)
             fill = GridBagConstraints.BOTH
         }
-    }
 
-    private fun getSearchBoxConstraints() {
+    private val searchBoxConstraints =
         GridBagConstraints().apply {
             gridx = 1
             gridy = 0
@@ -115,9 +114,8 @@ class ListPanel : JPanel() {
             insets = Insets(0, 0, 0, 0)
             fill = GridBagConstraints.BOTH
         }
-    }
 
-    private fun getEditCardConstraints() {
+    private val editCardConstraints =
         GridBagConstraints().apply {
             gridx = 0
             gridy = 0
@@ -127,7 +125,6 @@ class ListPanel : JPanel() {
             fill = GridBagConstraints.BOTH
             gridheight = 2
         }
-    }
 
     private fun initializeEntriesList() {
         table.model = initializeTableModel()
