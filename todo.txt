@@ -8,6 +8,17 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 Annoyances:
+2. normal search broken!
+    // OK. What needs to happen:
+    // 1. That entrypanel
+
+Ergens MainWindowState
+    MainWindow.setState() => does updates
+    Menu.setState() => does updates on menu items
+
+1. simultaneous runs possible (dangerous!)
+
+1. top card not centered
 
 
 Projects

@@ -41,7 +41,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private val entryPanel = JPanel()
 
-    private lateinit var entryEditingPanel : EntryEditingPanel
+    private lateinit var entryEditingPanel: EntryEditingPanel
 
     private val modesContainer = JPanel()
 
@@ -84,14 +84,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private val scrollPane = JScrollPane(table)
 
-
-
-    private val searchField = JTextField().apply {
-        document.addDocumentListener(searchFieldListener)
-    }
-
     private fun updateTable() {
-        println("Updating table!")
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
         tableModel.addColumn("answer")
@@ -104,13 +97,15 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     val searchFieldListener = DelegatingDocumentListener { updateTable() }
 
+    private val searchField = JTextField().apply {
+        document.addDocumentListener(searchFieldListener)
+    }
+
     private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {
-        // TODO: should also look at
-        val editWindowTerms =
-            if (entryEditingPanel.isVisible) entryEditingPanel.question().toHorizontalString() + " " else ""
-        val searchFieldTerms = searchField.text
-        val allTerms = (editWindowTerms + searchFieldTerms).lowercase().split(' ')
-        return allTerms.all { it in entry.first.lowercase() || it in entry.second.lowercase() }
+        val searchString = if (entryEditingPanel.isVisible) entryEditingPanel.frontText()
+        else searchField.text
+        val searchTerms = searchString.lowercase().split(' ')
+        return searchTerms.all { it in entry.first.lowercase() || it in entry.second.lowercase() }
     }
 
     init {
@@ -118,10 +113,12 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         modesContainer.layout = CardLayout()
         createKeyListener(KeyEvent.VK_ESCAPE) {
             with(searchField) {
+                isVisible = true
                 text = ""
                 requestFocusInWindow()
             }
             entryEditingPanel.isVisible = false
+            updateTable()
         }
         BlackBoard.register(::respondToUpdate, UpdateType.PROGRAMSTATE_CHANGED)
         BlackBoard.register(::respondToUpdate, UpdateType.ENCY_SWAPPED)
@@ -265,12 +262,20 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         modeMenu.add(goToEntryListMenuItem)
         val entryMenu = JMenu("Entry")
         entryMenu.add(createMenuItem("Add Entry", 'n') {
-            entryEditingPanel.isVisible = true
+            activateEntryPanel()
         })
         jMenuBar.add(fileMenu)
         jMenuBar.add(encyMenu)
         jMenuBar.add(entryMenu)
         jMenuBar.add(modeMenu)
+    }
+
+    private fun activateEntryPanel() {
+        if (entryEditingPanel.isVisible) return // do nothing
+        entryEditingPanel.isVisible = true
+        entryEditingPanel.setQuestion(searchField.text)
+        searchField.text = ""
+        searchField.isVisible = false
     }
 
     private fun manageDeckShortcuts() {

@@ -1,7 +1,6 @@
 package ui
 
 import data.*
-import eventhandling.DelegatingDocumentListener
 import ui.main_window.MainWindow
 import java.awt.*
 import javax.swing.*
@@ -35,6 +34,8 @@ class EntryEditingPanel(private val parentWindow: MainWindow, private var entry:
         document.addDocumentListener(parentWindow.searchFieldListener)
         //document.addDocumentListener(DelegatingDocumentListener { println("Listening") })
     }
+
+    fun frontText(): String = cardFrontPane.text
 
     private fun makeTabTransferFocus(component: Component) {
         var strokes: HashSet<KeyStroke> = HashSet(listOf(KeyStroke.getKeyStroke("pressed TAB")))
@@ -214,6 +215,12 @@ class EntryEditingPanel(private val parentWindow: MainWindow, private var entry:
             insets = Insets(10, 10, 10, 10)
         }
         add(buttonPane, buttonPaneConstraints)
+    }
+
+    fun setQuestion(question: String?) {
+        entry = null
+        cardFrontPane.text = question
+        cardBackPane.text = ""
     }
 }
 
