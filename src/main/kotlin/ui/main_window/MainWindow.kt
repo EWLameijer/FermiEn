@@ -56,9 +56,6 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     init {
-
-        modesContainer.layout = CardLayout()
-
         BlackBoard.register(::respondToUpdate, UpdateType.PROGRAMSTATE_CHANGED)
         BlackBoard.register(::respondToUpdate, UpdateType.ENCY_SWAPPED)
 
@@ -66,10 +63,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         listPanel.setup()
 
         // note: container.add needs string, so .name here (or "$"), despite it seeming overkill
-        modesContainer.add(listPanel, displayId)
-        modesContainer.add(reviewManager.reviewPanel, reviewingId)
-        modesContainer.add(SummarizingPanel(reviewManager), summarizingId)
-        modesContainer.add(informationPanel, informationalId)
+        setupPanelContainer(reviewManager)
         add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -88,6 +82,16 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         }
         messageUpdater!!.start()
         iconImage = ImageIcon("resources/FermiEn.png").image
+    }
+
+    private fun setupPanelContainer(reviewManager: ReviewManager) {
+        modesContainer.apply {
+            layout = CardLayout()
+            add(listPanel, displayId)
+            add(reviewManager.reviewPanel, reviewingId)
+            add(SummarizingPanel(reviewManager), summarizingId)
+            add(informationPanel, informationalId)
+        }
     }
 
     // Updates the title of the window, which contains information like the number of cards in the deck
@@ -127,12 +131,14 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun rebuildFileMenu() {
-        fileMenu.removeAll()
-        fileMenu.add(createMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile))
-        fileMenu.add(createMenuItem("Add Entries (Eb format)", 'e', ::importEbText))
-        fileMenu.add(createMenuItem("Add Entries (FermiEn format)", 'f', ::importEncyText))
-        fileMenu.add(createMenuItem("Quit", 'q', ::saveAndQuit))
-        addDeckLoadingMenuItems(fileMenu)
+        with (fileMenu) {
+            removeAll()
+            add(createMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile))
+            add(createMenuItem("Add Entries (Eb format)", 'e', ::importEbText))
+            add(createMenuItem("Add Entries (FermiEn format)", 'f', ::importEncyText))
+            add(createMenuItem("Quit", 'q', ::saveAndQuit))
+            addDeckLoadingMenuItems(this)
+        }
     }
 
     private fun addMenu() {
@@ -254,14 +260,12 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private fun respondToUpdate(update: Update) = when (update.type) {
         UpdateType.ENCY_SWAPPED -> {
-            //Personalisation.updateTimeOfCurrentDeckReview()
             informationPanel.updateMessageLabel()
             updateWindowTitle()
             showCorrectPanel()
         }
         UpdateType.PROGRAMSTATE_CHANGED -> {
             reviewState = ReviewingState.valueOf(update.contents)
-            //reviewPanel.refresh() // there may be new cards to refresh
             updateOnScreenInformation()
             showCorrectPanel()
         }

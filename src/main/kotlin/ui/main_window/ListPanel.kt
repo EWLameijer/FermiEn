@@ -85,7 +85,40 @@ class ListPanel : JPanel() {
         createKeyListener(KeyEvent.VK_ESCAPE) {
             resetPanel()
         }
-        val editCardConstraints = GridBagConstraints().apply {
+        entryEditingPanel = EntryEditingPanel(this)
+        layout = GridBagLayout()
+        add(entryEditingPanel, getEditCardConstraints())
+        entryEditingPanel.isVisible = false
+        add(searchField, getSearchBoxConstraints())
+        add(scrollPane, getTableConstraints())
+
+        initializeEntriesList()
+    }
+
+    private fun getTableConstraints() {
+        GridBagConstraints().apply {
+            gridx = 1
+            gridy = 1
+            weightx = 1.0
+            weighty = 1000.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+        }
+    }
+
+    private fun getSearchBoxConstraints() {
+        GridBagConstraints().apply {
+            gridx = 1
+            gridy = 0
+            weightx = 1.0
+            weighty = 1.0
+            insets = Insets(0, 0, 0, 0)
+            fill = GridBagConstraints.BOTH
+        }
+    }
+
+    private fun getEditCardConstraints() {
+        GridBagConstraints().apply {
             gridx = 0
             gridy = 0
             weightx = 1.0
@@ -94,36 +127,10 @@ class ListPanel : JPanel() {
             fill = GridBagConstraints.BOTH
             gridheight = 2
         }
-        val searchBoxConstraints = GridBagConstraints().apply {
-            gridx = 1
-            gridy = 0
-            weightx = 1.0
-            weighty = 1.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-        }
-        val tableConstraints = GridBagConstraints().apply {
-            gridx = 1
-            gridy = 1
-            weightx = 1.0
-            weighty = 1000.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-        }
-        entryEditingPanel = EntryEditingPanel(this)
-        layout = GridBagLayout()
-        add(entryEditingPanel, editCardConstraints)
-        entryEditingPanel.isVisible = false
-        add(searchField, searchBoxConstraints)
-        add(scrollPane, tableConstraints)
+    }
 
-        val tableModel = UnchangeableTableModel()
-        tableModel.addColumn("question")
-        tableModel.addColumn("answer")
-        EntryManager.getHorizontalRepresentation().sortedBy { it.first.lowercase() }.forEach {
-            tableModel.addRow(arrayOf(it.first, it.second))
-        }
-        table.model = tableModel
+    private fun initializeEntriesList() {
+        table.model = initializeTableModel()
         table.fillsViewportHeight = true
         table.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(mouseEvent: MouseEvent) {
@@ -136,6 +143,16 @@ class ListPanel : JPanel() {
                 }
             }
         })
+    }
+
+    private fun initializeTableModel(): UnchangeableTableModel {
+        return UnchangeableTableModel().apply {
+            addColumn("question")
+            addColumn("answer")
+            EntryManager.getHorizontalRepresentation().sortedBy { it.first.lowercase() }.forEach {
+                addRow(arrayOf(it.first, it.second))
+            }
+        }
     }
 
     fun resetPanel() {

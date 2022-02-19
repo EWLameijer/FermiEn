@@ -10,7 +10,7 @@ backslashes.
 Usually: View needs to send to
 
 Annoyances:
-2. normal search broken!
+
     // OK. What needs to happen:
     // 1. That entrypanel
 
@@ -19,7 +19,10 @@ Model - the EntryManager etc
 
 View: MainWindow, which has EntryEditingPanel, searchField, meny
 
-MainWindow = 411 lines.
+MainWindow = 411 lines. => 275 lines. Good!
+16:17 => 16:33? :D
+
+
 
 
 
