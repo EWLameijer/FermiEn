@@ -1,3 +1,13 @@
+General design
+
+Model - view - controller
+
+View: the Main window  and such
+
+Controller: the main window is growing quite a bit
+
+Model = the encyclopedia itself.
+
 
 ReviewManager
 

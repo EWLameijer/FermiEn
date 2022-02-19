@@ -21,6 +21,10 @@ fun JComponent.createKeyListener(keyStroke: KeyStroke, action: () -> Unit) {
     actionMap.put(eventId, ProgrammableAction(action))
 }
 
+fun JComponent.createKeyListener(keyEvent: Int, action: () -> Unit) {
+    createKeyListener(KeyStroke.getKeyStroke(keyEvent, 0), action)
+}
+
 private fun createKeyPressSensitiveButton(text: String, actionKey: KeyStroke, action: () -> Unit): JButton =
     JButton(text).apply {
         mnemonic = KeyEvent.getExtendedKeyCodeForChar(actionKey.keyChar.code)

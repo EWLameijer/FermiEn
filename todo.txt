@@ -7,10 +7,21 @@ house both questions and answers. Assuming text (for now) a normal format would 
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
+Usually: View needs to send to
+
 Annoyances:
 2. normal search broken!
     // OK. What needs to happen:
     // 1. That entrypanel
+
+// refactoring! [a bit late, MainWindow has far more than 7 items]
+Model - the EntryManager etc
+
+View: MainWindow, which has EntryEditingPanel, searchField, meny
+
+MainWindow = 411 lines.
+
+
 
 Ergens MainWindowState
     MainWindow.setState() => does updates

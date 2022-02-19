@@ -1,11 +1,11 @@
 package ui
 
 import data.*
-import ui.main_window.MainWindow
+import ui.main_window.ListPanel
 import java.awt.*
 import javax.swing.*
 
-class EntryEditingPanel(private val parentWindow: MainWindow, private var entry: Entry? = null) : JPanel() {
+class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: Entry? = null) : JPanel() {
     private val priorityLabel = JLabel(priorityText())
 
     private val deleteButton = UnfocusableButton("Delete") {
