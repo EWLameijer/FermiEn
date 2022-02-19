@@ -95,14 +95,14 @@ internal class CenteredBoxView(elem: Element, axis: Int) : BoxView(elem, axis) {
         var textBlockHeight = 0
 
         for (i in spans.indices) {
-            textBlockHeight = spans[i]
+            textBlockHeight += spans[i]
         }
         // TODO: find out how to make it nice for the top window too
-        /* if (textBlockHeight * offsets.size < targetSpan) {
+        if (textBlockHeight * offsets.size < targetSpan) {
             val offset = (targetSpan - textBlockHeight) / 2
             for (i in offsets.indices) {
                 offsets[i] += offset
             }
-        } */
+        }
     }
 }

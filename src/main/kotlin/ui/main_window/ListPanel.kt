@@ -95,39 +95,44 @@ class ListPanel : JPanel() {
         initializeEntriesList()
     }
 
-    private val tableConstraints =
-        GridBagConstraints().apply {
-            gridx = 1
-            gridy = 1
-            weightx = 1.0
-            weighty = 1000.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-        }
+    private val tableConstraints = GridBagConstraints().apply {
+        gridx = 1
+        gridy = 1
+        weightx = 1.0
+        weighty = 1000.0
+        insets = Insets(0, 0, 0, 0)
+        fill = GridBagConstraints.BOTH
+    }
 
-    private val searchBoxConstraints =
-        GridBagConstraints().apply {
-            gridx = 1
-            gridy = 0
-            weightx = 1.0
-            weighty = 1.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-        }
+    private val searchBoxConstraints = GridBagConstraints().apply {
+        gridx = 1
+        gridy = 0
+        weightx = 1.0
+        weighty = 1.0
+        insets = Insets(0, 0, 0, 0)
+        fill = GridBagConstraints.BOTH
+    }
 
-    private val editCardConstraints =
-        GridBagConstraints().apply {
-            gridx = 0
-            gridy = 0
-            weightx = 1.0
-            weighty = 1.0
-            insets = Insets(0, 0, 0, 0)
-            fill = GridBagConstraints.BOTH
-            gridheight = 2
+    private val editCardConstraints = GridBagConstraints().apply {
+        gridx = 0
+        gridy = 0
+        weightx = 1.0
+        weighty = 1.0
+        insets = Insets(0, 0, 0, 0)
+        fill = GridBagConstraints.BOTH
+        gridheight = 2
+    }
+
+    private val tableModel = UnchangeableTableModel().apply {
+        addColumn("question")
+        addColumn("answer")
+        EntryManager.getHorizontalRepresentation().sortedBy { it.first.lowercase() }.forEach {
+            addRow(arrayOf(it.first, it.second))
         }
+    }
 
     private fun initializeEntriesList() {
-        table.model = initializeTableModel()
+        table.model = tableModel
         table.fillsViewportHeight = true
         table.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(mouseEvent: MouseEvent) {
@@ -140,16 +145,6 @@ class ListPanel : JPanel() {
                 }
             }
         })
-    }
-
-    private fun initializeTableModel(): UnchangeableTableModel {
-        return UnchangeableTableModel().apply {
-            addColumn("question")
-            addColumn("answer")
-            EntryManager.getHorizontalRepresentation().sortedBy { it.first.lowercase() }.forEach {
-                addRow(arrayOf(it.first, it.second))
-            }
-        }
     }
 
     fun resetPanel() {

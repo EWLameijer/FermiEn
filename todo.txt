@@ -30,7 +30,6 @@ Ergens MainWindowState
     MainWindow.setState() => does updates
     Menu.setState() => does updates on menu items
 
-1. simultaneous runs possible (dangerous!)
 
 1. top card not centered
 
