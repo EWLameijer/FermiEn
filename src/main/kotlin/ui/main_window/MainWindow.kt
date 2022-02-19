@@ -29,7 +29,7 @@ const val reviewingId = "REVIEWING"
 const val informationalId = "INFORMATIONAL"
 const val summarizingId = "SUMMARIZING"
 
-class MainWindow(reviewManager: ReviewManager) : JFrame() {
+class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
 
     private var mainMode = if (reviewManager.hasNextCard()) MainWindowMode.REVIEW else MainWindowMode.DISPLAY
@@ -46,9 +46,25 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
 
     private fun nameOfLastUsedEncyDirectory() = Settings.currentFile()!!.pathPart()
 
+    private val fileMenu = JMenu("File")
+
     private var messageUpdater: Timer? = null
 
-    private val fileMenu = JMenu("File")
+    private val entryMenu = JMenu("Entry").apply {
+        addMenuItem("Add Entry", 'n') {
+            listPanel.activateEntryPanel()
+        }
+    }
+
+    private val encyMenu = JMenu("Encyclopedia Settings").apply {
+        addMenuItem("Study Settings", 't') { StudyOptionsWindow.display() }
+        addMenuItem("Analyze Ency", 'z') { Analyzer.run() }
+    }
+
+    private val modeMenu = JMenu("Mode").apply {
+        add(startReviewingMenuItem)
+        add(goToEntryListMenuItem)
+    }
 
     private fun goToEntryList() {
         mainMode = MainWindowMode.DISPLAY
@@ -128,53 +144,51 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
         goToEntryListMenuItem.isEnabled = mainMode != MainWindowMode.DISPLAY
         startReviewingMenuItem.isEnabled = mainMode == MainWindowMode.DISPLAY
         if (mainMode == MainWindowMode.DISPLAY) listPanel.resetPanel()
+        else reviewManager.initializeReviewSession()
     }
 
-    private fun rebuildFileMenu() {
-        with (fileMenu) {
+    private fun updateFileMenu() {
+        fileMenu.apply {
             removeAll()
-            add(createMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile))
-            add(createMenuItem("Add Entries (Eb format)", 'e', ::importEbText))
-            add(createMenuItem("Add Entries (FermiEn format)", 'f', ::importEncyText))
-            add(createMenuItem("Quit", 'q', ::saveAndQuit))
-            addDeckLoadingMenuItems(this)
+            addMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile)
+            addMenuItem("Add Entries (Eb format)", 'e', ::importEbText)
+            addMenuItem("Add Entries (FermiEn format)", 'f', ::importEncyText)
+            addMenuItem("Quit", 'q', ::saveAndQuit)
+            addDeckLoadingMenuItems()
         }
     }
 
-    private fun addMenu() {
-        jMenuBar = JMenuBar()
-        rebuildFileMenu()
-        val encyMenu = JMenu("Encyclopedia Settings")
-        encyMenu.add(createMenuItem("Study Settings", 't') { StudyOptionsWindow.display() })
-        encyMenu.add(createMenuItem("Analyze Ency", 'z') { Analyzer.run() })
-        val modeMenu = JMenu("Mode")
-        modeMenu.add(startReviewingMenuItem)
-        modeMenu.add(goToEntryListMenuItem)
-        val entryMenu = JMenu("Entry")
-        entryMenu.add(createMenuItem("Add Entry", 'n') {
-            listPanel.activateEntryPanel()
-        })
-        jMenuBar.add(fileMenu)
-        jMenuBar.add(encyMenu)
-        jMenuBar.add(entryMenu)
-        jMenuBar.add(modeMenu)
+    private fun JMenu.addMenuItem(label: String, actionKey: Char, listener: () -> Unit) {
+        add(createMenuItem(label, actionKey, listener))
     }
+
+
+
+    private fun addMenu() {
+        jMenuBar = JMenuBar().apply {
+            updateFileMenu()
+            add(fileMenu)
+            add(encyMenu)
+            add(entryMenu)
+            add(modeMenu)
+        }
+    }
+
 
     private fun manageDeckShortcuts() {
         DeckShortcutsPopup().updateShortcuts()
-        rebuildFileMenu()
+        updateFileMenu()
     }
 
-    private fun addDeckLoadingMenuItems(fileMenu: JMenu) {
+    private fun addDeckLoadingMenuItems() {
         fileMenu.addSeparator()
-        fileMenu.add(createMenuItem("Manage deck-shortcuts", '0', ::manageDeckShortcuts))
+        fileMenu.addMenuItem("Manage deck-shortcuts", '0', ::manageDeckShortcuts)
         (1..9).filter { Settings.shortcuts[it] != null }.forEach { digit ->
             val encyFileName = Settings.shortcuts[digit]!!
-            fileMenu.add(
-                createMenuItem(
+            fileMenu.addMenuItem(
                     "Load deck '${encyFileName.fileNamePart()}'",
                     digit.digitToChar()
-                ) { EntryManager.loadEntriesFrom(encyFileName) })
+                ) { EntryManager.loadEntriesFrom(encyFileName) }
         }
         (10..Settings.maxNumShortcuts).filter { Settings.shortcuts[it] != null }
             .forEach { rawIndex ->
@@ -189,8 +203,7 @@ class MainWindow(reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun createAltMenuItem(label: String, actionKey: Char, listener: () -> Unit) = JMenuItem(label).apply {
-        accelerator =
-            KeyStroke.getKeyStroke(KeyEvent.getExtendedKeyCodeForChar(actionKey.code), ActionEvent.ALT_MASK)
+        accelerator = KeyStroke.getKeyStroke(KeyEvent.getExtendedKeyCodeForChar(actionKey.code), ActionEvent.ALT_MASK)
         addActionListener { listener() }
     }
 

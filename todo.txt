@@ -1,71 +1,14 @@
-// design basic structure: context, question, answer, importance
-?? importance for context
-
-
 As learning works best with flashcards, which have a question and answer, a file format should be supported that can
 house both questions and answers. Assuming text (for now) a normal format would be
 "questionString"\t"answerString". Note that both questionString and answerString should be able to contain newlines and
 backslashes.
 
-Usually: View needs to send to
-
-Annoyances:
-
-    // OK. What needs to happen:
-    // 1. That entrypanel
-
-// refactoring! [a bit late, MainWindow has far more than 7 items]
-Model - the EntryManager etc
-
-View: MainWindow, which has EntryEditingPanel, searchField, meny
-
-MainWindow = 411 lines. => 275 lines. Good!
-16:17 => 16:33? :D
-
-
-
-
-
-Ergens MainWindowState
-    MainWindow.setState() => does updates
-    Menu.setState() => does updates on menu items
-
-
-1. top card not centered
 
 
 Projects
-    1. zorg dat je makkelijk kan editen zonder dupl
-    2. Maak het buildable met Gradle
-    3. probeer de plaatjes in de resources te krijgen!
-    // D3: Liefst input A relatie B
+1. Bug: answer seen if switching back after completion.
+1. probeer de plaatjes in de resources te krijgen
 
-
-Kan editen zonder dupl:
-1. Zorg dat Ctrl-N eerste keer een panel aan de linkerkant uitklapt OK
-2. Zorg dat Esc het weer terugklapt OK
-3. Probleem: het lijkt erop dat
-
-
-
-16:47
-https://www.youtube.com/watch?v=d02PK8C5EaA :
-    -res at same level as src
-    getClass.getClassLoader.getResource("towngate.jog"
-17:04 => UGH. Don't understand it yet.
-17:05
-    On startup
-        WHAT if no
-
-
-!! BUG improving learning: how?
-!!Feature: restore from save file
-!!Feature: allow list of entries below add entry window
-=>Eb: save and load as text
-??Check if modify card while studying works well
-
-BUG: if text in review window is large, it doesn't scroll?
-!make replacement window friendlier in case of long strings...
 
 ? check that all buttons work
 ? print, read, clean up code

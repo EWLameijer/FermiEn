@@ -22,15 +22,10 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     init {
         BlackBoard.register({ respondToEncyUpdate() }, UpdateType.ENCY_CHANGED)
         BlackBoard.register({ respondToEncySwap() }, UpdateType.ENCY_SWAPPED)
-        //    ..BlackBoard.register(this, UpdateType.CARD_CHANGED)
-        //BlackBoard.register(this, UpdateType.DECK_CHANGED)
         reviewPanel.manager = this
     }
 
     private var entriesToBeReviewed = mutableListOf<Entry>()
-    //private var cardsReviewed = mutableSetOf<Card>()
-
-    // private val evalStatusListener: ActionListener = ActionListener { e: ActionEvent -> evaluateStatus() }
 
     // counter stores the index of the card in the cardsToBeReviewed list that should be reviewed next.
     private var counter: Int = 0
@@ -50,11 +45,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
                 reviewsSoFar.isNotEmpty() && reviewsSoFar.last().instant > EntryManager.encyLoadInstant()!!
             }
     }
-
-    /*fun reviewedCards(): List<Card> {
-        ensureReviewSessionIsValid()
-        return cardsReviewed.toList()
-    }*/
 
     fun getNewFirstReviews(): List<Review> {
         return EntryManager.entries().mapNotNull { it.reviews().firstOrNull() }
