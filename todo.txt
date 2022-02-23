@@ -6,8 +6,7 @@ backslashes.
 
 
 Projects
-1. Bug: answer seen if switching back after completion.
-1. probeer de plaatjes in de resources te krijgen
+- probeer de plaatjes in de resources te krijgen
 
 
 ? check that all buttons work

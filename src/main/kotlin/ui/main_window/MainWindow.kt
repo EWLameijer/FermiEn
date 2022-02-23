@@ -116,7 +116,9 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         val shortCutCode = getShortCutCode(Settings.getShortcutIdOfCurrentDeck())
         var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
         val entries = EntryManager.entries().size
-        title += ", ${"entry".pluralize(entries)} in deck, ${"point".pluralize(numReviewingPoints)}"
+        val toReview = reviewManager.numCardsToReview()
+        title += ", ${"entry".pluralize(entries)} in deck, $toReview to review, " +
+                "point".pluralize(numReviewingPoints) + "."
         this.title = title
     }
 
@@ -163,7 +165,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
 
-
     private fun addMenu() {
         jMenuBar = JMenuBar().apply {
             updateFileMenu()
@@ -186,9 +187,9 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         (1..9).filter { Settings.shortcuts[it] != null }.forEach { digit ->
             val encyFileName = Settings.shortcuts[digit]!!
             fileMenu.addMenuItem(
-                    "Load deck '${encyFileName.fileNamePart()}'",
-                    digit.digitToChar()
-                ) { EntryManager.loadEntriesFrom(encyFileName) }
+                "Load deck '${encyFileName.fileNamePart()}'",
+                digit.digitToChar()
+            ) { EntryManager.loadEntriesFrom(encyFileName) }
         }
         (10..Settings.maxNumShortcuts).filter { Settings.shortcuts[it] != null }
             .forEach { rawIndex ->

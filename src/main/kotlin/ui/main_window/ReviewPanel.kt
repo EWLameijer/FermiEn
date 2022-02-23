@@ -22,7 +22,6 @@ class ReviewPanel : JPanel() {
     private val backOfCardPanel = CardPanel()
     private val situationalButtonPanel = JPanel()
     private val fixedButtonPanel = JPanel()
-    //private val reviewHistoryArea = JTextArea("test")
     private var reviewingState = ANSWER_HIDDEN
     private var entry: Entry? = null
 
@@ -103,7 +102,6 @@ class ReviewPanel : JPanel() {
             weighty = 2.0
             fill = GridBagConstraints.BOTH
         }
-        backOfCardPanel.background = Color.YELLOW
         add(backOfCardPanel, backOfCardConstraints)
     }
 
@@ -117,7 +115,6 @@ class ReviewPanel : JPanel() {
             weighty = 2.0
             fill = GridBagConstraints.BOTH
         }
-        frontOfCardPanel.background = Color.PINK
         add(frontOfCardPanel, frontOfCardConstraints)
     }
 
@@ -135,7 +132,6 @@ class ReviewPanel : JPanel() {
         }
         val sidePanel = JPanel()
 
-        //sidePanel.add(reviewHistoryArea)
         sidePanel.background = Color.RED
         add(sidePanel, sidePanelConstraints)
     }

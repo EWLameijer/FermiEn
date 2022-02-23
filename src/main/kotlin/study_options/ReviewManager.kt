@@ -135,33 +135,5 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     // is there a next card to study?
     fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
 
-    // If cards are added to (or, more importantly, removed from) the deck, ensure
-    // that the card also disappears from the list of cards to be reviewed
-    /*private fun updateCollection() {
-        if (entriesToBeReviewed.isEmpty()) {
-            updatePanels()
-            return
-        }
-        val deletingCurrentCard =
-            !EntryManager.containsEntryWithQuestion(entriesToBeReviewed[counter].question.toHorizontalString())
-        val deletedIndices =
-            entriesToBeReviewed.withIndex()
-                .filter { !EntryManager.containsEntryWithQuestion(entriesToBeReviewed[it.index].question.toHorizontalString()) }
-                .map { it.index }
-        entriesToBeReviewed =
-            entriesToBeReviewed.filter { EntryManager.containsEntryWithQuestion(it.question.toHorizontalString()) }
-                .toMutableList()
-        deletedIndices.forEach { if (it <= counter) counter-- }
-
-        if (deletingCurrentCard) {
-            moveToNextReviewOrEnd()
-        } else {
-            updatePanels()
-        }
-    }*/
-
-    // Allows the GUI to initialize the panel that displays the reviews
-    /*fun setPanel(inputReviewPanel: ReviewPanel) {
-        reviewPanel = inputReviewPanel
-    }*/
+    fun numCardsToReview() = entriesToBeReviewed.lastIndex - counter
 }
