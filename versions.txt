@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.36.1 2022-02-27 Bugfix: corrected number of cards to total number of cards to be reviewed.
 0.36.0 2022-02-23 Added number of cards to review to top of window-info.
 0.35.0 2022-01-08 Mouseover in list window shows full entry
 0.34.0 2022-01-05 Have nicer format when modifying card instead of text running off the screen...

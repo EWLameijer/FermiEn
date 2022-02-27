@@ -116,7 +116,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         val shortCutCode = getShortCutCode(Settings.getShortcutIdOfCurrentDeck())
         var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
         val entries = EntryManager.entries().size
-        val toReview = reviewManager.numCardsToReview()
+        val toReview = EntryManager.reviewableEntries().size
         title += ", ${"entry".pluralize(entries)} in deck, $toReview to review, " +
                 "point".pluralize(numReviewingPoints) + "."
         this.title = title
