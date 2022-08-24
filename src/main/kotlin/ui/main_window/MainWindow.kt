@@ -32,7 +32,9 @@ const val summarizingId = "SUMMARIZING"
 class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
 
-    private var mainMode = if (reviewManager.hasNextCard()) MainWindowMode.REVIEW else MainWindowMode.DISPLAY
+    private var mainMode =
+        if (Settings.studyOptions.otherSettings.startInStudyMode && reviewManager.hasNextCard())
+            MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
     private val listPanel = ListPanel()
 

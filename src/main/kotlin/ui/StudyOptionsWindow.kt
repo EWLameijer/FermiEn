@@ -11,6 +11,7 @@ import eventhandling.BlackBoard
 import study_options.IntervalSettings
 import study_options.OtherSettings
 import study_options.StudyOptions
+import ui.loose_components.LabelledCheckbox
 import ui.loose_components.LabelledTextField
 import ui.loose_components.TimeInputElement
 import ui.main_window.ReviewingState
@@ -58,6 +59,8 @@ class StudyOptionsWindow : JFrame() {
 
     private val defaultPriority: LabelledTextField
 
+    private val defaultStartMode : LabelledCheckbox
+
     private val textFields: List<LabelledTextField>
 
     init {
@@ -89,6 +92,10 @@ class StudyOptionsWindow : JFrame() {
             studyOptions.otherSettings.defaultPriority.toString(), 3, 0
         )
 
+        defaultStartMode = LabelledCheckbox("start deck in study mode",
+            studyOptions.otherSettings.startInStudyMode
+        )
+
         textFields = listOf(sizeOfReview, lengtheningFactor, targetedSuccessPercentage)
     }
 
@@ -111,6 +118,7 @@ class StudyOptionsWindow : JFrame() {
         timeToWaitAfterIncorrectReview.interval = settings.intervalSettings.forgottenInterval
         targetedSuccessPercentage.setContents(settings.otherSettings.idealSuccessPercentage)
         defaultPriority.setContents(settings.otherSettings.defaultPriority)
+        defaultStartMode.setContents(settings.otherSettings.startInStudyMode)
         reactivateListeners()
         updateFrame()
     }
@@ -134,7 +142,8 @@ class StudyOptionsWindow : JFrame() {
         OtherSettings(
             stringToInt(sizeOfReview.contents()),
             stringToDouble(targetedSuccessPercentage.contents())!!,
-            stringToInt(defaultPriority.contents())
+            stringToInt(defaultPriority.contents()),
+            defaultStartMode.contents()
         )
     )
 
@@ -186,6 +195,7 @@ class StudyOptionsWindow : JFrame() {
             add(timeToWaitAfterIncorrectReview)
             add(targetedSuccessPercentage)
             add(defaultPriority)
+            add(defaultStartMode)
         }
         settingsPane.add(settingsBox, BorderLayout.NORTH)
         return settingsPane

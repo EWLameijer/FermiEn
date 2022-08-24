@@ -15,7 +15,8 @@ private const val defaultSuccessTarget = 85.0
 class OtherSettings(
     var reviewSessionSize: Int? = defaultReviewSessionSize, // if not specified, review all/infinite cards
     var idealSuccessPercentage: Double = defaultSuccessTarget,
-    newDefaultPriority: Int? = maxPriority
+    newDefaultPriority: Int? = maxPriority,
+    var startInStudyMode: Boolean = true
 ) : PropertyPossessor() {
     var defaultPriority = newDefaultPriority?.coerceIn(1..maxPriority) ?: maxPriority
 
@@ -23,6 +24,7 @@ class OtherSettings(
         val otherOptions = other as OtherSettings
         reviewSessionSize == otherOptions.reviewSessionSize &&
                 defaultPriority == otherOptions.defaultPriority &&
+                startInStudyMode == otherOptions.startInStudyMode &&
                 doublesEqualWithinThousands(
                     idealSuccessPercentage,
                     otherOptions.idealSuccessPercentage
@@ -34,17 +36,20 @@ class OtherSettings(
         Objects.hash(
             reviewSessionSize,
             idealSuccessPercentage,
-            defaultPriority
+            defaultPriority,
+            startInStudyMode
         )
 
     private val sessionSizeLabel = "session size"
     private val idealSuccessPercentageLabel = "ideal success percentage"
     private val defaultPriorityLabel = "default priority for new cards"
+    private val startInStudyModeLabel = "start in study mode"
 
     override fun properties() = mapOf<String, Any?>(
         sessionSizeLabel to reviewSessionSize,
         idealSuccessPercentageLabel to idealSuccessPercentage,
-        defaultPriorityLabel to defaultPriority
+        defaultPriorityLabel to defaultPriority,
+        startInStudyModeLabel to startInStudyMode
     )
 
     override fun parse(lines: List<String>) {
@@ -52,6 +57,7 @@ class OtherSettings(
             parseLabel(it, sessionSizeLabel, OtherSettings::reviewSessionSize, this, String::toIntOrNull)
             parseLabel(it, idealSuccessPercentageLabel, OtherSettings::idealSuccessPercentage, this, String::toDouble)
             parseLabel(it, defaultPriorityLabel, OtherSettings::defaultPriority, this, String::toInt)
+            parseLabel(it, startInStudyModeLabel, OtherSettings::startInStudyMode, this, String::toBoolean)
         }
     }
 }
