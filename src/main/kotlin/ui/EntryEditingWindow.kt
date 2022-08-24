@@ -1,6 +1,7 @@
 package ui
 
 import data.*
+import maxPriority
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent
@@ -20,11 +21,11 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private fun priorityText() = if (entry == null) "" else "Priority ${entry!!.importance}"
 
     private fun changePriority() {
-        val newPriorityAsString = JOptionPane.showInputDialog(this, "Enter new priority (1-10)", entry!!.importance)
-        val newPriority = newPriorityAsString.toIntOrNull()
-        if (newPriority == null || newPriority < 1 || newPriority > 10) JOptionPane.showMessageDialog(
+        val newPriorityAsString = JOptionPane.showInputDialog(this, "Enter new priority (1-$maxPriority)", entry!!.importance)
+        val newPriority = newPriorityAsString?.toIntOrNull()
+        if (newPriority == null || newPriority < 1 || newPriority > maxPriority) JOptionPane.showMessageDialog(
             this,
-            "'$newPriorityAsString' is an invalid value - enter a value between 1 and 10"
+            "'$newPriorityAsString' is an invalid value - enter a value between 1 and $maxPriority"
         ) else {
             entry!!.importance = newPriority
             priorityLabel.text = "Priority $newPriority"

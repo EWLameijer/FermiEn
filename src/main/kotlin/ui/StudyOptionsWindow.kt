@@ -56,6 +56,8 @@ class StudyOptionsWindow : JFrame() {
 
     private val timeToWaitAfterIncorrectReview: TimeInputElement
 
+    private val defaultPriority: LabelledTextField
+
     private val textFields: List<LabelledTextField>
 
     init {
@@ -82,6 +84,10 @@ class StudyOptionsWindow : JFrame() {
             "Strive for this percentage successful reviews (between 80% and 90% likely best)",
             toRegionalString(studyOptions.otherSettings.idealSuccessPercentage.toString()), 5, 2
         )
+        defaultPriority = LabelledTextField(
+            "default priority for new cards",
+            studyOptions.otherSettings.defaultPriority.toString(), 3, 0
+        )
 
         textFields = listOf(sizeOfReview, lengtheningFactor, targetedSuccessPercentage)
     }
@@ -104,6 +110,7 @@ class StudyOptionsWindow : JFrame() {
         lengtheningFactor.setContents(settings.intervalSettings.lengtheningFactor)
         timeToWaitAfterIncorrectReview.interval = settings.intervalSettings.forgottenInterval
         targetedSuccessPercentage.setContents(settings.otherSettings.idealSuccessPercentage)
+        defaultPriority.setContents(settings.otherSettings.defaultPriority)
         reactivateListeners()
         updateFrame()
     }
@@ -126,7 +133,8 @@ class StudyOptionsWindow : JFrame() {
         ),
         OtherSettings(
             stringToInt(sizeOfReview.contents()),
-            stringToDouble(targetedSuccessPercentage.contents())!!
+            stringToDouble(targetedSuccessPercentage.contents())!!,
+            stringToInt(defaultPriority.contents())
         )
     )
 
@@ -177,6 +185,7 @@ class StudyOptionsWindow : JFrame() {
             add(lengtheningFactor)
             add(timeToWaitAfterIncorrectReview)
             add(targetedSuccessPercentage)
+            add(defaultPriority)
         }
         settingsPane.add(settingsBox, BorderLayout.NORTH)
         return settingsPane

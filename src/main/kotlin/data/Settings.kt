@@ -94,5 +94,4 @@ object Settings {
 
     fun getShortcutIdOfCurrentDeck(): Int? =
         shortcuts.filterValues { it == currentFile!! }.toList().firstOrNull()?.first
-
 }

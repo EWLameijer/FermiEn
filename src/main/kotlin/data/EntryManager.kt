@@ -69,7 +69,12 @@ data class Entry(
 
 fun String.toEntry(): Entry {
     val (question, answer) = split('\t')
-    return Entry(StorageString(question), StorageString(answer), 10, Instant.now())
+    return Entry(
+        StorageString(question),
+        StorageString(answer),
+        Settings.studyOptions.otherSettings.defaultPriority,
+        Instant.now()
+    )
 }
 
 object EntryManager {
@@ -142,7 +147,7 @@ object EntryManager {
         File(Settings.currentRepetitionsFile()).writeText(sortedEntries.joinToString(separator = "\n") {
             val compactQuestion = it.question.toHorizontalString()
             val creationInstant = it.creationInstant ?: Instant.now()
-            val importance = it.importance ?: 10
+            val importance = it.importance ?: Settings.studyOptions.otherSettings.defaultPriority
             val rawReviews = it.reviews()
                 .joinToString(separator = "\t") { review -> "${review.instant}\t${review.result.abbreviation}" }
             val reviews = if (rawReviews == "") "" else "\t$rawReviews"
@@ -177,7 +182,7 @@ object EntryManager {
             }
         } else {
             entry.apply {
-                importance = importance ?: 10
+                importance = importance ?: Settings.studyOptions.otherSettings.defaultPriority
                 creationInstant = Instant.now()
             }
             entries += entry

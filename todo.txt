@@ -4,9 +4,15 @@ house both questions and answers. Assuming text (for now) a normal format would 
 backslashes.
 
 
+Ideas
+-start up in listview instead of studyview          140     15 /    560/u
+-clean up code (check with Visser-site)             200     210     99/u
+-probeer de plaatjes in de resources te krijgen     30      90      20/u
+-check that all buttons work                        0               0
+
 
 Projects
-- probeer de plaatjes in de resources te krijgen
+-
 
 
 ? check that all buttons work

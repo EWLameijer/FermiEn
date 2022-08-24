@@ -9,6 +9,8 @@ import java.net.ServerSocket
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
+const val maxPriority = 10
+
 const val indexOfLineWithMostRecentVersionNumber = 6
 
 fun fermiEnVersion(): String =
