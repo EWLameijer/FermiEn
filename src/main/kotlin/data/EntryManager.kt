@@ -127,7 +127,7 @@ object EntryManager {
         return true
     }
 
-    fun loadEntries() = loadEntriesFrom(Settings.lastFileOfPreviousSession())
+    fun loadEntries() = loadEntriesFrom(Settings.nameOfLastFileOpened())
 
     private fun addEntryRepetitionData(repetitionData: String) {
         val repetitionParts = repetitionData.split('\t')

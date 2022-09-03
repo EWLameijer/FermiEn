@@ -14,10 +14,12 @@ object Settings {
     private var currentFile: String? = null
     var studyOptions = StudyOptions()
 
-    fun lastFileOfPreviousSession(): String {
+    fun nameOfLastFileOpened(): String {
         val statusFile = File(statusFileName)
-        val possibleLastFileOfPreviousSession =  if (statusFile.isFile) File(statusFileName).readLines().getAt(lastLoadedEncyKey) else null
-        if (possibleLastFileOfPreviousSession != null) return possibleLastFileOfPreviousSession
+        val lastEncyName = if (statusFile.isFile) File(statusFileName).readLines().getAt(lastLoadedEncyKey) else null
+        // but what if the last file does not exist anymore?
+        if (lastEncyName != null && File(lastEncyName).isFile) return lastEncyName
+        // lastEncyName is null OR does not exist anymore. Default to notes.txt!
         val notesFile = File("notes.txt")
         if (!notesFile.isFile) notesFile.writeText("")
         return "notes.txt"

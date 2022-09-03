@@ -133,5 +133,5 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     // is there a next card to study?
-    fun hasNextCard() = counter < entriesToBeReviewed.lastIndex
+    fun hasNextCard() = counter <= entriesToBeReviewed.lastIndex
 }

@@ -32,7 +32,9 @@ const val summarizingId = "SUMMARIZING"
 class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
 
-    private var mainMode =
+    private var mainMode = correctStartingMode()
+
+    private fun correctStartingMode() =
         if (Settings.studyOptions.otherSettings.startInStudyMode && reviewManager.hasNextCard())
             MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
@@ -278,6 +280,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         UpdateType.ENCY_SWAPPED -> {
             informationPanel.updateMessageLabel()
             updateWindowTitle()
+            mainMode = correctStartingMode()
             showCorrectPanel()
         }
         UpdateType.PROGRAMSTATE_CHANGED -> {
