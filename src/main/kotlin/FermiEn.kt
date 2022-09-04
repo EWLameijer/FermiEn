@@ -14,11 +14,12 @@ const val feDefaultPriority = 1
 
 const val indexOfLineWithMostRecentVersionNumber = 6
 
-fun fermiEnVersion(): String =
-    with(File("versions.txt")) {
+fun fermiEnVersion(): String = "0.38.2"
+    // TODO: restore when I have mastered resources
+   /* with(File("versions.txt")) {
         if (isFile) readLines()[indexOfLineWithMostRecentVersionNumber].split(' ').first()
         else ""
-    }
+    }*/
 
 fun List<String>.getAt(key: String): String? =
     firstOrNull { it.startsWith(key) }?.split(DEFAULT_SEPARATOR)?.get(1)

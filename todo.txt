@@ -1,11 +1,4 @@
-COMMUNICATION: show cards in current review session.
 
-BUG: when starting new ency,
-    old card prop up with new
-    also non-standard settings!
-
-Probleem:
-counter is te vaag: indexOfCurrent
 
 startReview
   [activates panel]
