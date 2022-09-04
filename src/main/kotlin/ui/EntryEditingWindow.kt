@@ -5,6 +5,7 @@ import maxPriority
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.JComponent.WHEN_FOCUSED
 
@@ -77,7 +78,8 @@ class EntryEditingWindow(val mode: Mode) : JFrame() {
         setSize(650, 400)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         isVisible = true
-        iconImage = ImageIcon("resources/FermiEn_neg.png").image
+        val inputStream = javaClass.classLoader.getResourceAsStream("FermiEn_neg.png")
+        iconImage = ImageIcon(ImageIO.read(inputStream)).image
         updateTitle()
     }
 

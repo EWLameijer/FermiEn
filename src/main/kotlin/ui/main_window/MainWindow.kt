@@ -5,13 +5,13 @@ import UpdateType
 import data.*
 import doNothing
 import eventhandling.BlackBoard
-import fermiEnVersion
 import study_options.Analyzer
 import study_options.ReviewManager
 import ui.*
 import java.awt.CardLayout
 import java.awt.event.*
 import java.io.File
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 import kotlin.system.exitProcess
@@ -105,7 +105,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             informationPanel.updateMessageLabel()
         }
         messageUpdater!!.start()
-        iconImage = ImageIcon("resources/FermiEn.png").image
+        val inputStream = javaClass.classLoader.getResourceAsStream("FermiEn.png")
+        iconImage = ImageIcon(ImageIO.read(inputStream)).image
     }
 
     private fun setupPanelContainer(reviewManager: ReviewManager) {
@@ -125,7 +126,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private fun updateWindowTitle() {
         val numReviewingPoints = EntryManager.reviewingPoints()
         val shortCutCode = getShortCutCode(Settings.getShortcutIdOfCurrentDeck())
-        var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
+        var title = "FermiEn ${Loader.version}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
         val entries = EntryManager.entries().size
         val toReview = EntryManager.reviewableEntries().size
         val sessionText = if (inReviewingMode() && reviewManager.reviewsLeftInThisSession() > 0) {

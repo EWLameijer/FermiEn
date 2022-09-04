@@ -2,24 +2,49 @@ import data.EntryManager
 import study_options.ReviewManager
 import ui.main_window.MainWindow
 import ui.main_window.ReviewPanel
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
+import java.io.InputStreamReader
 import java.net.InetAddress
 import java.net.ServerSocket
+import java.nio.charset.StandardCharsets
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
+
 
 const val maxPriority = 10
 const val feDefaultPriority = 1
 
 const val indexOfLineWithMostRecentVersionNumber = 6
 
-fun fermiEnVersion(): String = "0.38.2"
-    // TODO: restore when I have mastered resources
-   /* with(File("versions.txt")) {
-        if (isFile) readLines()[indexOfLineWithMostRecentVersionNumber].split(' ').first()
-        else ""
-    }*/
+class Loader {
+    companion object {
+        val version : String by lazy {
+            fermiEnVersion()
+        }
+
+        private fun fermiEnVersion(): String {
+            // resources loading from https://mkyong.com/java/java-read-a-file-from-resources-folder/
+            val inputStream = javaClass.classLoader.getResourceAsStream("versions.txt")
+            try {
+                InputStreamReader(inputStream, StandardCharsets.UTF_8).use { streamReader ->
+                    BufferedReader(streamReader).use { reader ->
+                        var counter = 0
+                        var line: String?
+                        while (reader.readLine().also { line = it } != null) {
+                            if (counter == indexOfLineWithMostRecentVersionNumber) return line!!.split(' ').first()
+                            counter++
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            return ""
+        }
+    }
+}
 
 fun List<String>.getAt(key: String): String? =
     firstOrNull { it.startsWith(key) }?.split(DEFAULT_SEPARATOR)?.get(1)

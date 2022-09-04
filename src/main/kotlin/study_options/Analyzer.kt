@@ -1,7 +1,6 @@
 package study_options
 
 import data.*
-import fermiEnVersion
 import java.io.BufferedWriter
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
@@ -146,7 +145,7 @@ object Analyzer {
         val numCorrect = entries.sumOf { it.reviews().count { review -> review.result == ReviewResult.SUCCESS } }
         val numIncorrect = numReviews - numCorrect
         val successPercentage = 100.0 * numCorrect / numReviews
-        write(/* str = */ "FermiEn version ${fermiEnVersion()}$EOL")
+        write(/* str = */ "FermiEn version ${Loader.version}$EOL")
         write("Number of cards is: ${entries.size}$EOL")
         write("Number of reviews: $numReviews, success percentage ")
         write("%.1f".format(successPercentage))

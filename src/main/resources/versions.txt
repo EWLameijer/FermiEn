@@ -4,6 +4,8 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.38.4 2022-09-04 Bugfix: now also shows the FermiEn version from the jar
+0.38.3 2022-09-04 Bugfix: now also shows icons when loading the jar
 0.38.2 2022-09-04 Bugfix: when making a new encyclopedia, don't let 'New Card' load an old card.
 0.38.1 2022-09-04 Bugfix: now makes it resistant against users creating a file that does not end in ".txt"
 0.38.0 2022-09-04 Feature: now displays number of cards left in current session.
