@@ -5,9 +5,7 @@ import data.Entry
 import data.EntryManager
 import study_options.ReviewManager
 import study_options.ReviewResult
-import ui.CardPanel
-import ui.EntryEditingWindow
-import ui.createKeyPressSensitiveButton
+import ui.*
 import java.awt.*
 import java.awt.event.ComponentListener
 import java.beans.EventHandler
@@ -136,7 +134,9 @@ class ReviewPanel : JPanel() {
         add(sidePanel, sidePanelConstraints)
     }
 
-    private fun editCard() = EntryEditingWindow(entry)
+    private fun editCard() = EntryEditingWindow(EditMode(entry!!))
+
+    fun newCard() = EntryEditingWindow(AddMode(entry!!.clone()))
 
     private fun registerAnswer(wasRemembered: ReviewResult) {
         manager!!.wasRemembered(wasRemembered)

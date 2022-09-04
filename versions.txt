@@ -4,6 +4,8 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+// NEED FIX BUG: for some reason, reviewing 2 cards is problematic. Also need check: new card in empty window review mode does not break things.
+0.37.2 2022-09-04 Bugfix: nog New Card is possible again in review mode
 0.37.1 2022-09-03 Bugfix: now robust against broken links in status file, bug <= for card review removed
 0.37.0 2022-09-03 Now has options to start in non-review mode and set default importance of new cards. Bugfix for user not entering new priority in card.
 0.36.1 2022-02-27 Bugfix: corrected number of cards to total number of cards to be reviewed.

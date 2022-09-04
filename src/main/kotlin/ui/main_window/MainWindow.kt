@@ -40,6 +40,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private val listPanel = ListPanel()
 
+    private var reviewPanel = ReviewPanel()
+
     private val modesContainer = JPanel()
 
     private val informationPanel = InformationPanel(reviewManager)
@@ -54,9 +56,11 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private var messageUpdater: Timer? = null
 
+    // TODO
     private val entryMenu = JMenu("Entry").apply {
         addMenuItem("Add Entry", 'n') {
-            listPanel.activateEntryPanel()
+            if (mainMode == MainWindowMode.DISPLAY) listPanel.activateEntryPanel()
+            else if (reviewState == ReviewingState.REVIEWING || reviewState == ReviewingState.REACTIVE) reviewPanel.newCard()
         }
     }
 
@@ -105,7 +109,9 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun setupPanelContainer(reviewManager: ReviewManager) {
+        reviewPanel = reviewManager.reviewPanel
         modesContainer.apply {
+
             layout = CardLayout()
             add(listPanel, displayId)
             add(reviewManager.reviewPanel, reviewingId)
@@ -270,7 +276,11 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         addActionListener { listener() }
     }
 
+    // TODO
     private fun saveAndQuit() {
+        if (mainMode == MainWindowMode.DISPLAY && listPanel.isEditing()) {
+            listPanel.saveState()
+        }
         EntryManager.saveEntriesToFile()
         dispose()
         exitProcess(0)

@@ -25,6 +25,10 @@ class ListPanel : JPanel() {
 
     private lateinit var entryEditingPanel: EntryEditingPanel
 
+    fun isEditing() = entryEditingPanel.isVisible
+
+    fun saveState() = entryEditingPanel.saveNewEntry()
+
     private val searchField = JTextField().apply {
         document.addDocumentListener(searchFieldListener)
     }

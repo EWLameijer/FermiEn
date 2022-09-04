@@ -7,7 +7,9 @@ import study_options.Analyzer
 import study_options.Review
 import study_options.ReviewResult
 import study_options.toReviews
+import ui.EditMode
 import ui.EntryEditingWindow
+import ui.Mode
 import java.io.File
 import java.time.Duration
 import java.time.Instant
@@ -19,6 +21,8 @@ data class Entry(
     var importance: Int? = null,
     var creationInstant: Instant? = null
 ) {
+    fun clone() = Entry(question, answer, Settings.studyOptions.otherSettings.defaultPriority, Instant.now())
+
     private var reviews = mutableListOf<Review>()
 
     fun initReviewsWith(initialReviews: List<Review>) {
@@ -64,7 +68,6 @@ data class Entry(
 
     fun waitingTimeBeforeRelevantReview(reviewIndex: Int): Duration =
         Duration.between(reviewInstant(reviewIndex - 1), reviewInstant(reviewIndex))
-
 }
 
 fun String.toEntry(): Entry {
@@ -158,8 +161,8 @@ object EntryManager {
     }
 
     fun editEntryByQuestion(question: String) {
-        val selectedEntry = entries.find { it.toHorizontalDisplay().first == question }
-        EntryEditingWindow(selectedEntry)
+        val selectedEntry = entries.find { it.toHorizontalDisplay().first == question }!!
+        EntryEditingWindow(EditMode(selectedEntry))
     }
 
     private fun questions(): Set<String> = entries.map { it.toHorizontalDisplay().first }.toSet()

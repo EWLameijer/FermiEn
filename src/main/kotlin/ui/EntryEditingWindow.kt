@@ -8,7 +8,13 @@ import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.JComponent.WHEN_FOCUSED
 
-class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
+sealed class Mode(val description: String, val possibleEntry: Entry?)
+
+class AddMode(entry: Entry? = null) : Mode("add", entry)
+class EditMode(entry: Entry) : Mode("edit", entry)
+
+class EntryEditingWindow(val mode: Mode) : JFrame() {
+    private var entry = mode.possibleEntry
     private val priorityLabel = JLabel(priorityText())
 
     private val deleteButton = UnfocusableButton("Delete") {
@@ -21,7 +27,8 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     private fun priorityText() = if (entry == null) "" else "Priority ${entry!!.importance}"
 
     private fun changePriority() {
-        val newPriorityAsString = JOptionPane.showInputDialog(this, "Enter new priority (1-$maxPriority)", entry!!.importance)
+        val newPriorityAsString =
+            JOptionPane.showInputDialog(this, "Enter new priority (1-$maxPriority)", entry!!.importance)
         val newPriority = newPriorityAsString?.toIntOrNull()
         if (newPriority == null || newPriority < 1 || newPriority > maxPriority) JOptionPane.showMessageDialog(
             this,
@@ -75,7 +82,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
     }
 
     private fun updateTitle() {
-        title = "${Settings.currentFile()!!.fileNamePart()}: " + if (entry == null) "add entry" else "edit entry"
+        title = "${Settings.currentFile()!!.fileNamePart()}: " + mode.description + " entry"
     }
 
     private fun clearOrExit() {
@@ -108,7 +115,7 @@ class EntryEditingWindow(private var entry: Entry? = null) : JFrame() {
             JOptionPane.showMessageDialog(this, "Cannot add a card with a blank front")
             return
         }
-        if (entry != null) { // are you trying to replace the card/front?
+        if (mode is EditMode) { // are you trying to replace the card/front?
             val originalQuestion = originalQuestion()!!
             val originalAnswer = entry!!.answer
             if (question().flattenedEquals(originalQuestion) && answer().flattenedEquals(originalAnswer)) closeWindow()

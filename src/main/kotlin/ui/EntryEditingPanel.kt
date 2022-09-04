@@ -19,7 +19,8 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
     private fun priorityText() = if (entry == null) "" else "Priority ${entry!!.importance}"
 
     private fun changePriority() {
-        val newPriorityAsString = JOptionPane.showInputDialog(this, "Enter new priority (1-$maxPriority)", entry!!.importance)
+        val newPriorityAsString =
+            JOptionPane.showInputDialog(this, "Enter new priority (1-$maxPriority)", entry!!.importance)
         val newPriority = newPriorityAsString.toIntOrNull()
         if (newPriority == null || newPriority < 1 || newPriority > maxPriority) JOptionPane.showMessageDialog(
             this,
@@ -73,20 +74,6 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
         //defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         isVisible = true
         //iconImage = ImageIcon("resources/FermiEn_neg.png").image
-        updateTitle()
-    }
-
-    private fun updateTitle() {
-        //title = "${Settings.currentFile()!!.fileNamePart()}: " + if (entry == null) "add entry" else "edit entry"
-    }
-
-    private fun clearOrExit() {
-        if (entry != null) closeWindow()
-        if (cardFrontPane.text.isNotBlank() || cardBackPane.text.isNotBlank()) clear() else closeWindow()
-    }
-
-    private fun closeWindow() {
-        //dispatchEvent(WindowEvent(this, WindowEvent.WINDOW_CLOSING))
     }
 
     private fun clear() {
@@ -96,7 +83,6 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
             requestFocusInWindow()
         }
         cardBackPane.text = ""
-        updateTitle()
     }
 
     fun question() = cardFrontPane.text.toStorageString()
@@ -105,28 +91,24 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
 
     private fun originalQuestion(): StorageString? = entry?.question
 
-    private fun saveNewEntry() {
+    fun saveNewEntry() {
         if (question().toHorizontalString().isBlank()) {
             JOptionPane.showMessageDialog(this, "Cannot add a card with a blank front")
             return
         }
         if (entry != null) { // are you trying to replace the card/front?
-            val originalQuestion = originalQuestion()!!
             val originalAnswer = entry!!.answer
-            if (question().flattenedEquals(originalQuestion) && answer().flattenedEquals(originalAnswer)) closeWindow()
-            else { //because closeWindow does not stop the process...
-                val buttons = getFrontChangeButtons()
-                JOptionPane.showOptionDialog(
-                    null,
-                    stringCompareResult(originalAnswer),
-                    "Are you sure you want to update the current card?", 0,
-                    JOptionPane.QUESTION_MESSAGE, null, buttons, null
-                )
-            }
+            val buttons = getFrontChangeButtons()
+            JOptionPane.showOptionDialog(
+                null,
+                stringCompareResult(originalAnswer),
+                "Are you sure you want to update the current card?", 0,
+                JOptionPane.QUESTION_MESSAGE, null, buttons, null
+            )
+
         } else {
             submitEntry()
         }
-        //createKeyListener(KeyEvent.VK_ESCAPE) { clearOrExit() } // set escape back
     }
 
     private fun stringCompareResult(originalAnswer: StorageString): String {
@@ -161,7 +143,6 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
     private fun submitEntry() {
         val newEntry = Entry(question(), answer(), entry?.importance)
         EntryManager.addEntry(newEntry)
-        clearOrExit() // enable adding new cards, but modifying an existing card should not result in a 'card chain'
     }
 
     private fun getFrontChangeButtons(): Array<JButton> {
