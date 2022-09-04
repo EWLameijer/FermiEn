@@ -123,8 +123,8 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     }
 
     private fun moveToNextReviewOrEnd() {
+        counter++
         if (hasNextCard()) {
-            counter++
             startCardReview()
         } else {
             initialized = false
