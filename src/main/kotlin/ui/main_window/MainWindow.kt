@@ -305,6 +305,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             informationPanel.updateMessageLabel()
             updateWindowTitle()
             mainMode = correctStartingMode()
+            reviewPanel.clearEntry()
             showCorrectPanel()
         }
         UpdateType.PROGRAMSTATE_CHANGED -> {

@@ -136,7 +136,7 @@ class ReviewPanel : JPanel() {
 
     private fun editCard() = EntryEditingWindow(EditMode(entry!!))
 
-    fun newCard() = EntryEditingWindow(AddMode(entry!!.clone()))
+    fun newCard() = EntryEditingWindow(AddMode(entry?.clone()))
 
     private fun registerAnswer(wasRemembered: ReviewResult) {
         manager!!.wasRemembered(wasRemembered)
@@ -162,6 +162,10 @@ class ReviewPanel : JPanel() {
     }
 
     private fun refresh() = repaint()
+
+    fun clearEntry() {
+        entry = null
+    }
 
     fun display(currentEntry: Entry) {
         reviewingState = ANSWER_HIDDEN
