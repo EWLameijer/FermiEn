@@ -3,13 +3,9 @@ package data
 import Update
 import backup
 import eventhandling.BlackBoard
-import study_options.Analyzer
-import study_options.Review
-import study_options.ReviewResult
-import study_options.toReviews
+import study_options.*
 import ui.EditMode
 import ui.EntryEditingWindow
-import ui.Mode
 import java.io.File
 import java.time.Duration
 import java.time.Instant
@@ -126,6 +122,7 @@ object EntryManager {
         }
         val settingsFile = File(Settings.currentSettingsFile())
         if (settingsFile.isFile) Settings.studyOptions.parse(settingsFile.readLines())
+        else Settings.studyOptions = StudyOptions()
         BlackBoard.post(Update(UpdateType.ENCY_SWAPPED))
         return true
     }

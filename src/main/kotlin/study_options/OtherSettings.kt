@@ -1,6 +1,7 @@
 package study_options
 
 import data.doublesEqualWithinThousands
+import feDefaultPriority
 import genericEqualsWith
 import maxPriority
 import java.util.*
@@ -15,10 +16,10 @@ private const val defaultSuccessTarget = 85.0
 class OtherSettings(
     var reviewSessionSize: Int? = defaultReviewSessionSize, // if not specified, review all/infinite cards
     var idealSuccessPercentage: Double = defaultSuccessTarget,
-    newDefaultPriority: Int? = maxPriority,
+    newDefaultPriority: Int? = feDefaultPriority,
     var startInStudyMode: Boolean = true
 ) : PropertyPossessor() {
-    var defaultPriority = newDefaultPriority?.coerceIn(1..maxPriority) ?: maxPriority
+    var defaultPriority = newDefaultPriority?.coerceIn(1..maxPriority) ?: feDefaultPriority
 
     override fun equals(other: Any?) = genericEqualsWith(other) {
         val otherOptions = other as OtherSettings

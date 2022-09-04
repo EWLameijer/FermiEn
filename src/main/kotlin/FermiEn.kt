@@ -10,6 +10,7 @@ import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
 const val maxPriority = 10
+const val feDefaultPriority = 1
 
 const val indexOfLineWithMostRecentVersionNumber = 6
 

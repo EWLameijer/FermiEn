@@ -252,6 +252,10 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         return Entry(question.toStorageString(), answer.toStorageString())
     }
 
+    private fun makeTxtFileName(fileName: String): String =
+        if (fileName.endsWith(".txt")) fileName
+        else fileName.replace('.', '_') + ".txt"
+
     private fun createEncyFile() {
         val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
             fileFilter = FileNameExtensionFilter("Encyclopedia files", "txt")
@@ -262,10 +266,16 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         } else {
             val selectedFile = chooser.selectedFile
             val selectedFilepath = selectedFile.absolutePath
-            if (!selectedFile.exists()) {
-                File(selectedFilepath).writeText("")
+
+            if (selectedFile.exists()) EntryManager.loadEntriesFrom(selectedFilepath)
+            else {
+                // new file: check that it is a nice textfile
+                val selectedFileName = selectedFile.name
+                val txtFileName = makeTxtFileName(selectedFileName)
+                val txtFilePath: String = selectedFilepath.removeSuffix(selectedFileName) + txtFileName
+                File(txtFilePath).writeText("")
+                EntryManager.loadEntriesFrom(txtFilePath)
             }
-            EntryManager.loadEntriesFrom(selectedFilepath)
         }
     }
 
