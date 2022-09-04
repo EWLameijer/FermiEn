@@ -27,6 +27,8 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
 
     private var entriesToBeReviewed = mutableListOf<Entry>()
 
+    fun reviewsLeftInThisSession() = entriesToBeReviewed.size - counter
+
     // counter stores the index of the card in the cardsToBeReviewed list that should be reviewed next.
     private var counter: Int = 0
 

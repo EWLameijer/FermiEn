@@ -111,7 +111,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     private fun setupPanelContainer(reviewManager: ReviewManager) {
         reviewPanel = reviewManager.reviewPanel
         modesContainer.apply {
-
             layout = CardLayout()
             add(listPanel, displayId)
             add(reviewManager.reviewPanel, reviewingId)
@@ -120,6 +119,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         }
     }
 
+    private fun inReviewingMode() = mainMode == MainWindowMode.REVIEW
+
     // Updates the title of the window, which contains information like the number of cards in the deck
     private fun updateWindowTitle() {
         val numReviewingPoints = EntryManager.reviewingPoints()
@@ -127,7 +128,10 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         var title = "FermiEn ${fermiEnVersion()}: $shortCutCode ${Settings.currentFile()!!.fileNamePart()}"
         val entries = EntryManager.entries().size
         val toReview = EntryManager.reviewableEntries().size
-        title += ", ${"entry".pluralize(entries)} in deck, $toReview to review, " +
+        val sessionText = if (inReviewingMode() && reviewManager.reviewsLeftInThisSession() > 0) {
+            "entry".pluralize(reviewManager.reviewsLeftInThisSession()) + " in this session, "
+        } else ""
+        title += ", ${"entry".pluralize(entries)} in deck, ${"entry".pluralize(toReview)} to review, " + sessionText +
                 "point".pluralize(numReviewingPoints) + "."
         this.title = title
     }
