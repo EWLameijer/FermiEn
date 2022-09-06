@@ -7,12 +7,12 @@ v1.1, 2022-09-06
 image::enrico_fermi.jpg[Basic Layout,500,375]
 *Enrico Fermi* (https://www.smithsonianmag.com/science-nature/enrico-fermi-scientific-chance-luck-nuclear-age-180971249/[Image source])
 
-Spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Nobel-prize winning physicist
-Enrico Fermi. He was one of the very few physicists after Newton who excelled in both experimental and theoretical physics,
- and was also called the "Pope of Physics" (because he was always right). Next to that, he was an impassioned and
+_FermiEn_ is a spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Nobel-prize winning physicist
+Enrico Fermi. Fermi was one of the very few physicists after Newton who excelled in both experimental and theoretical physics,
+ and was even called the "Pope of Physics" (because he was always right). Next to that, he was an impassioned and
  great educator, who educated several
 young physicists who went on to win Nobel prizes themselves
- (depending on the count, 10, 11 or 12 prizes http://fermieffect.com/enrico-fermi/influence-in-science/).
+ (depending on the count, http://fermieffect.com/enrico-fermi/influence-in-science/[10, 11 or 12 prizes]).
 
 But even Fermi did not get his knowledge for 'free'-he tended to spend train journeys reviewing elementary physics formulas,
 it is likely that that process occasionally gave him a good idea and refreshed his mind.
