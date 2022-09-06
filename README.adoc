@@ -22,17 +22,20 @@ FermiEn is similarly designed to help one expand, maintain and refresh one's kno
 The list panel, which is shown on startup (when there are no cards to be reviewed, or the "Start deck in review mode" 
 in the study options window is unchecked) shows all entries in the current encyclopedia, sorted alphabetically.
 
-image::ency_mode.jpg[Basic Layout,800,500]
+image::ency_mode.jpg[Basic Layout,714,500]
+*List mode (Ctrl+L)*
 
 The basic structure is that of an encyclopedia, where you make entries (Ctrl+N for a new entry) that contain both a
 key (or question) and a description (or answer). Finding all entries that
 refer to a certain string (like "Java") is easily done by using the search bar at the top.
 
-image::new_card.jpg[Basic Layout,800,500]
+image::new_card.jpg[Basic Layout,714,500]
+*New Card (Ctrl+N)* (in review window, a new card will pop up an extra window)
 
-The second mode of FermiEn is spaced repetition: you can rehearse your knowledge by clicking Ctrl+R.
+The second mode of FermiEn is spaced repetition (more about spaced repetition in my https://github.com/EWLameijer/Eb2/blob/master/README.adoc[Eb2 repository]): you can rehearse your knowledge by clicking Ctrl+R.
 
-image::study_mode.jpg[Basic Layout,800,500]
+image::study_mode.jpg[Basic Layout,714,500]
+*Study mode (Ctrl+R)*
 
 Note that when studying for an exam it can be helpful to make a separate encyclopedia focused on that exam, Ctrl+O
 ("Control Oh") opens
@@ -45,7 +48,8 @@ scheme so you will get about 85% success, no matter how easy or hard the materia
 settings, especially when starting out with a new encyclopedia, use Ctrl+T to set things correctly. With Ctrl+T you
 can also adjust whether you want to start up in reviewing/study mode or in list/encyclopedia mode.
 
-image::study_options.jpg[Basic Layout,800,500]
+image::study_options.jpg[Basic Layout,714,500]
+*Study options (Ctrl+T)*
 
 If you want a certain tricky fact to crop up with priority, you can change its importance from the default value (1) to
 a maximum of 10. This may be useful for important things that you tend to forget.
