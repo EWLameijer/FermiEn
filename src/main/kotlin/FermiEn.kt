@@ -20,9 +20,7 @@ const val indexOfLineWithMostRecentVersionNumber = 6
 
 class Loader {
     companion object {
-        val version : String by lazy {
-            fermiEnVersion()
-        }
+        val version = fermiEnVersion()
 
         private fun fermiEnVersion(): String {
             // resources loading from https://mkyong.com/java/java-read-a-file-from-resources-folder/

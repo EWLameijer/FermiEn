@@ -77,10 +77,10 @@ class EntryEditingWindow(val mode: Mode) : JFrame() {
         addButtonPanel()
         setSize(650, 400)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-        isVisible = true
         val inputStream = javaClass.classLoader.getResourceAsStream("FermiEn_neg.png")
         iconImage = ImageIcon(ImageIO.read(inputStream)).image
         updateTitle()
+        isVisible = true
     }
 
     private fun updateTitle() {

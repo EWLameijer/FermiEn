@@ -66,14 +66,11 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
             cardFrontPane.text = entry!!.question.toPanelDisplayString()
             cardBackPane.text = entry!!.answer.toPanelDisplayString()
         }
-        //createKeyListener(KeyEvent.VK_ESCAPE) { clearOrExit() }
 
         addCardPanel()
         addButtonPanel()
         setSize(650, 400)
-        //defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         isVisible = true
-        //iconImage = ImageIcon("resources/FermiEn_neg.png").image
     }
 
     private fun clear() {

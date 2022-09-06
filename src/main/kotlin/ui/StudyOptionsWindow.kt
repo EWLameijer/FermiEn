@@ -18,6 +18,7 @@ import ui.main_window.ReviewingState
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.awt.event.KeyEvent
+import javax.imageio.ImageIO
 import javax.swing.*
 
 /**
@@ -70,14 +71,14 @@ class StudyOptionsWindow : JFrame() {
             studyOptions.intervalSettings.initialInterval
         )
         sizeOfReview = LabelledTextField(
-            "number of cards per reviewing session",
+            "Number of cards per reviewing session: ",
             studyOptions.otherSettings.reviewSessionSize.toString(), 3, 0
         )
         timeToWaitAfterCorrectReview = TimeInputElement(
             "Time to wait for re-reviewing remembered card:", studyOptions.intervalSettings.rememberedInterval
         )
         lengtheningFactor = LabelledTextField(
-            "after each successful review, increase review time by a factor",
+            "After each successful review, increase review time by a factor",
             toRegionalString(studyOptions.intervalSettings.lengtheningFactor.toString()), 5, 2
         )
         timeToWaitAfterIncorrectReview = TimeInputElement(
@@ -88,11 +89,11 @@ class StudyOptionsWindow : JFrame() {
             toRegionalString(studyOptions.otherSettings.idealSuccessPercentage.toString()), 5, 2
         )
         defaultPriority = LabelledTextField(
-            "default priority for new cards",
+            "Default priority for new cards",
             studyOptions.otherSettings.defaultPriority.toString(), 3, 0
         )
 
-        defaultStartMode = LabelledCheckbox("start deck in study mode",
+        defaultStartMode = LabelledCheckbox("Start deck in review mode",
             studyOptions.otherSettings.startInStudyMode
         )
 
@@ -171,6 +172,8 @@ class StudyOptionsWindow : JFrame() {
         setSize(700, 450)
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         updateFrame()
+        val inputStream = javaClass.classLoader.getResourceAsStream("FermiEn_neg.png")
+        iconImage = ImageIcon(ImageIO.read(inputStream)).image
         isVisible = true
     }
 

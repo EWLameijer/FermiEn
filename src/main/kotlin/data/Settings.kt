@@ -77,6 +77,7 @@ object Settings {
         val possibleIndex = line.substringBefore(DEFAULT_SEPARATOR)
         if (possibleIndex.any { !it.isDigit() }) return null
         val filePath = line.substringAfter(DEFAULT_SEPARATOR)
+        if (!File(filePath).isFile) return null
         return possibleIndex.toInt() to filePath
     }
 

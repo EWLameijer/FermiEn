@@ -56,7 +56,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private var messageUpdater: Timer? = null
 
-    // TODO
     private val entryMenu = JMenu("Entry").apply {
         addMenuItem("Add Entry", 'n') {
             if (mainMode == MainWindowMode.DISPLAY) listPanel.activateEntryPanel()
@@ -91,7 +90,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         add(modesContainer)
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
-        isVisible = true
         addWindowListener(object : WindowAdapter() {
             override fun windowClosing(windowEvent: WindowEvent?) {
                 saveAndQuit()
@@ -107,6 +105,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         messageUpdater!!.start()
         val inputStream = javaClass.classLoader.getResourceAsStream("FermiEn.png")
         iconImage = ImageIcon(ImageIO.read(inputStream)).image
+        isVisible = true
     }
 
     private fun setupPanelContainer(reviewManager: ReviewManager) {
@@ -168,8 +167,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         fileMenu.apply {
             removeAll()
             addMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile)
-            addMenuItem("Add Entries (Eb format)", 'e', ::importEbText)
-            addMenuItem("Add Entries (FermiEn format)", 'f', ::importEncyText)
+            addMenuItem("Add Entries from other ency", 'f', ::importEncyText)
             addMenuItem("Quit", 'q', ::saveAndQuit)
             addDeckLoadingMenuItems()
         }
@@ -223,8 +221,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         addActionListener { listener() }
     }
 
-    private fun importEbText() = importText(::ebConverter)
-
     private fun importEncyText() = importText(::encyConverter)
 
     private fun importText(fileConverter: (String) -> Unit) {
@@ -240,17 +236,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         }
     }
 
-    private fun ebConverter(filename: String) {
-        File(filename).readLines().forEach { EntryManager.addEntry(doubleTabToEntry(it)) }
-    }
-
     private fun encyConverter(filename: String) {
         File(filename).readLines().forEach { EntryManager.addEntry(it.toEntry()) }
-    }
-
-    private fun doubleTabToEntry(line: String): Entry {
-        val (question, answer) = line.split("\t\t")
-        return Entry(question.toStorageString(), answer.toStorageString())
     }
 
     private fun makeTxtFileName(fileName: String): String =
@@ -291,7 +278,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         addActionListener { listener() }
     }
 
-    // TODO
     private fun saveAndQuit() {
         if (mainMode == MainWindowMode.DISPLAY && listPanel.isEditing()) {
             listPanel.saveState()
