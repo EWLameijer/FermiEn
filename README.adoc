@@ -1,3 +1,30 @@
 =  FermiEn
 
-Spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Enrico Fermi, the "Pope of Physics", and a great educator.
+Spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Nobel-prize winning physicist
+Enrico Fermi, also called the "Pope of Physics" (because he was always right), and a great educator, who educated several
+young physicists who went on to win Nobel prizes themselves
+ (depending on the count, 10, 11 or 12 prizes http://fermieffect.com/enrico-fermi/influence-in-science/).
+
+Even Fermi did not get his knowledge for 'free'-he tended to spend train journeys reviewing elementary physics formulas,
+it is likely that occasionally gave him a good idea and refreshed his mind.
+
+FermiEn is also designed to help one expand, maintain and refresh one's knowledge.
+
+The basic structure is that of an encyclopedia, where you make entries (Ctrl+N for a new entry) that contain both a
+key (or question) and a description (or answer). Finding all entries that
+refer to a certain string (like "Java") is easily done by using the search bar on top.
+
+The second mode of FermiEn is spaced repetition: you can rehearse your knowledge by clicking Ctrl+R.
+
+Note that when studying for an exam it can be helpful to make a separate encyclopedia focused on that exam, Ctrl+O opens
+(or creates) an encyclopedia. With Ctrl-0 you can easily make a shortcut to the new (or old) encyclopedia. After the exam,
+you can merge the exam-encyclopedia using Ctrl+F.
+
+Scientifically, studying so that about 85% of your repetitions are successful seems optimal; the default study settings
+(Ctrl+T) are borne from my own personal experiments with learning French, but over time FermiEn will adjust the study
+scheme so you will get about 85% success, no matter how easy or hard the material is. If you want/need to change the
+settings, especially when starting out with a new encyclopedia, use Ctrl+T to set things correctly. With Ctrl+T you
+can also adjust whether you want to start up in reviewing/study mode or in list/encyclopedia mode.
+
+If you find bugs or have feature requests, please let me know via the Github Issues tab; you are also of course allowed
+to clone the code to create a version that is suited to your particular needs and demands.
