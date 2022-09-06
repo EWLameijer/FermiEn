@@ -5,7 +5,7 @@ v1.1, 2022-09-06
 :imagesdir: ./asciidoc_images
 
 image::enrico_fermi.jpg[Basic Layout,500,375]
-Enrico Fermi (https://www.smithsonianmag.com/science-nature/enrico-fermi-scientific-chance-luck-nuclear-age-180971249/[Image source])
+*Enrico Fermi* (https://www.smithsonianmag.com/science-nature/enrico-fermi-scientific-chance-luck-nuclear-age-180971249/[Image source])
 
 Spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Nobel-prize winning physicist
 Enrico Fermi. He was one of the very few physicists after Newton who excelled in both experimental and theoretical physics,
