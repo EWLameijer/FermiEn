@@ -24,7 +24,7 @@ class Loader {
 
         private fun fermiEnVersion(): String {
             // resources loading from https://mkyong.com/java/java-read-a-file-from-resources-folder/
-            val inputStream = javaClass.classLoader.getResourceAsStream("versions.txt")
+            val inputStream = Companion::class.java.classLoader.getResourceAsStream("versions.txt")
             try {
                 InputStreamReader(inputStream, StandardCharsets.UTF_8).use { streamReader ->
                     BufferedReader(streamReader).use { reader ->
