@@ -35,7 +35,7 @@ image::new_card.jpg[Basic Layout,714,500]
 The second mode of FermiEn is spaced repetition (more about spaced repetition in my https://github.com/EWLameijer/Eb2/blob/master/README.adoc[Eb2 repository]): you can rehearse your knowledge by clicking Ctrl+R.
 
 image::study_mode.jpg[Basic Layout,714,500]
-*Study mode (Ctrl+R)*
+*Study/Review mode (Ctrl+R)*
 
 Note that when studying for an exam it can be helpful to make a separate encyclopedia focused on that exam, Ctrl+O
 ("Control Oh") opens
