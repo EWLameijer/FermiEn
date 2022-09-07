@@ -19,6 +19,17 @@ it is likely that that process occasionally gave him a good idea and refreshed h
 
 FermiEn is similarly designed to help one expand, maintain and refresh one's knowledge.
 
+How to install FermiEn? First make sure that you have a Java Development Kit (JDK) installed, version 11 or later. You can check whether you have Java
+by opening a command prompt (for Windows this is with WindowsKey + S + C or WindowsKey + S + O, depending on the language of your 
+operating system), type in `java` and see what happens. If you get a list of options, Java is installed. Otherwise: download
+a modern JDK via (for example) https://adoptium.net/[Adoptium].
+
+Then go to the https://github.com/EWLameijer/FermiEn/releases[releases page], and download the latest FermiEn.main.jar file. 
+Put it in an empty directory on your computer somewhere. Depending on your operating system, you can either double-click the icon, or
+type a command / make something like a batch file to start it. The command being something like `java -jar FermiEn.main.jar`.
+
+FermiEn should now start up and open an empty encyclopedia named 'notes.txt' in the list panel.
+
 The list panel, which is shown on startup (when there are no cards to be reviewed, or the "Start deck in review mode" 
 in the study options window is unchecked) shows all entries in the current encyclopedia, sorted alphabetically.
 
