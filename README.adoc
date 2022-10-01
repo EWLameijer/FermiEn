@@ -1,22 +1,52 @@
 =  FermiEn
+Eric-Wubbo Lameijer
+v1.1, 2022-09-06
 
-Spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Nobel-prize winning physicist
-Enrico Fermi. He was one of the very few physicists after Newton who excelled in both experimental and theoretical physics,
- and was also called the "Pope of Physics" (because he was always right). Next to that, he was an impassioned and
+:imagesdir: ./asciidoc_images
+
+image::enrico_fermi.jpg[Basic Layout,500,375]
+*Enrico Fermi* (https://www.smithsonianmag.com/science-nature/enrico-fermi-scientific-chance-luck-nuclear-age-180971249/[Image source])
+
+_FermiEn_ is a spaced repetition/private encyclopedia hybrid, inspired by the vast knowledge of Nobel-prize winning physicist
+Enrico Fermi. Fermi was one of the very few physicists after Newton who excelled in both experimental and theoretical physics,
+ and was even called the "Pope of Physics" (because he was always right). Next to that, he was an impassioned and
  great educator, who educated several
 young physicists who went on to win Nobel prizes themselves
- (depending on the count, 10, 11 or 12 prizes http://fermieffect.com/enrico-fermi/influence-in-science/).
+ (depending on the count, http://fermieffect.com/enrico-fermi/influence-in-science/[10, 11 or 12 prizes]).
 
 But even Fermi did not get his knowledge for 'free'-he tended to spend train journeys reviewing elementary physics formulas,
 it is likely that that process occasionally gave him a good idea and refreshed his mind.
 
 FermiEn is similarly designed to help one expand, maintain and refresh one's knowledge.
 
+How to install FermiEn? First make sure that you have a Java Development Kit (JDK) installed, version 11 or later. You can check whether you have Java
+by opening a command prompt (for Windows this is with WindowsKey + S + C or WindowsKey + S + O, depending on the language of your 
+operating system), type in `java` and see what happens. If you get a list of options, Java is installed. Otherwise: download
+a modern JDK via (for example) https://adoptium.net/[Adoptium].
+
+Then go to the https://github.com/EWLameijer/FermiEn/releases[releases page], and download the latest FermiEn.main.jar file. 
+Put it in an empty directory on your computer somewhere. Depending on your operating system, you can either double-click the icon, or
+type a command / make something like a batch file to start it. The command being something like `java -jar FermiEn.main.jar`.
+
+FermiEn should now start up and open an empty encyclopedia named 'notes.txt' in the list panel.
+
+The list panel, which is shown on startup (when there are no cards to be reviewed, or the "Start deck in review mode" 
+in the study options window is unchecked) shows all entries in the current encyclopedia, sorted alphabetically.
+
+image::ency_mode.jpg[Basic Layout,714,500]
+*List mode (Ctrl+L)*
+
 The basic structure is that of an encyclopedia, where you make entries (Ctrl+N for a new entry) that contain both a
 key (or question) and a description (or answer). Finding all entries that
 refer to a certain string (like "Java") is easily done by using the search bar at the top.
 
-The second mode of FermiEn is spaced repetition: you can rehearse your knowledge by clicking Ctrl+R.
+image::new_card.jpg[Basic Layout,714,500]
+*New Card (Ctrl+N)* (in review window, a new card will pop up an extra window)
+
+The second mode of FermiEn is spaced repetition (more about spaced repetition in my https://github.com/EWLameijer/Eb2/blob/master/README.adoc[Eb2 repository]): you can rehearse your knowledge by clicking Ctrl+R.
+
+image::study_mode.jpg[Basic Layout,714,500]
+*Study/Review mode (Ctrl+R)*
 
 Note that when studying for an exam it can be helpful to make a separate encyclopedia focused on that exam, Ctrl+O
 ("Control Oh") opens
@@ -28,6 +58,9 @@ are borne from my own personal experiments with learning French, but over time F
 scheme so you will get about 85% success, no matter how easy or hard the material is. If you want/need to change the
 settings, especially when starting out with a new encyclopedia, use Ctrl+T to set things correctly. With Ctrl+T you
 can also adjust whether you want to start up in reviewing/study mode or in list/encyclopedia mode.
+
+image::study_options.jpg[Basic Layout,714,500]
+*Study options (Ctrl+T)*
 
 If you want a certain tricky fact to crop up with priority, you can change its importance from the default value (1) to
 a maximum of 10. This may be useful for important things that you tend to forget.
