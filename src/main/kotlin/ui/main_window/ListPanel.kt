@@ -1,8 +1,8 @@
 package ui.main_window
 
 import data.EntryManager
-import data.inHtml
-import data.linesOfMaxLength
+import data.utils.inHtml
+import data.utils.linesOfMaxLength
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
 import ui.EntryEditingPanel

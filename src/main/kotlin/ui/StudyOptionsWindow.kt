@@ -3,9 +3,9 @@ package ui
 
 import Update
 import data.Settings
-import data.stringToDouble
-import data.stringToInt
-import data.toRegionalString
+import data.utils.stringToDouble
+import data.utils.stringToInt
+import data.utils.toRegionalString
 import doNothing
 import eventhandling.BlackBoard
 import study_options.IntervalSettings

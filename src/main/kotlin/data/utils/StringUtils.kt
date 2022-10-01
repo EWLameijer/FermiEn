@@ -1,4 +1,4 @@
-package data
+package data.utils
 
 import java.io.File
 import java.math.RoundingMode

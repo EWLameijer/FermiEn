@@ -1,6 +1,7 @@
 package ui
 
 import data.*
+import data.utils.*
 import maxPriority
 import java.awt.*
 import java.awt.event.KeyEvent

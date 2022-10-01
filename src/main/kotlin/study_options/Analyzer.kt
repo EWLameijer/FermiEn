@@ -1,6 +1,8 @@
 package study_options
 
 import data.*
+import data.utils.EOL
+import data.utils.getDateString
 import java.io.BufferedWriter
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter

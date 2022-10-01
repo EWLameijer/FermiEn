@@ -2,6 +2,8 @@ package data
 
 import Update
 import backup
+import data.utils.StorageString
+import data.utils.toHorizontalString
 import eventhandling.BlackBoard
 import study_options.*
 import ui.EditMode

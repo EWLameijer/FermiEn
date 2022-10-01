@@ -1,6 +1,10 @@
 package ui
 
 import data.*
+import data.utils.StorageString
+import data.utils.linesOfMaxLength
+import data.utils.toHorizontalString
+import data.utils.toStorageString
 import maxPriority
 import ui.main_window.ListPanel
 import java.awt.*

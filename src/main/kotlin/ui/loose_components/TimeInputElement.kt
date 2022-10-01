@@ -4,8 +4,8 @@ package ui.loose_components
 import Update
 import data.TimeInterval
 import data.TimeUnit
-import data.doubleToMaxPrecisionString
-import data.stringToDouble
+import data.utils.doubleToMaxPrecisionString
+import data.utils.stringToDouble
 import eventhandling.BlackBoard
 import eventhandling.DelegatingDocumentListener
 import java.awt.Dimension

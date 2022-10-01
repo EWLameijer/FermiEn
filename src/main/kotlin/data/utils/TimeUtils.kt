@@ -1,4 +1,4 @@
-package data
+package data.utils
 
 import java.time.Duration
 

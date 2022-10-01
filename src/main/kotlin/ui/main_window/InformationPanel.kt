@@ -3,14 +3,14 @@ package ui.main_window
 import Update
 import ui.createKeyPressSensitiveButton
 import data.EntryManager
-import data.durationToString
+import data.utils.durationToString
+import data.utils.pluralize
 import eventhandling.BlackBoard
 import java.awt.BorderLayout
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JPanel
-import data.pluralize
 import study_options.ReviewManager
 
 class InformationPanel(val reviewManager: ReviewManager) : JPanel() {

@@ -1,8 +1,8 @@
 package ui.loose_components
 
 import EMPTY_STRING
-import data.representsInteger
-import data.representsPositiveFractionalNumber
+import data.utils.representsInteger
+import data.utils.representsPositiveFractionalNumber
 import java.util.logging.Logger
 import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException

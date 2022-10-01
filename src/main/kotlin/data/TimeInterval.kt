@@ -1,5 +1,6 @@
 package data
 
+import data.utils.multiplyDurationBy
 import genericEqualsWith
 import java.util.Objects
 

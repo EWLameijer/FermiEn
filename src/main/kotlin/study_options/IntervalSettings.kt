@@ -2,6 +2,7 @@ package study_options
 
 
 import data.*
+import data.utils.multiplyDurationBy
 import genericEqualsWith
 import java.time.Duration
 import java.util.*
