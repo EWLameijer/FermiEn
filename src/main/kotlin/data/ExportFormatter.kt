@@ -1,5 +1,5 @@
-import data.Entry
-import data.EntryManager
+package data
+
 import data.utils.StorageString
 import data.utils.toHorizontalString
 import java.io.File
@@ -9,52 +9,47 @@ const val definitionLength = 25 // 20 = 302, 25 = 292 30 = 294 35=312 26 =296
 const val whiteSpace = 5
 const val pageWidth = 80 // 85 doesn't look nice on Notepad++ printouts
 
-class LineProvider(private val lines: List<String>, private val width: Int) {
+class LineProvider(private val lines: List<String>) {
     val size = lines.size
 
-    operator fun get(i: Int): String =
-        if (i < size) lines[i]
-        else " ".repeat(width)
+    operator fun get(i: Int): String = lines.getOrElse(i) { "" }
 }
 
-fun StorageString.toPrintableString() = toHorizontalString().toNormalString()
+fun StorageString.toPrintableString() = toHorizontalString().toNormalString().trim()
 
 fun Entry.toLines(): List<String> {
     val keyLinesProvider = toLinesProvider(question.toPrintableString(), definitionLength)
     val valueLinesProvider = toLinesProvider(answer.toPrintableString(), pageWidth - definitionLength - whiteSpace)
 
     return (0..max(keyLinesProvider.size, valueLinesProvider.size)).map {
-        keyLinesProvider[it] + " ".repeat(whiteSpace) + valueLinesProvider[it]
+        "%-${definitionLength + whiteSpace}s".format(keyLinesProvider[it]) + valueLinesProvider[it]
     }
 }
 
 fun toLinesProvider(text: String, width: Int): LineProvider {
     fun toLines(text: String): List<String> {
-        if (text == "") return listOf()
-        val (firstLine, remainder) = if (text.length <= width) text to ""
-        else splitBeforeIndex(text, width)
-        val head = listOf("%-${width}s".format(firstLine))
-        return head + toLines(remainder)
+        if (text.length <= width) return listOf(text)
+        val (firstLine, remainder) = splitBeforeIndex(text, width)
+        return listOf(firstLine) + toLines(remainder)
     }
-    return LineProvider(toLines(text.trim()), width)
+    return LineProvider(toLines(text))
 }
 
 fun splitBeforeIndex(text: String, width: Int): Pair<String, String> {
-    // AsNoTrackingWithIdentityResolu : so also break at camelcase break
     val candidateFirstPart = text.take(width).dropLastWhile { it !in " ,./-:();-_|" }.trim()
     val firstPart = if (candidateFirstPart == "") {
+        // AsNoTrackingWithIdentityResolu : so also break at camelcase break
         val camelCaseBreak = text.take(width).dropLastWhile { it.isLowerCase() }.dropLast(1)
-        if (camelCaseBreak == "") throw IllegalArgumentException("Cannot parse this!")
-        else camelCaseBreak
+        if (camelCaseBreak == "") throw IllegalArgumentException("Cannot split '$text'!")
+        camelCaseBreak
     } else candidateFirstPart
-    val secondPart = text.removePrefix(firstPart).trim()
+    val secondPart = text.removePrefix(firstPart).trimStart()
     return firstPart to secondPart
 }
 
 private fun String.toNormalString() = this.replace(160.toChar(), ' ')
 
 fun exportAsPrintable(outputFilename: String) {
-    val entries = EntryManager.entries().sortedBy { it.question.toPrintableString().lowercase() }
-    val lines = entries.flatMap {it.toLines()}
+    val lines = EntryManager.entries().sortedBy { it.question.toPrintableString().lowercase() }.flatMap { it.toLines() }
     File(outputFilename).writeText(lines.joinToString("\n"))
 }

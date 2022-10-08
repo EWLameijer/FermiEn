@@ -14,7 +14,7 @@ import java.util.regex.Pattern
 value class StorageString(val s: String) {
     fun toPanelDisplayString() = toLines().joinToString("\n")
 
-    fun toLines(): List<String> {
+    private fun toLines(): List<String> {
         var backSlashActivated = false
         if (s[0] != '"' || s.last() != '"') throw IllegalArgumentException("StorageString.toLines(): '$s' is an illegal argument.")
 

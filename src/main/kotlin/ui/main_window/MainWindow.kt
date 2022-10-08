@@ -8,7 +8,7 @@ import data.utils.pathPart
 import data.utils.pluralize
 import doNothing
 import eventhandling.BlackBoard
-import exportAsPrintable
+import data.exportAsPrintable
 import study_options.Analyzer
 import study_options.ReviewManager
 import ui.*
@@ -196,7 +196,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             add(modeMenu)
         }
     }
-
 
     private fun manageDeckShortcuts() {
         DeckShortcutsPopup().updateShortcuts()
