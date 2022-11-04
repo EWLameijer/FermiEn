@@ -2,10 +2,7 @@ import data.EntryManager
 import study_options.ReviewManager
 import ui.main_window.MainWindow
 import ui.main_window.ReviewPanel
-import java.io.BufferedReader
-import java.io.File
-import java.io.IOException
-import java.io.InputStreamReader
+import java.io.*
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.nio.charset.StandardCharsets
@@ -72,11 +69,44 @@ fun main() {
 }
 
 fun startFermiEn() {
+    val path = findBreadcrumb();
+    println("Found path is $path")
     EntryManager.loadEntries()
     val reviewPanel = ReviewPanel()
     val reviewManager = ReviewManager(reviewPanel)
     reviewManager.initializeReviewSession()
     MainWindow(reviewManager)
 }
+
+fun findBreadcrumb(): String? {
+    val paths = File.listRoots()
+    paths.forEach(::println)
+    for (path in paths) {
+        println("Found path: $path")
+        val found = searchDirectoryRecursively(path)
+        if (found != null) return found;
+    }
+    return null;
+}
+
+fun searchDirectoryRecursively(inputPath: File): String? {
+    //println("Searching ${inputPath.path}")
+    val candidateBreadcrumb = inputPath.path + "\\fermien.breadcrumb";
+    //println("test: $candidateBreadcrumb")
+    val candidateBreadcrumbFile = File(candidateBreadcrumb);
+    if (candidateBreadcrumbFile.exists()) return inputPath.absolutePath
+
+    //println("Maindir: $inputPath / ${inputPath.path} / ${inputPath.name}")
+    val directories = inputPath.list() ?: return null
+    //for (d in directories) println("Found subdir: $d")
+    for (directory in directories) {
+        val targetDirectory = inputPath.path + "\\" + directory
+        //println("Entering $targetDirectory")
+        val found = searchDirectoryRecursively(File(targetDirectory))
+        if (found != null) return found;
+    }
+    return null
+}
+
 
 
