@@ -7,9 +7,12 @@ import study_options.StudyOptions
 import java.io.File
 import java.time.Duration
 
+const val baseDirectoryPath = "FermiEn_data"
+const val nameOfStatusFile = "fermien_status.txt"
+const val encyDirectory = "$baseDirectoryPath/encys"
 
 object Settings {
-    private const val statusFileName = "fermien_status.txt"
+    private const val statusFileName = "$baseDirectoryPath/$nameOfStatusFile"
     private const val lastLoadedEncyKey = "last_loaded_ency"
     private var currentFile: String? = null
     var studyOptions = StudyOptions()
@@ -20,9 +23,10 @@ object Settings {
         // but what if the last file does not exist anymore?
         if (lastEncyName != null && File(lastEncyName).isFile) return lastEncyName
         // lastEncyName is null OR does not exist anymore. Default to notes.txt!
-        val notesFile = File("notes.txt")
+        val notesPath = "$encyDirectory/notes.txt"
+        val notesFile = File(notesPath)
         if (!notesFile.isFile) notesFile.writeText("")
-        return "notes.txt"
+        return notesPath
     }
 
     fun currentRepetitionsFile(): String {

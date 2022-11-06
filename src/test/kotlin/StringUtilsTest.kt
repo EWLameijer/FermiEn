@@ -1,6 +1,6 @@
-import data.StorageString
-import data.toHorizontalString
-import data.toStorageString
+import data.utils.StorageString
+import data.utils.toHorizontalString
+import data.utils.toStorageString
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest

@@ -13,6 +13,8 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.Temporal
 
+fun List<Entry>.entrySorter() : List<Entry> = sortedBy { it.question.toPrintableString().lowercase() }
+
 data class Entry(
     val question: StorageString,
     val answer: StorageString,

@@ -172,6 +172,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             removeAll()
             addMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile)
             addMenuItem("Export Encyclopedia to printable txt", 'e', ::exportEncy)
+            addMenuItem("Export Encyclopedia to randomly ordered printable txt", 'd', ::exportRandomEncy)
             addMenuItem("Add Entries from other ency", 'f', ::importEncyText)
             addMenuItem("Quit", 'q', ::saveAndQuit)
             addDeckLoadingMenuItems()
@@ -182,10 +183,16 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         add(createMenuItem(label, actionKey, listener))
     }
 
-    private fun exportEncy() {
+    private fun exportEncy() = exportEncy(List<Entry>::entrySorter)
+
+    private fun exportRandomEncy() = exportEncy(List<Entry>::shuffled)
+
+    private fun exportEncy(sorter : List<Entry>.() -> List<Entry>) {
         val printableFilename = Settings.currentFile()!!.removeSuffix(".txt") + "_printable.txt"
-        exportAsPrintable(printableFilename)
+        val shuffledEntries = EntryManager.entries().sorter()
+        exportAsPrintable(shuffledEntries, printableFilename)
     }
+
 
     private fun addMenu() {
         jMenuBar = JMenuBar().apply {
@@ -316,4 +323,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         informationPanel.updateMessageLabel()
     }
 }
+
+
 

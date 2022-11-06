@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.41.0 2022-11-06 Feature: safer installation as well as option to generate randomly ordered encyclopedia for inspiration
 0.40.1 2022-10-01 Bugfix: set width of description field in prettyprint back to 25
 0.40.0 2022-10-01 Feature: add option to save ency into prettyprint format
 0.39.0 2022-09-06 Feature: now automatically removes encies that cannot be found anymore from shortcuts. Bugfix: removed (for other people useless) Eb import, ensured icon is loaded _before_ showing the window, also added icon to study settings window

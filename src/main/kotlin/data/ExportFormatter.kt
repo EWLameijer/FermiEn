@@ -49,7 +49,7 @@ fun splitBeforeIndex(text: String, width: Int): Pair<String, String> {
 
 private fun String.toNormalString() = this.replace(160.toChar(), ' ')
 
-fun exportAsPrintable(outputFilename: String) {
-    val lines = EntryManager.entries().sortedBy { it.question.toPrintableString().lowercase() }.flatMap { it.toLines() }
+fun exportAsPrintable(entries: List<Entry>, outputFilename: String) {
+    val lines = entries.flatMap { it.toLines() }
     File(outputFilename).writeText(lines.joinToString("\n"))
 }
