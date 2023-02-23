@@ -30,3 +30,5 @@ hs_err_pid*
 /log.txt
 /src/main/kotlin/META-INF/MANIFEST.MF
 /out/production/resources/versions.txt
+/out/production/*
+/FermiEn_data/fermien_status.txt

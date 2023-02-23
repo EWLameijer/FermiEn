@@ -10,13 +10,10 @@ import ui.createKeyListener
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import java.awt.Insets
-import java.awt.event.KeyEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
+import java.awt.event.*
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTable
-import javax.swing.JTextField
 import javax.swing.table.DefaultTableModel
 
 class ListPanel : JPanel() {
@@ -28,10 +25,6 @@ class ListPanel : JPanel() {
     fun isEditing() = entryEditingPanel.isVisible
 
     fun saveState() = entryEditingPanel.saveNewEntry()
-
-    private val searchField = JTextField().apply {
-        document.addDocumentListener(searchFieldListener)
-    }
 
     // from https://stackoverflow.com/questions/9467093/how-to-add-a-tooltip-to-a-cell-in-a-jtable
     private val table = object : JTable() {
@@ -49,22 +42,31 @@ class ListPanel : JPanel() {
         }
     }
 
+    private val filterPanel = FilterPanel(searchFieldListener)
+
     private val scrollPane = JScrollPane(table)
 
     private fun updateTable() {
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
         tableModel.addColumn("answer")
-        EntryManager.getHorizontalRepresentation().filter(::searchContentsInHorizontalEntry)
+        EntryManager.getHorizontalRepresentation().filter(::onTag).filter(::searchContentsInHorizontalEntry)
             .sortedBy { it.first.lowercase() }.forEach {
                 tableModel.addRow(arrayOf(it.first, it.second))
             }
         table.model = tableModel
+        makeWidthCorrect()
+    }
+
+    private fun onTag(entry: Pair<String, String>): Boolean {
+        val tag = filterPanel.getTag()
+        if (tag.isBlank()) return true
+        return entry.first.startsWith("$tag:", true)
     }
 
     private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {
         val searchString = if (entryEditingPanel.isVisible) entryEditingPanel.frontText()
-        else searchField.text
+        else filterPanel.getQuery()
         val searchTerms = searchString.lowercase().split(' ')
         return searchTerms.all { it in entry.first.lowercase() || it in entry.second.lowercase() }
     }
@@ -79,9 +81,8 @@ class ListPanel : JPanel() {
     fun activateEntryPanel() {
         if (entryEditingPanel.isVisible) return // do nothing
         entryEditingPanel.isVisible = true
-        entryEditingPanel.setQuestion(searchField.text)
-        searchField.text = ""
-        searchField.isVisible = false
+        entryEditingPanel.setQuestion(filterPanel.getQuery())
+        filterPanel.hideData()
     }
 
     fun setup() {
@@ -89,11 +90,13 @@ class ListPanel : JPanel() {
         createKeyListener(KeyEvent.VK_ESCAPE) {
             resetPanel()
         }
+        addComponentListener(ResizeListener())
         entryEditingPanel = EntryEditingPanel(this)
         layout = GridBagLayout()
         add(entryEditingPanel, editCardConstraints)
         entryEditingPanel.isVisible = false
-        add(searchField, searchBoxConstraints)
+
+        add(filterPanel, filterPanelConstraints)
         add(scrollPane, tableConstraints)
 
         initializeEntriesList()
@@ -108,7 +111,7 @@ class ListPanel : JPanel() {
         fill = GridBagConstraints.BOTH
     }
 
-    private val searchBoxConstraints = GridBagConstraints().apply {
+    private val filterPanelConstraints = GridBagConstraints().apply {
         gridx = 1
         gridy = 0
         weightx = 1.0
@@ -152,12 +155,19 @@ class ListPanel : JPanel() {
     }
 
     fun resetPanel() {
-        with(searchField) {
-            isVisible = true
-            text = ""
-            requestFocusInWindow()
-        }
+        filterPanel.reset()
         entryEditingPanel.isVisible = false
         updateTable()
+    }
+
+    fun makeWidthCorrect() {
+        validate()
+        filterPanel.shiftContents(table.width)
+    }
+
+    inner class ResizeListener : ComponentAdapter() {
+        override fun componentResized(e: ComponentEvent) {
+            makeWidthCorrect()
+        }
     }
 }

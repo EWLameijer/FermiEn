@@ -109,7 +109,9 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
         messageUpdater!!.start()
         val inputStream = javaClass.classLoader.getResourceAsStream("FermiEn.png")
         iconImage = ImageIcon(ImageIO.read(inputStream)).image
+
         isVisible = true
+        listPanel.makeWidthCorrect()
     }
 
     private fun setupPanelContainer(reviewManager: ReviewManager) {
@@ -187,7 +189,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private fun exportRandomEncy() = exportEncy(List<Entry>::shuffled)
 
-    private fun exportEncy(sorter : List<Entry>.() -> List<Entry>) {
+    private fun exportEncy(sorter: List<Entry>.() -> List<Entry>) {
         val printableFilename = Settings.currentFile()!!.removeSuffix(".txt") + "_printable.txt"
         val shuffledEntries = EntryManager.entries().sorter()
         exportAsPrintable(shuffledEntries, printableFilename)
@@ -238,6 +240,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
 
     private fun importEncyText() = importText(::encyConverter)
 
+    // TODO
     private fun importText(fileConverter: (String) -> Unit) {
         val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
             fileFilter = FileNameExtensionFilter("Text files", "txt")
@@ -247,6 +250,13 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             return
         } else {
             val selectedFile = chooser.selectedFile
+            var initialTag = selectedFile.canonicalPath.dropLastWhile { it != '.' }.dropLast(1)
+                .takeLastWhile { it != File.separatorChar }
+            val desiredTag = JOptionPane.showInputDialog(
+                null,
+                "Optional: add tag to merged entries",
+                initialTag
+            )
             fileConverter(selectedFile.absolutePath)
         }
     }
@@ -279,6 +289,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
                 File(txtFilePath).writeText("")
                 EntryManager.loadEntriesFrom(txtFilePath)
             }
+            listPanel.makeWidthCorrect()
         }
     }
 
@@ -310,11 +321,13 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             reviewPanel.clearEntry()
             showCorrectPanel()
         }
+
         UpdateType.PROGRAMSTATE_CHANGED -> {
             reviewState = ReviewingState.valueOf(update.contents)
             updateOnScreenInformation()
             showCorrectPanel()
         }
+
         else -> doNothing
     }
 

@@ -1,9 +1,31 @@
+Now want to work with tags
+
+Functionality 1: instead of merely a search field, the line should be split like:
+search [searchfield]  tag [tagField]
 
 
-startReview
-  [activates panel]
-wasRemembered
--> moveToNextReviewOrEnd
+What I WANT to do?
+merge files, adding tags to one?
+    check name of file, get filename, Capitalize it
+    get option to not add tag
+    if tag, add entries with "Tag: ", else normal adding
+>20:45 CLEAN CODE!
+
+Add entries from other Ency
+Also introduce dialog box, like Tag
+
+What I need to do
+
+1) When filling in a tag, only show those fields starting with "Tag:"
+2) When in Tag mode,
+
+
+
+
+on resize:
+https://stackoverflow.com/questions/1088595/how-to-do-something-on-swing-component-resizing
+
+
 
 As learning works best with flashcards, which have a question and answer, a file format should be supported that can
 house both questions and answers. Assuming text (for now) a normal format would be
