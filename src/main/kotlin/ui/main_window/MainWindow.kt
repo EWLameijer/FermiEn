@@ -239,9 +239,8 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun importEncyText() = importText(::encyConverter)
-
-    // TODO
-    private fun importText(fileConverter: (String) -> Unit) {
+    
+    private fun importText(fileConverter: (String, String) -> Unit) {
         val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
             fileFilter = FileNameExtensionFilter("Text files", "txt")
         }
@@ -257,12 +256,12 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
                 "Optional: add tag to merged entries",
                 initialTag
             )
-            fileConverter(selectedFile.absolutePath)
+            fileConverter(selectedFile.absolutePath, desiredTag)
         }
     }
 
-    private fun encyConverter(filename: String) {
-        File(filename).readLines().forEach { EntryManager.addEntry(it.toEntry()) }
+    private fun encyConverter(filename: String, tag: String) {
+        File(filename).readLines().forEach { EntryManager.addEntry(it.toEntryWithTag(tag)) }
     }
 
     private fun makeTxtFileName(fileName: String): String =

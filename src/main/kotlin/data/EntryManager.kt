@@ -80,6 +80,18 @@ fun String.toEntry(): Entry {
     )
 }
 
+fun String.toEntryWithTag(tag: String): Entry {
+    val (rawQuestion, answer) = split('\t')
+    // rawQuestion = "\"Question\", so need to (re)move initial "
+    val question = if (tag.isNotBlank()) "\"$tag: ${rawQuestion.drop(1)}" else rawQuestion
+    return Entry(
+        StorageString(question),
+        StorageString(answer),
+        Settings.studyOptions.otherSettings.defaultPriority,
+        Instant.now()
+    )
+}
+
 object EntryManager {
     private var encyLoadInstant: Instant? = null
 
