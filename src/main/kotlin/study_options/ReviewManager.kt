@@ -130,6 +130,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
             startCardReview()
         } else {
             initialized = false
+            reviewPanel.clearEntry()
             BlackBoard.post(Update(UpdateType.PROGRAMSTATE_CHANGED, ReviewingState.SUMMARIZING.name))
         }
     }

@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes
 
+0.42.0 2023-02-24 Feature: now supports searching for tags (and creating them on filemerge). Also bugfix: should not add/edit card on creating new card after review session ends.
 0.41.0 2022-11-06 Feature: safer installation as well as option to generate randomly ordered encyclopedia for inspiration
 0.40.1 2022-10-01 Bugfix: set width of description field in prettyprint back to 25
 0.40.0 2022-10-01 Feature: add option to save ency into prettyprint format

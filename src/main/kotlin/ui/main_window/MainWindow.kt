@@ -239,7 +239,7 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun importEncyText() = importText(::encyConverter)
-    
+
     private fun importText(fileConverter: (String, String) -> Unit) {
         val chooser = JFileChooser(nameOfLastUsedEncyDirectory()).apply {
             fileFilter = FileNameExtensionFilter("Text files", "txt")
