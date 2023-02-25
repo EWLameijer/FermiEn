@@ -24,13 +24,18 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         BlackBoard.register({ respondToEncySwap() }, UpdateType.ENCY_SWAPPED)
         reviewPanel.manager = this
     }
-
+    
     private var entriesToBeReviewed = mutableListOf<Entry>()
 
     fun reviewsLeftInThisSession() = entriesToBeReviewed.size - counter
 
     // counter stores the index of the card in the cardsToBeReviewed list that should be reviewed next.
     private var counter: Int = 0
+
+    private fun reset() {
+        counter = 0
+        entriesToBeReviewed = mutableListOf()
+    }
 
     // Should the answer (back of the card) be shown to the user? 'No'/false when the user is trying to recall the answer,
     // 'Yes'/true when the user needs to check the answer.
@@ -97,6 +102,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
 
     private fun continueReviewSession() {
         initialized = true
+        reset()
         val maxNumReviews = Settings.studyOptions.otherSettings.reviewSessionSize
         val reviewableEntries = EntryManager.reviewableEntries()
         val numberOfReviewableEntries = reviewableEntries.size
@@ -104,6 +110,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
             if (maxNumReviews == null) numberOfReviewableEntries
             else min(maxNumReviews, numberOfReviewableEntries)
         if (numCardsToBeReviewed == 0) return
+
         // now, for best effect, those cards which have expired more recently should
         // be rehearsed first, as other cards probably need to be relearned anyway,
         // and we should try to contain the damage.
@@ -116,7 +123,6 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
         entriesToBeReviewed = ArrayList(prioritizedReviewList.subList(0, numCardsToBeReviewed))
         entriesToBeReviewed.shuffle()
 
-        counter = 0
         startCardReview()
     }
 

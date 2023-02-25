@@ -1,3 +1,16 @@
+WHEN: no new cards to review, but entries in session displayed in menu bar
+
+MainWindow
+    HAS a reviewManager
+        What happens when the deck is swapped?
+
+loadEntriesFrom
+ => EncySwapped
+    => FIRST ReviewManager, which works fine!
+    => THEN MainWindow
+        respondToUpdate
+            showCorrectPanel
+
 Now want to work with tags
 
 Functionality 1: instead of merely a search field, the line should be split like:
