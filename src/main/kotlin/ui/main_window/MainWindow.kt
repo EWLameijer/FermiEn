@@ -33,8 +33,14 @@ const val reviewingId = "REVIEWING"
 const val informationalId = "INFORMATIONAL"
 const val summarizingId = "SUMMARIZING"
 
-class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
+class MainWindow() : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
+
+    private val reviewPanel = ReviewPanel()
+    
+    private val reviewManager = ReviewManager(reviewPanel).apply {
+        initializeReviewSession()
+    }
 
     private var mainMode = correctStartingMode()
 
@@ -43,8 +49,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
             MainWindowMode.REVIEW else MainWindowMode.DISPLAY
 
     private val listPanel = ListPanel()
-
-    private var reviewPanel = ReviewPanel()
 
     private val modesContainer = JPanel()
 
@@ -115,7 +119,6 @@ class MainWindow(private val reviewManager: ReviewManager) : JFrame() {
     }
 
     private fun setupPanelContainer(reviewManager: ReviewManager) {
-        reviewPanel = reviewManager.reviewPanel
         modesContainer.apply {
             layout = CardLayout()
             add(listPanel, displayId)

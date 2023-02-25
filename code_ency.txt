@@ -10,6 +10,13 @@ Model = the encyclopedia itself.
 
 
 ReviewManager
+    that ReviewManager is essentially a static class/singleton has some warts, like therefore it requires that when the
+    deck is swapped, the counter and entriesToBeReviewed to be reset - manually. It would seem better to just discard
+    the reviewManager and change it by another one. However, since ReviewManager has some listeners on Blackboard,
+    you should then not forget to discard the listeners when creating a new ReviewManager object! Which is also a rather
+    easy mistake to make; therefore, for now (until I get a better idea) the choice remains for the single and
+    irreplaceable ReviewManager object. I can, however, avoid passing the ReviewManager object to MainWindow and instead
+    have MainWindow manage it.
 
 tabs:
   note that IntelliJ automatically converts tabs to spaces in text files, so make text files in Notepad++

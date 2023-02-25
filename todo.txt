@@ -1,15 +1,6 @@
-WHEN: no new cards to review, but entries in session displayed in menu bar
+When deleting a card from a study session, creating a new card can show the deleted card... 20230225
 
-MainWindow
-    HAS a reviewManager
-        What happens when the deck is swapped?
 
-loadEntriesFrom
- => EncySwapped
-    => FIRST ReviewManager, which works fine!
-    => THEN MainWindow
-        respondToUpdate
-            showCorrectPanel
 
 Now want to work with tags
 

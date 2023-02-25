@@ -83,10 +83,7 @@ fun main() {
 fun startFermiEn() {
     setupIfNeeded()
     EntryManager.loadEntries()
-    val reviewPanel = ReviewPanel()
-    val reviewManager = ReviewManager(reviewPanel)
-    reviewManager.initializeReviewSession()
-    MainWindow(reviewManager)
+    MainWindow()
 }
 
 // what should happen?
