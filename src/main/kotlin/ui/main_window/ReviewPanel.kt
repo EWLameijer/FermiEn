@@ -11,6 +11,9 @@ import java.awt.event.ComponentListener
 import java.beans.EventHandler
 import javax.swing.JPanel
 import ui.main_window.ReviewState.*
+import javax.swing.JOptionPane
+import javax.swing.JOptionPane.WARNING_MESSAGE
+import javax.swing.JOptionPane.YES_NO_OPTION
 
 enum class ReviewState { ANSWER_HIDDEN, ANSWER_SHOWN }
 
@@ -56,7 +59,20 @@ class ReviewPanel : JPanel() {
         }
         fixedButtonPanel.add(createKeyPressSensitiveButton("Edit entry", 'e') { editCard() })
         fixedButtonPanel.add(createKeyPressSensitiveButton("Delete entry", 'd') {
-            EntryManager.removeEntry(entry!!)
+            val noOption = "No"
+            val yesOption = "Yes"
+            val options = arrayOf(noOption, yesOption)
+            val dialogResult = JOptionPane.showOptionDialog(
+                this,
+                "Do you want to delete this card?",
+                "Deleting card",
+                YES_NO_OPTION,
+                WARNING_MESSAGE,
+                null,
+                options,
+                noOption
+            )
+            if (dialogResult == 1) EntryManager.removeEntry(entry!!)
         })
         //fixedButtonPanel.add(createKeyPressSensitiveButton("View score", 'v', ::showScore))
         add(fixedButtonPanel, fixedButtonPanelConstraints)

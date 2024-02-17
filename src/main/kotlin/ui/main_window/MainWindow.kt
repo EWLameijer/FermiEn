@@ -9,6 +9,7 @@ import data.utils.pluralize
 import doNothing
 import eventhandling.BlackBoard
 import data.exportAsPrintable
+import data.utils.toStorageString
 import study_options.Analyzer
 import study_options.ReviewManager
 import ui.*
@@ -177,11 +178,24 @@ class MainWindow() : JFrame() {
             removeAll()
             addMenuItem("Create or Load Encyclopedia", 'o', ::createEncyFile)
             addMenuItem("Export Encyclopedia to printable txt", 'e', ::exportEncy)
+            addMenuItem("Export Encyclopedia to txt with questions above answers", 'g', ::exportToVerticalQuestionAnswerFormat)
             addMenuItem("Export Encyclopedia to randomly ordered printable txt", 'd', ::exportRandomEncy)
+            addMenuItem("Add Entries (Eb format)", 'w', ::importEbText)
             addMenuItem("Add Entries from other ency", 'f', ::importEncyText)
             addMenuItem("Quit", 'q', ::saveAndQuit)
             addDeckLoadingMenuItems()
         }
+    }
+
+    private fun importEbText() = importText(::ebConverter)
+
+    private fun ebConverter(filename: String, tag: String) {
+        File(filename).readLines().forEach { EntryManager.addEntry(doubleTabToEntry(it)) }
+    }
+
+    private fun doubleTabToEntry(line: String): Entry {
+        val (question, answer) = line.split("\t\t")
+        return Entry(question.toStorageString(), answer.toStorageString())
     }
 
     private fun JMenu.addMenuItem(label: String, actionKey: Char, listener: () -> Unit) {
@@ -198,6 +212,22 @@ class MainWindow() : JFrame() {
         exportAsPrintable(shuffledEntries, printableFilename)
     }
 
+    private fun exportToVerticalQuestionAnswerFormat() {
+        val entries = EntryManager.entries()
+        for (entry in entries) {
+            entry.question.toLines().forEach(::println)
+            printSpacedSeparator("-")
+            entry.answer.toLines().forEach(::println)
+            printSpacedSeparator("=")
+        }
+    }
+
+    private fun printSpacedSeparator(separator: String) {
+        val separatorLength = 40
+        println()
+        println(separator.repeat(separatorLength))
+        println()
+    }
 
     private fun addMenu() {
         jMenuBar = JMenuBar().apply {
