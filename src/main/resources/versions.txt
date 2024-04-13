@@ -4,7 +4,8 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes and refactorings
 
-0.43.0 2024-02-17 Added option for vertical printing of questions/answers, and no defends against too-easy deletion of a card when reviewing
+0.43.1 2024-04-13 Small refactorings, and now clears tag when switching encyclopedias.
+0.43.0 2024-02-17 Added option for vertical printing of questions/answers, and now defends against too-easy deletion of a card when reviewing
 0.42.2 2023-02-25 Code cleanup: now ReviewManager is handled by MainWindow, not by FermiEn
 0.42.1 2023-02-25 Bugfix: now correctly sets entries to review back to 0 on a deck swap.
 0.42.0 2023-02-24 Feature: now supports searching for tags (and creating them on filemerge). Also bugfix: should not add/edit card on creating new card after review session ends.

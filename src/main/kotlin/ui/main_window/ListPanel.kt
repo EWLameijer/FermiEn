@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel
 
 class ListPanel : JPanel() {
 
-    val searchFieldListener = DelegatingDocumentListener { updateTable() }
+    val searchFieldListener = DelegatingDocumentListener {  updateTable() }
 
     private lateinit var entryEditingPanel: EntryEditingPanel
 
@@ -50,7 +50,7 @@ class ListPanel : JPanel() {
         val tableModel = UnchangeableTableModel()
         tableModel.addColumn("question")
         tableModel.addColumn("answer")
-        EntryManager.getHorizontalRepresentation().filter(::onTag).filter(::searchContentsInHorizontalEntry)
+        EntryManager.getHorizontalRepresentation().filter { onTag(it.first) }.filter(::searchContentsInHorizontalEntry)
             .sortedBy { it.first.lowercase() }.forEach {
                 tableModel.addRow(arrayOf(it.first, it.second))
             }
@@ -58,10 +58,9 @@ class ListPanel : JPanel() {
         makeWidthCorrect()
     }
 
-    private fun onTag(entry: Pair<String, String>): Boolean {
+    fun onTag(question: String): Boolean {
         val tag = filterPanel.getTag()
-        if (tag.isBlank()) return true
-        return entry.first.startsWith("$tag:", true)
+        return tag.isBlank() || question.startsWith("$tag:", true)
     }
 
     private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {
@@ -86,7 +85,7 @@ class ListPanel : JPanel() {
     }
 
     fun setup() {
-        BlackBoard.register({ updateTable() }, UpdateType.ENCY_CHANGED, UpdateType.ENCY_SWAPPED)
+        BlackBoard.register({ filterPanel.reset(); updateTable() }, UpdateType.ENCY_CHANGED, UpdateType.ENCY_SWAPPED)
         createKeyListener(KeyEvent.VK_ESCAPE) {
             resetPanel()
         }

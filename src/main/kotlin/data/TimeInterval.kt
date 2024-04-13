@@ -17,8 +17,7 @@ class TimeInterval(var scalar: Double = 0.0, var unit: TimeUnit) {
         require(scalar >= 0) { "TimeInterval.setTo() error: negative time intervals are not permitted." }
     }
 
-    override fun equals(other: Any?) = genericEqualsWith(other) {
-        val otherInterval = other as TimeInterval
+    override fun equals(other: Any?) = genericEqualsWith(other) { otherInterval ->
         doublesEqualWithinThousands(scalar, otherInterval.scalar) && unit == otherInterval.unit
     }
 

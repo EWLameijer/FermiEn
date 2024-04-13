@@ -12,11 +12,11 @@ const val EMPTY_STRING = ""
 
 const val DEFAULT_SEPARATOR = ": "
 
-fun Any.genericEqualsWith(other: Any?, specialistCompare: (Any) -> Boolean): Boolean = when {
+inline fun <reified T> T.genericEqualsWith(other: Any?, specialistCompare: (T) -> Boolean): Boolean = when {
     this === other -> true
     other == null -> false
-    javaClass != other.javaClass -> false
-    else -> specialistCompare(other)
+    other !is T -> false
+    else -> specialistCompare(other as T)
 }
 
 fun backup(filename: String) {

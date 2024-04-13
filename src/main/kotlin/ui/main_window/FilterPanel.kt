@@ -25,6 +25,7 @@ class FilterPanel(private val searchFieldListener: DelegatingDocumentListener) :
         isVisible = true
         searchField.text = ""
         searchField.requestFocusInWindow()
+        tagField.text = ""
     }
 
     fun getQuery(): String = searchField.text

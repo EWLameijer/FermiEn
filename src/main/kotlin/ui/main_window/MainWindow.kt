@@ -3,13 +3,10 @@ package ui.main_window
 import Update
 import UpdateType
 import data.*
-import data.utils.fileNamePart
-import data.utils.pathPart
-import data.utils.pluralize
 import doNothing
 import eventhandling.BlackBoard
 import data.exportAsPrintable
-import data.utils.toStorageString
+import data.utils.*
 import study_options.Analyzer
 import study_options.ReviewManager
 import ui.*
@@ -208,7 +205,7 @@ class MainWindow() : JFrame() {
 
     private fun exportEncy(sorter: List<Entry>.() -> List<Entry>) {
         val printableFilename = Settings.currentFile()!!.removeSuffix(".txt") + "_printable.txt"
-        val shuffledEntries = EntryManager.entries().sorter()
+        val shuffledEntries = EntryManager.entries().filter { listPanel.onTag(it.question.toHorizontalString()) }.sorter()
         exportAsPrintable(shuffledEntries, printableFilename)
     }
 
@@ -282,7 +279,7 @@ class MainWindow() : JFrame() {
             return
         } else {
             val selectedFile = chooser.selectedFile
-            var initialTag = selectedFile.canonicalPath.dropLastWhile { it != '.' }.dropLast(1)
+            val initialTag = selectedFile.canonicalPath.dropLastWhile { it != '.' }.dropLast(1)
                 .takeLastWhile { it != File.separatorChar }
             val desiredTag = JOptionPane.showInputDialog(
                 null,

@@ -21,8 +21,7 @@ class OtherSettings(
 ) : PropertyPossessor() {
     var defaultPriority = newDefaultPriority?.coerceIn(1..maxPriority) ?: feDefaultPriority
 
-    override fun equals(other: Any?) = genericEqualsWith(other) {
-        val otherOptions = other as OtherSettings
+    override fun equals(other: Any?) = genericEqualsWith(other) { otherOptions ->
         reviewSessionSize == otherOptions.reviewSessionSize &&
                 defaultPriority == otherOptions.defaultPriority &&
                 startInStudyMode == otherOptions.startInStudyMode &&

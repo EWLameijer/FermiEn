@@ -41,9 +41,7 @@ class ReviewManager(var reviewPanel: ReviewPanel) {
     // 'Yes'/true when the user needs to check the answer.
     private var initialized = false
 
-    fun reviewResults(): List<Review> {
-        return EntryManager.entries().flatMap { it.getReviewsAfter(EntryManager.encyLoadInstant()!!) }
-    }
+    fun reviewResults(): List<Review> = EntryManager.entries().flatMap { it.getReviewsAfter(EntryManager.encyLoadInstant()!!) }
 
     private fun entriesReviewedInThisSession(): List<Entry> {
         return EntryManager.entries()

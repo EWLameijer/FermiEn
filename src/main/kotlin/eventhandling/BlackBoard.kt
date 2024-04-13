@@ -22,9 +22,8 @@ object BlackBoard {
     private var listeners: Map<UpdateType, ArrayList<UpdateAction>> =
         UpdateType.values().associateWith { ArrayList<UpdateAction>() }
 
-    fun post(update: Update) {
-        listeners[update.type]?.forEach { it(update) }
-    }
+    fun post(update: Update) = listeners[update.type]?.forEach { it(update) }
+
 
     fun register(listener: UpdateAction, vararg updateTypes: UpdateType) = updateTypes.forEach {
         (listeners[it] ?: error("")).add(listener)

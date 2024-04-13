@@ -21,5 +21,4 @@ abstract class PropertyPossessor {
     ) {
         if (line.startsWith(label)) property.set(parent, line.split(DEFAULT_SEPARATOR)[1].converter())
     }
-
 }

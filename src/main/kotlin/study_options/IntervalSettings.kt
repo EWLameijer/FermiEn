@@ -21,12 +21,11 @@ class IntervalSettings(
     var forgottenInterval: TimeInterval = defaultForgottenInterval,
     var lengtheningFactor: Double = defaultLengtheningFactor
 ) : PropertyPossessor() {
-    override fun equals(other: Any?) = genericEqualsWith(other) {
-        val otherOptions = other as IntervalSettings
-        initialInterval == otherOptions.initialInterval &&
-                rememberedInterval == otherOptions.rememberedInterval &&
-                doublesEqualWithinThousands(lengtheningFactor, otherOptions.lengtheningFactor) &&
-                forgottenInterval == otherOptions.forgottenInterval
+    override fun equals(other: Any?) = genericEqualsWith(other) { otherSettings ->
+        initialInterval == otherSettings.initialInterval &&
+                rememberedInterval == otherSettings.rememberedInterval &&
+                doublesEqualWithinThousands(lengtheningFactor, otherSettings.lengtheningFactor) &&
+                forgottenInterval == otherSettings.forgottenInterval
 
     }
 
