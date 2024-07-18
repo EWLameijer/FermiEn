@@ -4,6 +4,7 @@ MAJOR version when you make incompatible API changes, // meaning old files canno
 MINOR version when you add functionality in a backwards compatible manner, and // added functionality
 PATCH version when you make backwards compatible bug fixes. // bug fixes and refactorings
 
+0.44.1 2024-07-18 Adding a new card if a tag is present will now automatically add the tag to the question
 0.43.1 2024-04-13 Small refactorings, and now clears tag when switching encyclopedias.
 0.43.0 2024-02-17 Added option for vertical printing of questions/answers, and now defends against too-easy deletion of a card when reviewing
 0.42.2 2023-02-25 Code cleanup: now ReviewManager is handled by MainWindow, not by FermiEn

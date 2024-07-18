@@ -8,11 +8,6 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 
 class FilterPanel(private val searchFieldListener: DelegatingDocumentListener) : JPanel() {
-
-    fun hideData() {
-        isVisible = false
-    }
-
     private val searchLabel = JLabel("Search:", JLabel.CENTER)
 
     private val tagLabel = JLabel("Tag:", JLabel.CENTER)

@@ -80,8 +80,9 @@ class ListPanel : JPanel() {
     fun activateEntryPanel() {
         if (entryEditingPanel.isVisible) return // do nothing
         entryEditingPanel.isVisible = true
-        entryEditingPanel.setQuestion(filterPanel.getQuery())
-        filterPanel.hideData()
+        val tag = filterPanel.getTag()
+        val possibleTag = if (tag.isNotBlank()) "$tag: " else ""
+        entryEditingPanel.setQuestion(possibleTag + filterPanel.getQuery())
     }
 
     fun setup() {
