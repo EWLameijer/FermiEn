@@ -31,7 +31,7 @@ const val reviewingId = "REVIEWING"
 const val informationalId = "INFORMATIONAL"
 const val summarizingId = "SUMMARIZING"
 
-class MainWindow() : JFrame() {
+class MainWindow : JFrame() {
     private var reviewState = ReviewingState.REACTIVE
 
     private val reviewPanel = ReviewPanel()
@@ -184,9 +184,9 @@ class MainWindow() : JFrame() {
         }
     }
 
-    private fun importEbText() = importText(::ebConverter)
+    private fun importEbText() = importText { text, _ -> ebConverter(text) }
 
-    private fun ebConverter(filename: String, tag: String) {
+    private fun ebConverter(filename: String) {
         File(filename).readLines().forEach { EntryManager.addEntry(doubleTabToEntry(it)) }
     }
 

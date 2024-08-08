@@ -83,10 +83,12 @@ class ListPanel : JPanel() {
         val tag = filterPanel.getTag()
         val possibleTag = if (tag.isNotBlank()) "$tag: " else ""
         entryEditingPanel.setQuestion(possibleTag + filterPanel.getQuery())
+        entryEditingPanel.focusOnQuestion()
     }
 
     fun setup() {
-        BlackBoard.register({ filterPanel.reset(); updateTable() }, UpdateType.ENCY_CHANGED, UpdateType.ENCY_SWAPPED)
+        BlackBoard.register({ filterPanel.resetAfterDeckChanged(); updateTable() }, UpdateType.ENCY_SWAPPED)
+        BlackBoard.register({ filterPanel.resetAfterCardAdded(); updateTable() }, UpdateType.ENCY_CHANGED)
         createKeyListener(KeyEvent.VK_ESCAPE) {
             resetPanel()
         }
@@ -155,7 +157,7 @@ class ListPanel : JPanel() {
     }
 
     fun resetPanel() {
-        filterPanel.reset()
+        filterPanel.resetAfterCardAdded()
         entryEditingPanel.isVisible = false
         updateTable()
     }

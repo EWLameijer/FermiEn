@@ -205,6 +205,10 @@ class EntryEditingPanel(private val parentWindow: ListPanel, private var entry: 
         cardFrontPane.text = question
         cardBackPane.text = ""
     }
+
+    fun focusOnQuestion() {
+        cardFrontPane.requestFocus()
+    }
 }
 
 

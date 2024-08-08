@@ -16,11 +16,15 @@ class FilterPanel(private val searchFieldListener: DelegatingDocumentListener) :
         document.addDocumentListener(searchFieldListener)
     }
 
-    fun reset() {
+    fun resetAfterDeckChanged() {
+        resetAfterCardAdded()
+        tagField.text = ""
+    }
+
+    fun resetAfterCardAdded() {
         isVisible = true
         searchField.text = ""
         searchField.requestFocusInWindow()
-        tagField.text = ""
     }
 
     fun getQuery(): String = searchField.text
