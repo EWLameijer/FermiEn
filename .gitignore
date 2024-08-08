@@ -32,3 +32,4 @@ hs_err_pid*
 /out/production/resources/versions.txt
 /out/production/*
 /FermiEn_data/fermien_status.txt
+/target/*

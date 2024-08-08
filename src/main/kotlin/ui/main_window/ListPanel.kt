@@ -58,9 +58,17 @@ class ListPanel : JPanel() {
         makeWidthCorrect()
     }
 
+    private fun respondToTagChange() {
+
+    }
+
     fun onTag(question: String): Boolean {
         val tag = filterPanel.getTag()
-        return tag.isBlank() || question.startsWith("$tag:", true)
+        if (tag.isBlank()) return true
+        val possibleTag = "^[A-Za-z]+:".toRegex().find(question)?.value?.lowercase() ?: return false
+        return tag.lowercase().all { it in possibleTag}
+//        println("possible tag:" + possibleTag)
+//        return question.startsWith("$tag:", true)
     }
 
     private fun searchContentsInHorizontalEntry(entry: Pair<String, String>): Boolean {

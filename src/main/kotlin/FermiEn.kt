@@ -2,10 +2,8 @@ import data.EntryManager
 import data.baseDirectoryPath
 import data.encyDirectory
 import data.nameOfStatusFile
-import study_options.ReviewManager
 import ui.closeOptionPane
 import ui.main_window.MainWindow
-import ui.main_window.ReviewPanel
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException

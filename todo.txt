@@ -1,1 +1,5 @@
-Fine :)
+Create autocomplete for tags
+
+What should changing a tag do?
+/press Tab: find first tag with all letters
+No, it would be ideal to find the shortest tag with all letters. However, for that I'd need a Tag-registry that is updated, as then it isn't line-dependent anymore
