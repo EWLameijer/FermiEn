@@ -1,4 +1,11 @@
+1. Make Alt+i add "- what is?"
+2. Make Alt+a add "- what are?"
+3. Make tab return from tag to search field
+4. Create tool that converts a dictionary to something for Obsidian?
+
 Create autocomplete for tags
+
+https://docs.oracle.com/javase/tutorial/uiswing/misc/focus.html
 
 What should changing a tag do?
 /press Tab: find first tag with all letters
